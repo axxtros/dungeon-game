@@ -24,14 +24,12 @@ exports.index = function (req, res) {
                 callback(err, result);
             });
         },
-        
-        
+                
         func_prog_ver: function asyncParallalDbGetProgName(callback) {                        
             databaseControl.getProgramVersion(function getProgramProgNameCallback(err, result) {                
                 callback(err, result);
             });
         },
-                
 
     }, function asyncParallalResulthandler(err, results) {
         if (err) {

@@ -255,3 +255,5 @@ app.js
 routes/user.js
 routes/index.js
 modules/db.js
+modules/application.js
+routes/game.js
