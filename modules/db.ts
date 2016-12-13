@@ -1,5 +1,7 @@
-﻿//Database modul.
-
+﻿/*
+ * Adatbázis modul.
+ * 13/12/2016
+ */
 
 var sqlite3 = require('sqlite3').verbose();
 var file = "data.db";

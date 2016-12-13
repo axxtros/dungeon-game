@@ -1,5 +1,9 @@
 ﻿
 
+/*
+ * Hagymányos JS-es adatbázis kezelés, teszt miatt van bent, amúgy nincs használva.
+ */ 
+
 var sqlite3 = require('sqlite3').verbose();
 var file = "data.db";
 var dbase = new sqlite3.Database(file);

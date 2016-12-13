@@ -6,7 +6,6 @@ var db2 = require('../modules/db2');
 
 exports.index = function (req, res) {      
 
-
     async.parallel({
 
         //hagyományos js-es megoldás
@@ -41,7 +40,7 @@ exports.index = function (req, res) {
             res.send(err);
         } else {
             let v = new db.TestNameSpace.TestClass();
-            res.render('index', { progName: results.func_prog_name, version: results.func_prog_ver });
+            res.render('index', { program_name: results.func_prog_name, program_version: results.func_prog_ver });
         }
     });
 
