@@ -13,8 +13,7 @@ export namespace DatabaseControlNameSpace {
 
         constructor() { }
 
-        getProgramName(callback: any): any {
-            console.log('@db1 3');
+        getProgramName(callback: any): any {            
             var sql = "select value from sys_param sp where	sp.key = 'PROGRAM_NAME'";
             dbase.each(sql, (err, row) => {
                 if (err) {
@@ -25,8 +24,7 @@ export namespace DatabaseControlNameSpace {
             });
         }
 
-        getProgramVersion(callback : any): any {
-            console.log('@db1 3');
+        getProgramVersion(callback : any): any {            
             var sql = "select value from sys_param sp where	sp.key = 'PROGRAM_VERSION'";
             dbase.each(sql, (err, row) => {
                 if (err) {

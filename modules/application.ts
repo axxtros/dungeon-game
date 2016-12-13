@@ -16,6 +16,7 @@ export namespace DatabaseControlNameSpace {
     export class ApplicationClass {        
         
         constructor() {
+            console.log('@ ApplicationClass constructor');
             async.parallel({
 
                 func_prog_name: function asyncParallalDbGetProgName(callback) {
@@ -40,8 +41,8 @@ export namespace DatabaseControlNameSpace {
             });
         }
         
-        get pageData(): any {
-            return this.pageData;                           
+        get pageData(): any {            
+            return this.pageData;            
         }        
 
     }
