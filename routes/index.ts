@@ -1,10 +1,12 @@
 ﻿
 var async = require('async');
-var db = require('../modules/db');
-var db2 = require('../modules/db2');
+var dbModule = require('../modules/db');
+//var db2 = require('../modules/db2');
 
 
 exports.index = function (req, res) {      
+
+    let databaseControl = new dbModule.DatabaseControlNameSpace.DBControl();
 
     async.parallel({
 
@@ -17,19 +19,15 @@ exports.index = function (req, res) {
         },
         */
 
-        func_prog_name: function asyncParallalDbGetProgName(callback) {
-            let dbObject = new db.TestNameSpace.TestClass();
-            dbObject.getProgramName(function getProgramProgNameCallback(err, result) {
+        func_prog_name: function asyncParallalDbGetProgName(callback) {            
+            databaseControl.getProgramName(function getProgramProgNameCallback(err, result) {
                 callback(err, result);
             });
         },
         
         
-        func_prog_ver: function asyncParallalDbGetProgName(callback) {
-            console.log('@db1 1');
-            let dbObject = new db.TestNameSpace.TestClass();
-            dbObject.getProgramVersion(function getProgramProgNameCallback(err, result) {
-                console.log('@db1 2');
+        func_prog_ver: function asyncParallalDbGetProgName(callback) {                        
+            databaseControl.getProgramVersion(function getProgramProgNameCallback(err, result) {                
                 callback(err, result);
             });
         },
@@ -38,14 +36,15 @@ exports.index = function (req, res) {
     }, function asyncParallalResulthandler(err, results) {
         if (err) {
             res.send(err);
-        } else {
-            let v = new db.TestNameSpace.TestClass();
-            res.render('index', { program_name: results.func_prog_name, program_version: results.func_prog_ver });
+        } else {            
+            res.render('index', {
+                program_name: results.func_prog_name,
+                program_version: results.func_prog_ver
+
+            });
         }
     });
-
-
-    //let v = new db.TestNameSpace.TestClass();
+    
     //res.render('index', { progName: 'Dungeon Game', szam: v.kiir(1) });
 };
 

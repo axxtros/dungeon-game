@@ -8,15 +8,9 @@ var file = "data.db";
 var dbase = new sqlite3.Database(file);
 
 
-export namespace TestNameSpace {
+export namespace DatabaseControlNameSpace {
 
-    export class TestClass {
-        x: number;        
-
-
-        kiir(szam: number): string {
-            return "szam: " + szam;
-        }
+    export class DBControl {        
 
         getProgramName(callback: any): any {
             console.log('@db1 3');
