@@ -254,3 +254,4 @@ app.js
 *.map
 routes/user.js
 routes/index.js
+modules/db.js

@@ -8,8 +8,11 @@
     "email": ""
   },
   "dependencies": {
+    "async": "^2.1.4",
+    "ejs": "^2.5.5",
     "express": "3.4.4",
     "jade": "*",
+    "sqlite3": "^3.1.8",
     "stylus": "*"
   }
 }
