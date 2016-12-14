@@ -3,7 +3,7 @@
  * 13/12/2016
  */
 
-export namespace DatabaseControlNameSpace {    
+export namespace DatabaseControlNameSpace {
 
     var sqlite3 = require('sqlite3').verbose();
     var file = "data.db";
