@@ -14,12 +14,12 @@ exports.game = function (req, res, next) {
     
     //var pageDataObj = new appModule.DatabaseControlNameSpace.ApplicationClass();    
     let appCtrl = new appControl.DatabaseControlNameSpace.ApplicationClass();
-
+    
     console.log('@game.ts');    
 
-    for (let item in appCtrl.aArray)
+    for (let item in appCtrl._testArray)
     {
-        console.log('@appCtrl.aArray: ' + appCtrl.aArray[item]);
+        console.log('@appCtrl._testArray: ' + appCtrl._testArray[item]);
     }
 
     /*
@@ -28,8 +28,6 @@ exports.game = function (req, res, next) {
     }
     */
 
-    res.render('game.ejs', { test_a: appCtrl.aArray[0], t_array: appCtrl.aArray });
-    
-    
+    res.render('game.ejs', { test_a: appCtrl._testArray[0], t_array: appCtrl._testArray });
     
 }

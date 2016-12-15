@@ -3,63 +3,51 @@
  * 13/12/2016
  */
 
-//import * as _ from '../modules/db';
 import * as databaseControl from "../modules/db";
 
 export namespace DatabaseControlNameSpace {
 
-    var async = require('async');
-    //var dbModule = require('../modules/db');    
-    //var databaseControl = new dbModule.DatabaseControlNameSpace.DBControl();
+    var async = require('async');    
     var dbCtrl = new databaseControl.DatabaseControlNameSpace.DBControl();
 
-    /*
-    var pageData: { key: string, value: string }[] = [
-        { "key": "-", "value": "-" }
-    ];
-    */
 
     export class ApplicationClass {                
-
-        //private dbModule = require('../modules/db');    
+   
         private dbCtrl :databaseControl.DatabaseControlNameSpace.DBControl;
+        private testArray: Array<string>;   // = ['element 0', 'element 2'];
 
-        private testArray: Array<string> = ['a1', 'a2'];
-
+        //ez most nincs használva
         private pageData: { key: string, value: string }[] = [
             { "key": "-..-", "value": "..-.." }
         ];        
 
-        constructor() {
-            //this.dbCtrl = new databaseControl.DatabaseControlNameSpace.DBControl();
+        constructor() {            
             console.log('@ApplicationClass constructor');
-            this.dataDownloader();
+            this.pageDataLoader();
         }
 
-        private dataDownloader(): void {            
-            console.log('@ApplicationClass dataDownloader()');
-            
+        private pageDataLoader(): void {            
+            console.log('@ApplicationClass pageDataLoader()');            
             this.testArray = new Array();
-            this.testArray.push('element1');
-            this.testArray.push('element2');
+            this.testArray.push('element 1');
+            this.testArray.push('element 2');
 
-            for (let i = 1; i != 100; i++) {
-                this.testArray.push('element' + i);
+            //ez működik
+            for (let i = 3; i != 6; i++) {
+                this.testArray.push('element ' + i);
             }
             
             for (let item in this.testArray) {
                 console.log('@testArray: ' + ' ' + this.testArray[item]);
             }
-            
+
+            //ez működik, de a GET után fut le
             let pr_name = dbCtrl.getProgramName(function getPrName(err, result) {            
-                console.log('@getProgName: ' + result);                
+                console.log('@getProgName: ' + result);
+                //this.testArray.push('element' + result);               
             });            
-            /*
-            db.getProgramName(function (programName) {
-                res.render('chat', { program_name: programName, chat_page_name: 'Ez az oldal a chat-é!' });
-                res.end();
-            });
-            */
+            
+            //ez működik, de a GET után fut le
             async.parallel({                
                 func_prog_name: function asyncParallalDbGetProgName(callback) {
                     dbCtrl.getProgramName(function getProgramProgNameCallback(err, result) {
@@ -79,42 +67,22 @@ export namespace DatabaseControlNameSpace {
                 if (err) {
                     console.log('@async 3 - ERROR');                    
                 } else {
-                    console.log('@async 4 - OK');
-                    //this.pageData.push({ "key": "PROGRAM_NAME", "value": results.func_prog_name });
-                    //this.pageData.push({ "key": "PROGRAM_VERSION", "value": results.func_prog_ver });
+                    console.log('@async 4 - OK');                    
                     //this.testArray.push('egy');
                     //this.testArray.push('kettő');
                 }
-            });
-            
-        }
+            });            
+        }                
 
-        public valamitLehoz(): void {
-            try {
-                
-            } catch (err) {
-                console.log(err);
-            }
-        }
+        //getters/setters
 
-        public get pageDataArray(): any[] {            
-            console.log('@ApplicationClass pageDataArray()');            
-
-            for (let item in this.pageData) {
-                console.log('@pageData: ' + this.pageData[item].key + ' ' + this.pageData[item].value);
-            }
-
-            return this.pageData;            
-        }
-
-        public set aArray(_a: string[]) {
+        public set _testArray(_a: string[]) {
             this.testArray = _a;
         }
 
-        public get aArray(): string[] {
+        public get _testArray(): string[] {
             return this.testArray;
         }
 
     }
-
 }
