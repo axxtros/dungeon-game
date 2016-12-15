@@ -28,8 +28,8 @@ exports.game = function (req, res, next) {
     }
     */
 
-    console.log('@game.ts render');
-    res.render('game.ejs', { test_a: appCtrl.aArray[0] });
-
+    res.render('game.ejs', { test_a: appCtrl.aArray[0], t_array: appCtrl.aArray });
+    
+    
     
 }

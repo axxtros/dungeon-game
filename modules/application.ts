@@ -42,11 +42,24 @@ export namespace DatabaseControlNameSpace {
             this.testArray = new Array();
             this.testArray.push('element1');
             this.testArray.push('element2');
+
+            for (let i = 1; i != 100; i++) {
+                this.testArray.push('element' + i);
+            }
             
             for (let item in this.testArray) {
                 console.log('@testArray: ' + ' ' + this.testArray[item]);
             }
-
+            
+            let pr_name = dbCtrl.getProgramName(function getPrName(err, result) {            
+                console.log('@getProgName: ' + result);                
+            });            
+            /*
+            db.getProgramName(function (programName) {
+                res.render('chat', { program_name: programName, chat_page_name: 'Ez az oldal a chat-é!' });
+                res.end();
+            });
+            */
             async.parallel({                
                 func_prog_name: function asyncParallalDbGetProgName(callback) {
                     dbCtrl.getProgramName(function getProgramProgNameCallback(err, result) {
@@ -69,8 +82,8 @@ export namespace DatabaseControlNameSpace {
                     console.log('@async 4 - OK');
                     //this.pageData.push({ "key": "PROGRAM_NAME", "value": results.func_prog_name });
                     //this.pageData.push({ "key": "PROGRAM_VERSION", "value": results.func_prog_ver });
-                    //this.a.push('egy');
-                    //this.a.push('kettő');
+                    //this.testArray.push('egy');
+                    //this.testArray.push('kettő');
                 }
             });
             
