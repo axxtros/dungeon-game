@@ -32,73 +32,63 @@ export namespace DatabaseControlNameSpace {
 
         constructor() {
             //this.dbCtrl = new databaseControl.DatabaseControlNameSpace.DBControl();
-            console.log('@ ApplicationClass constructor');
-            this.getPageDatas();
+            console.log('@ApplicationClass constructor');
+            this.dataDownloader();
         }
 
-        private getPageDatas(): void {            
-            console.log('@ ApplicationClass getPageDatas()');
-            //this.pageData = new Array();
-
-            //if (this.testArray === 'undefined') {
-                this.testArray = new Array();
-                this.testArray.push('b1');
-                this.testArray.push('b2');
-
-            //}
-
-            for (let e in this.testArray) {
-                console.log('@ggg' + ' ' + this.testArray[e]);
+        private dataDownloader(): void {            
+            console.log('@ApplicationClass dataDownloader()');
+            
+            this.testArray = new Array();
+            this.testArray.push('element1');
+            this.testArray.push('element2');
+            
+            for (let item in this.testArray) {
+                console.log('@testArray: ' + ' ' + this.testArray[item]);
             }
 
-            /*
-            async.parallel({
-
+            async.parallel({                
                 func_prog_name: function asyncParallalDbGetProgName(callback) {
                     dbCtrl.getProgramName(function getProgramProgNameCallback(err, result) {
+                        console.log('@async 1');
                         callback(err, result);
                     });
                 },
 
                 func_prog_ver: function asyncParallalDbGetProgName(callback) {
                     dbCtrl.getProgramVersion(function getProgramProgNameCallback(err, result) {
+                        console.log('@async 2');
                         callback(err, result);
                     });
                 },
 
             }, function asyncParallalResulthandler(err, results) {
                 if (err) {
-                    console.log('ERROR');
+                    console.log('@async 3 - ERROR');                    
                 } else {
+                    console.log('@async 4 - OK');
                     //this.pageData.push({ "key": "PROGRAM_NAME", "value": results.func_prog_name });
                     //this.pageData.push({ "key": "PROGRAM_VERSION", "value": results.func_prog_ver });
-
                     //this.a.push('egy');
-                    //this.a.push('kettő');                    
-
+                    //this.a.push('kettő');
                 }
             });
-            */
+            
         }
 
-        async function valamitLehoz() {
+        public valamitLehoz(): void {
             try {
-                let data = await function asyncParallalDbGetProgName(callback) {
-                    dbCtrl.getProgramName(function getProgramProgNameCallback(err, result) {
-                        callback(err, result);
-                    });
-                };
-                console.log('@data: ' + data);
+                
             } catch (err) {
                 console.log(err);
             }
         }
 
         public get pageDataArray(): any[] {            
-            //this.getPageDatas();
+            console.log('@ApplicationClass pageDataArray()');            
 
-            for (let e in this.pageData) {
-                console.log('@mmm' + e.toString() + ' ' + this.pageData[e].key + ' ' + this.pageData[e].value);
+            for (let item in this.pageData) {
+                console.log('@pageData: ' + this.pageData[item].key + ' ' + this.pageData[item].value);
             }
 
             return this.pageData;            

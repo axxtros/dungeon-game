@@ -15,17 +15,20 @@ exports.game = function (req, res, next) {
     //var pageDataObj = new appModule.DatabaseControlNameSpace.ApplicationClass();    
     let appCtrl = new appControl.DatabaseControlNameSpace.ApplicationClass();
 
-    console.log('@bbb');
+    console.log('@game.ts');    
 
-    for (let e in appCtrl.pageDataArray) {
-        console.log('@hhh' + e.toString() + ' ' + appCtrl.pageDataArray[e].key + ' ' + appCtrl.pageDataArray[e].value);
-    }
-
-    for (let a in appCtrl.aArray)
+    for (let item in appCtrl.aArray)
     {
-        console.log('@ooo' + appCtrl.aArray[a]);
+        console.log('@appCtrl.aArray: ' + appCtrl.aArray[item]);
     }
 
+    /*
+    for (let item in appCtrl.pageDataArray) {
+        console.log('@appCtrl pageDataArray' + appCtrl.pageDataArray[item].key + ' ' + appCtrl.pageDataArray[item].value);
+    }
+    */
+
+    console.log('@game.ts render');
     res.render('game.ejs', { test_a: appCtrl.aArray[0] });
 
     
