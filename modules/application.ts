@@ -45,7 +45,7 @@ export namespace DatabaseControlNameSpace {
             //ez működik, de a GET után fut le
             let pr_name = dbCtrl.getProgramName(function getPrName(err, result) {            
                 console.log('@getProgName: ' + result);
-                this.addValue(result);
+                //this.addValue(result);
                 //this.testArray.push('element' + result);               
                 //callback(err, result);
             });
