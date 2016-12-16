@@ -11,7 +11,7 @@ var async = require('async');
 import * as appControl from "../modules/application";
 
 exports.game = function (req, res, next) {
-    
+
     //var pageDataObj = new appModule.DatabaseControlNameSpace.ApplicationClass();    
     let appCtrl = new appControl.DatabaseControlNameSpace.ApplicationClass();
     
@@ -28,6 +28,10 @@ exports.game = function (req, res, next) {
     }
     */
 
-    res.render('game.ejs', { test_a: appCtrl._testArray[0], t_array: appCtrl._testArray });
+    setTimeout(function () {
+        res.render('game.ejs', { test_a: appCtrl._testArray[0], t_array: appCtrl._testArray });
+    }, 5000);
+
+    //res.render('game.ejs', { test_a: appCtrl._testArray[0], t_array: appCtrl._testArray });
     
 }

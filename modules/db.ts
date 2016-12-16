@@ -13,6 +13,17 @@ export namespace DatabaseControlNameSpace {
 
         constructor() { }
 
+        getProgramName2(): any {
+            var sql = "select value from sys_param sp where	sp.key = 'PROGRAM_NAME'";
+            dbase.each(sql, (err, row) => {
+                if (err) {
+                    return err;
+                } else {
+                    return row.value;
+                }
+            });
+        }
+
         getProgramName(callback: any): any {            
             var sql = "select value from sys_param sp where	sp.key = 'PROGRAM_NAME'";
             dbase.each(sql, (err, row) => {

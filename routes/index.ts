@@ -6,7 +6,7 @@ var dbModule = require('../modules/db');
 
 exports.index = function (req, res) {      
 
-    let databaseControl = new dbModule.DatabaseControlNameSpace.DBControl();
+    var databaseControl = new dbModule.DatabaseControlNameSpace.DBControl();
 
     async.parallel({
 
