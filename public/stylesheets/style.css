@@ -35,8 +35,13 @@ div.headerDiv {
 }
 
 div.contentDiv {
-    background-color: red;
+    background-color: white;
     width: auto;
+}
+
+div.gameDiv {
+    border: 1px solid black;
+    background-color: white;
 }
 
 div.footerDiv {

@@ -14,10 +14,13 @@
         Game page...<%= test_a %>
 
         <% for(var i = 0; i != t_array.length; i++) {%>
-            <li><%= t_array[i] %></li>
+            <li>
+                <div>
+                    <%= t_array[i] %>                        
+                </div>                
+            </li>
         <% } %>
-
-</div>
+    </div>
 
     <div class="contentDiv">
         <div id="gamediv" style="display: block; margin-top: 4px; margin-left: auto; margin-right: auto; width: 1000px;">
@@ -34,7 +37,8 @@
 
     </div>
 
-    <script src="/javascripts/init.js"></script>
+    <script src="/javascripts/client_util.js"></script>
+    <script src="/javascripts/init_game_area.js"></script>
 
 </body>
 </html>
