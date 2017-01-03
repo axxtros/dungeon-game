@@ -11,30 +11,22 @@
 <body>
 
     <div class="headerDiv">
-        Game page...<%= test_a %>
-
-        <% for(var i = 0; i != t_array.length; i++) {%>
-            <li>
-                <div>
-                    <%= t_array[i] %>                        
-                </div>                
-            </li>
-        <% } %>
+        #headerDiv...       
     </div>
 
     <div class="contentDiv">
-        <div id="gamediv" style="display: block; margin-top: 4px; margin-left: auto; margin-right: auto; width: 1000px;">
-            <canvas id="mapcanvas" width="800" height="400" style="position: absolute; left: 0; top: 0; z-index: 0;">
-                Your browser is not supported the HTML5 canvas.
+        <div id="gamediv" style="display: block; margin: 4px 0 4px 0; margin-left: auto; margin-right: auto;">
+            <canvas id="mapcanvas" style="position: absolute; z-index: 0;">
+                Your browser is not supported the HTML5 canvas!
             </canvas>
-            <canvas id="unitcanvas" width="800" height="400" style="position: absolute; left: 0; top: 0; z-index: 1;"></canvas>
-            <canvas id="missilecanvas" width="800" height="400" style="position: absolute; left: 0; top: 0; z-index: 2;"></canvas>
+            <canvas id="unitcanvas" style="position: absolute; z-index: 1;"></canvas>
+            <canvas id="missilecanvas" style="position: absolute; z-index: 2;"></canvas>
             <canvas id="devcanvas" style="position: absolute; z-index: 100;"></canvas>
         </div>
     </div>
 
     <div class="footerDiv">
-
+        #footer
     </div>
 
     <script src="/javascripts/client_util.js"></script>

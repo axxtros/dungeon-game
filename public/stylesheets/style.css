@@ -11,7 +11,7 @@ section, summary, time, mark, audio, video {
     border: 0;
     font-size: 100%;
     font: inherit;
-    vertical-align: baseline;
+    vertical-align: baseline;    
 }
 
 html {
@@ -26,7 +26,8 @@ body {
   background-color: white;
   width: 1000px;
   margin-left: auto;
-  margin-right: auto;
+  margin-right: auto;  
+  color: black;
 }
 
 div.headerDiv {
@@ -39,13 +40,12 @@ div.contentDiv {
     width: auto;
 }
 
-div.gameDiv {
-    border: 1px solid black;
+div.gameDiv {    
     background-color: white;
 }
 
 div.footerDiv {
-    background-color: blue;
+    background-color: darkgray;
     width: auto;
 }
 
