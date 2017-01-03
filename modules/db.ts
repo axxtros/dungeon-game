@@ -46,6 +46,17 @@ export namespace DatabaseControlNameSpace {
             });        
         }
 
+        getProgramDeveloper(callback: any): any {
+            var sql = "select value from sys_param sp where	sp.key = 'DEVELOPER'";
+            dbase.each(sql, (err, row) => {
+                if (err) {
+                    callback(err);
+                } else {
+                    callback(null, row.value);
+                }
+            });
+        }
+
     }
 
 }

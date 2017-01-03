@@ -257,3 +257,4 @@ routes/index.js
 modules/db.js
 modules/application.js
 routes/game.js
+modules/storage.js

@@ -6,7 +6,8 @@ var app = express();
 var async = require('async');
 //var appModule = require('../modules/application');
 
-import * as appControl from "../modules/application";
+//import * as appControl from "../modules/application";
+import * as storage from "../modules/storage";
 
 exports.game = function (req, res, next) {
 
@@ -29,6 +30,6 @@ exports.game = function (req, res, next) {
     //normál megoldás, azonali render - működik
     //res.render('game.ejs', { test_a: appCtrl._testArray[0], t_array: appCtrl._testArray });
 
-    res.render('game.ejs', { GAME_PAGE: 'GAME PAGE' });
+    res.render('game.ejs', { GAME_PAGE: 'GAME PAGE', pr_developer: storage.DataStorageNameSpace.BaseClass.pageData[0] });
     
 }

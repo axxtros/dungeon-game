@@ -4,6 +4,7 @@
  */
 
 import * as databaseControl from "../modules/db";
+import * as storage from "../modules/storage";
 
 export namespace DatabaseControlNameSpace {
 
@@ -11,6 +12,7 @@ export namespace DatabaseControlNameSpace {
     //var async = require('asyncawait/async');
     //var await = require('asyncawait/await');
     var dbCtrl = new databaseControl.DatabaseControlNameSpace.DBControl();
+    var webData = new storage.DataStorageNameSpace.WebPageDataStorage();
 
     export class ApplicationClass {                
    
@@ -53,7 +55,7 @@ export namespace DatabaseControlNameSpace {
             console.log('@pr_name: ' + pr_name);
 
             //ez működik, de a GET után fut le
-            async.parallel({                
+            async.parallel({
                 /*
                 init: function asyncParallalDbGetProgName(callback) {
                     setTimeout(function () {
@@ -79,11 +81,19 @@ export namespace DatabaseControlNameSpace {
                     dbCtrl.getProgramVersion(function getProgramProgNameCallback(err, result) {
                         console.log('@async 2');
                         //callback(err, result);
-                        setTimeout(function () {                            
+                        setTimeout(function () {
                             callback(err, result);
                         }, 2000);
                     });
                 },
+
+                func_prog_dev: function asyncParallalDbGetProgDev(callback) {
+                    dbCtrl.getProgramDeveloper(function getProgramProgVerCallback(err, result) {
+                        console.log('@async 5');
+                        storage.DataStorageNameSpace.BaseClass.addItem(result);
+                        callback(err, result);
+                    });
+                }
 
             }, function asyncParallalResulthandler(err, results) {
                 if (err) {
