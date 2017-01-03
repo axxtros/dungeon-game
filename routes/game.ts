@@ -9,7 +9,7 @@ var async = require('async');
 //import * as appControl from "../modules/application";
 import * as storage from "../modules/storage";
 
-exports.game = function (req, res, next) {
+exports.game = function (req, res, next) {    
 
     /*
     let appCtrl = new appControl.DatabaseControlNameSpace.ApplicationClass();    

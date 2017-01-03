@@ -12,6 +12,7 @@ export namespace DatabaseControlNameSpace {
     //var async = require('asyncawait/async');
     //var await = require('asyncawait/await');
     var dbCtrl = new databaseControl.DatabaseControlNameSpace.DBControl();
+    //var webPageDbCtrl = new databaseControl.DatabaseControlNameSpace.WebPageDatas();
     var webData = new storage.DataStorageNameSpace.WebPageDataStorage();
 
     export class ApplicationClass {                
@@ -27,6 +28,7 @@ export namespace DatabaseControlNameSpace {
         constructor() {            
             console.log('@ApplicationClass constructor');
             this.testArray = new Array();
+            this.pageData.push({ key: 'aaa', value: 'bbb' });
             this.pageDataLoader();
         }
 
@@ -54,7 +56,24 @@ export namespace DatabaseControlNameSpace {
 
             console.log('@pr_name: ' + pr_name);
 
-            //ez működik, de a GET után fut le
+            //async.parallel({
+            //    getWebpageStaticDatas: function _getWebpageStaticDatas(callback) {
+            //        webPageDbCtrl.getWebPageDatas(function getWebpageDatasCallback(err, result) {
+            //            console.log('@ttt async series 1 result: ' + result);
+            //            callback(err, result);
+            //        });
+            //    }
+            //}, function asyncResultHandler(err, result) {
+            //    if (err) {
+            //        console.log('@ttt async series 2 - ERROR');
+            //    } else {
+            //        console.log('@ttt async series 3 - OK');                                            
+            //    }
+            //});
+
+            
+            //ez működik, de a GET után fut le (series) 
+            //https://github.com/caolan/async/blob/v1.5.2/README.md
             async.parallel({
                 /*
                 init: function asyncParallalDbGetProgName(callback) {
@@ -66,31 +85,39 @@ export namespace DatabaseControlNameSpace {
                         callback();
                     }, 2000);
                 },
-                */
-                func_prog_name: function asyncParallalDbGetProgName(callback) {
-                    dbCtrl.getProgramName(function getProgramProgNameCallback(err, result) {
-                        console.log('@async 1');
-                        //callback(err, result);
-                        setTimeout(function () {
-                            callback(err, result);
-                        }, 2000);
-                    });
-                },
+                */                
 
-                func_prog_ver: function asyncParallalDbGetProgName(callback) {
-                    dbCtrl.getProgramVersion(function getProgramProgNameCallback(err, result) {
-                        console.log('@async 2');
-                        //callback(err, result);
-                        setTimeout(function () {
-                            callback(err, result);
-                        }, 2000);
-                    });
-                },
+                //func_prog_name: function asyncParallalDbGetProgName(callback) {
+                //    dbCtrl.getProgramName(function getProgramProgNameCallback(err, result) {
+                //        console.log('@async 1');
+                //        //callback(err, result);
+                //        setTimeout(function () {
+                //            callback(err, result);
+                //        }, 2000);
+                //    });
+                //},
 
-                func_prog_dev: function asyncParallalDbGetProgDev(callback) {
-                    dbCtrl.getProgramDeveloper(function getProgramProgVerCallback(err, result) {
-                        console.log('@async 5');
-                        storage.DataStorageNameSpace.BaseClass.addItem(result);
+                //func_prog_ver: function asyncParallalDbGetProgName(callback) {
+                //    dbCtrl.getProgramVersion(function getProgramProgNameCallback(err, result) {
+                //        console.log('@async 2');
+                //        //callback(err, result);
+                //        setTimeout(function () {
+                //            callback(err, result);
+                //        }, 2000);
+                //    });
+                //},
+
+                //func_prog_dev: function asyncParallalDbGetProgDev(callback) {
+                //    dbCtrl.getProgramDeveloper(function getProgramProgVerCallback(err, result) {
+                //        console.log('@async 5 result key:' + result.key + ' value: ' + result.value);
+                //        storage.DataStorageNameSpace.BaseClass.addItem(result.key, result.value);
+                //        callback(err, result);
+                //    });
+                //},
+
+                getWebpageStaticDatas: function _getWebpageStaticDatas(callback) {
+                    dbCtrl.getWebPageDatas(function getWebpageDatasCallback(err, result) {
+                        console.log('@ttt async series 1 result: ' + result);
                         callback(err, result);
                     });
                 }
@@ -103,7 +130,7 @@ export namespace DatabaseControlNameSpace {
                     //this.testArray.push('egy');
                     //this.testArray.push('kettő');
                 }
-            });            
+            });                  
         }                
 
         private addValue(svalue: string): void {
