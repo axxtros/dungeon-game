@@ -87,33 +87,33 @@ export namespace DatabaseControlNameSpace {
                 },
                 */                
 
-                //func_prog_name: function asyncParallalDbGetProgName(callback) {
-                //    dbCtrl.getProgramName(function getProgramProgNameCallback(err, result) {
-                //        console.log('@async 1');
-                //        //callback(err, result);
-                //        setTimeout(function () {
-                //            callback(err, result);
-                //        }, 2000);
-                //    });
-                //},
+                func_prog_name: function asyncParallalDbGetProgName(callback) {
+                    dbCtrl.getProgramName(function getProgramProgNameCallback(err, result) {
+                        console.log('@async 1');
+                        //callback(err, result);
+                        setTimeout(function () {
+                            callback(err, result);
+                        }, 2000);
+                    });
+                },
 
-                //func_prog_ver: function asyncParallalDbGetProgName(callback) {
-                //    dbCtrl.getProgramVersion(function getProgramProgNameCallback(err, result) {
-                //        console.log('@async 2');
-                //        //callback(err, result);
-                //        setTimeout(function () {
-                //            callback(err, result);
-                //        }, 2000);
-                //    });
-                //},
+                func_prog_ver: function asyncParallalDbGetProgName(callback) {
+                    dbCtrl.getProgramVersion(function getProgramProgNameCallback(err, result) {
+                        console.log('@async 2');
+                        //callback(err, result);
+                        setTimeout(function () {
+                            callback(err, result);
+                        }, 2000);
+                    });
+                },
 
-                //func_prog_dev: function asyncParallalDbGetProgDev(callback) {
-                //    dbCtrl.getProgramDeveloper(function getProgramProgVerCallback(err, result) {
-                //        console.log('@async 5 result key:' + result.key + ' value: ' + result.value);
-                //        storage.DataStorageNameSpace.BaseClass.addItem(result.key, result.value);
-                //        callback(err, result);
-                //    });
-                //},
+                func_prog_dev: function asyncParallalDbGetProgDev(callback) {
+                    dbCtrl.getProgramDeveloper(function getProgramProgVerCallback(err, result) {
+                        console.log('@async 5 result key:' + result.key + ' value: ' + result.value);
+                        storage.DataStorageNameSpace.BaseClass.addItem(result.key, result.value);
+                        callback(err, result);
+                    });
+                },
 
                 getWebpageStaticDatas: function _getWebpageStaticDatas(callback) {
                     dbCtrl.getWebPageDatas(function getWebpageDatasCallback(err, result) {

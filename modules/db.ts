@@ -5,7 +5,7 @@
 
 //hogyan kell kitenni egy adatbázisból lekérdezett eredményt az async modulból kijebb
 //http://stackoverflow.com/questions/38337896/how-to-async-combine-multiple-json-arrays-into-1-with-node-js-javascript
-//tönnszörös rekord lekérdezése, és azonnali elhelyezése egy array-ben (ez nem biztos, hogy segít, de nézd át)
+//többszörös rekord lekérdezése, és azonnali elhelyezése egy array-ben (ez nem biztos, hogy segít, de nézd át)
 //http://stackoverflow.com/questions/18395743/building-json-with-node-js-with-multiple-queries
 
 export namespace DatabaseControlNameSpace {
@@ -85,8 +85,8 @@ export namespace DatabaseControlNameSpace {
         }
 
         getWebPageDatas(callback: any): any {
-            var sql = "select sp.id, sp.key, sp.value from sys_param sp";
-            //var sql = "select sp.key, sp.value from sys_param sp where	sp.key = 'DEVELOPER'";
+            //var sql = "select sp.id, sp.key, sp.value from sys_param sp";
+            var sql = "select sp.key, sp.value from sys_param sp where	sp.key = 'DEVELOPER'";
             dbase.each(sql, (err, row) => {
                 if (err) {
                     console.log('@db err: ' + err);
