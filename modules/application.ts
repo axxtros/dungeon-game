@@ -73,65 +73,98 @@ export namespace DatabaseControlNameSpace {
 
             
             //ez működik, de a GET után fut le (series) 
-            //https://github.com/caolan/async/blob/v1.5.2/README.md
-            async.parallel({
-                /*
-                init: function asyncParallalDbGetProgName(callback) {
-                    setTimeout(function () {
-                        let testArray2: Array<string>;
-                        testArray2 = new Array();
-                        testArray2.push('egy');
-                        console.log('@async 0_1: ' + testArray2[0]);
-                        callback();
-                    }, 2000);
-                },
-                */                
+            //https://github.com/caolan/async/blob/v1.5.2/README.md            
 
-                func_prog_name: function asyncParallalDbGetProgName(callback) {
-                    dbCtrl.getProgramName(function getProgramProgNameCallback(err, result) {
-                        console.log('@async 1');
-                        //callback(err, result);
+            //async.series([
+            //    func1,
+            //    func2,
+            //    func3
+            //], cb);
+
+            //function func1(cb) { console.log('#1'); cb(); }
+
+            //function func2(cb) { console.log('#2'); cb(); }
+
+            //function func3(cb) { console.log('#3'); cb(); }
+
+            //function cb() { console.log('#async end!'); }
+
+            try {
+                async.series({
+                    /*
+                    init: function asyncParallalDbGetProgName(callback) {
                         setTimeout(function () {
-                            callback(err, result);
+                            let testArray2: Array<string>;
+                            testArray2 = new Array();
+                            testArray2.push('egy');
+                            console.log('@async 0_1: ' + testArray2[0]);
+                            callback();
                         }, 2000);
-                    });
-                },
+                    },
+                    */
 
-                func_prog_ver: function asyncParallalDbGetProgName(callback) {
-                    dbCtrl.getProgramVersion(function getProgramProgNameCallback(err, result) {
-                        console.log('@async 2');
-                        //callback(err, result);
-                        setTimeout(function () {
-                            callback(err, result);
-                        }, 2000);
-                    });
-                },
+                    //func_prog_name: function asyncParallalDbGetProgName(callback) {
+                    //    dbCtrl.getProgramName(function getProgramProgNameCallback(err, result) {
+                    //        console.log('@async 1');
+                    //        //callback(err, result);
+                    //        setTimeout(function () {
+                    //            callback(err, result);
+                    //        }, 2000);
+                    //    });
+                    //},
 
-                func_prog_dev: function asyncParallalDbGetProgDev(callback) {
-                    dbCtrl.getProgramDeveloper(function getProgramProgVerCallback(err, result) {
-                        console.log('@async 5 result key:' + result.key + ' value: ' + result.value);
-                        storage.DataStorageNameSpace.BaseClass.addItem(result.key, result.value);
-                        callback(err, result);
-                    });
-                },
+                    //func_prog_ver: function asyncParallalDbGetProgName(callback) {
+                    //    dbCtrl.getProgramVersion(function getProgramProgNameCallback(err, result) {
+                    //        console.log('@async 2');
+                    //        //callback(err, result);
+                    //        setTimeout(function () {
+                    //            callback(err, result);
+                    //        }, 2000);
+                    //    });
+                    //},
 
-                getWebpageStaticDatas: function _getWebpageStaticDatas(callback) {
-                    dbCtrl.getWebPageDatas(function getWebpageDatasCallback(err, result) {
-                        console.log('@ttt async series 1 result: ' + result);
-                        callback(err, result);
-                    });
-                }
+                    //func_prog_dev: function asyncParallalDbGetProgDev(callback) {
+                    //    dbCtrl.getProgramDeveloper(function getProgramProgVerCallback(err, result) {
+                    //        console.log('@async 5 result key:' + result.key + ' value: ' + result.value);
+                    //        storage.DataStorageNameSpace.BaseClass.addItem(result.key, result.value);
+                    //        callback(err, result);
+                    //    });
+                    //},
 
-            }, function asyncParallalResulthandler(err, results) {
-                if (err) {
-                    console.log('@async 3 - ERROR');
-                } else {
-                    console.log('@async 4 - OK');                     
-                    //this.testArray.push('egy');
-                    //this.testArray.push('kettő');
-                }
-            });                  
-        }                
+                    getWebpageStaticDatas: function _getWebpageStaticDatas(callback) {                        
+                        dbCtrl.getWebPageDatas(function getWebpageDatasCallback(err, result) {
+                            console.log('@async result id: ' + result.id + ' key: ' + result.key + ' value: ' + result.value);
+                            setTimeout(function () {      
+                                if (err) {
+                                    console.log('@async getWebpageStaticDatas ERROR: ' + err.message);
+                                } else {
+                                    if (result.length > 0) {
+                                        for (var i = 0; i != result.length; i++) {
+                                            console.log('@async getWebpageStaticDatas result key: ' + result[i].key + ' value: ' + result[i].value);
+                                            storage.DataStorageNameSpace.BaseClass.addItem(result[i].key, result[i].value);
+                                        }
+                                    }                                    
+                                }                                
+                                callback(err, result);
+                            }, 1000);
+                        });
+                    }
+
+                }, function asyncParallalResulthandler(err, results) {
+                    if (err) {
+                        console.log('@async 3 - ERROR: ' + err.message);
+                    } else {
+                        console.log('@async 4 - OK');
+                        console.log('@async 4 : results: ' + results.getWebpageStaticDatas.key);                        
+                        //Callback was already called.
+                        //this.testArray.push('egy');
+                        //this.testArray.push('kettő');
+                    }
+                })
+            } catch (err) {
+                console.log('@async CATCH ERROR: ' + err);
+            }
+        }        
 
         private addValue(svalue: string): void {
             this.testArray.push(svalue);

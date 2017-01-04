@@ -38,16 +38,16 @@ export namespace DatabaseControlNameSpace {
 
         constructor() { }        
 
-        getProgramName2(): any {
-            var sql = "select value from sys_param sp where	sp.key = 'PROGRAM_NAME'";
-            dbase.each(sql, (err, row) => {
-                if (err) {
-                    return err;
-                } else {
-                    return row.value;
-                }
-            });
-        }
+        //getProgramName2(): any {
+        //    var sql = "select value from sys_param sp where	sp.key = 'PROGRAM_NAME'";
+        //    dbase.each(sql, (err, row) => {
+        //        if (err) {
+        //            return err;
+        //        } else {
+        //            return row.value;
+        //        }
+        //    });
+        //}
 
         getProgramName(callback: any): any {            
             var sql = "select value from sys_param sp where	sp.key = 'PROGRAM_NAME'";
@@ -71,8 +71,7 @@ export namespace DatabaseControlNameSpace {
             });        
         }
 
-        getProgramDeveloper(callback: any): any {
-            //var sql = "select value from sys_param sp where	sp.key = 'DEVELOPER'";
+        getProgramDeveloper(callback: any): any {            
             var sql = "select sp.key, sp.value from sys_param sp where	sp.key = 'DEVELOPER'";
             dbase.each(sql, (err, row) => {
                 if (err) {
@@ -84,15 +83,33 @@ export namespace DatabaseControlNameSpace {
             });
         }
 
-        getWebPageDatas(callback: any): any {
-            //var sql = "select sp.id, sp.key, sp.value from sys_param sp";
-            var sql = "select sp.key, sp.value from sys_param sp where	sp.key = 'DEVELOPER'";
+        getPrDevName(cb: any): any {
+            var sql = "select sp.id, sp.key, sp.value from sys_param sp where sp.key = 'DEVELOPER'";
             dbase.each(sql, (err, row) => {
                 if (err) {
-                    console.log('@db err: ' + err);
-                    callback(err);
+                    console.log('@getPrDevName ERROR: ' + err.message);
+                    cb(err);
                 } else {
-                    callback(null, row);
+                    console.log('@getPrDevName key: ' + row.key + ' value: ' + row.value);
+                    cb(row);
+                }
+            });
+        }
+
+        //dbase.all-t kell használni, akkor kéri le egyben mindent, és Array-ban adja vissza (SELECT-nél all kell!!!)
+        //https://codeforgeek.com/2014/07/node-sqlite-tutorial/
+        //https://www.npmjs.com/package/sqlite3
+        //http://www.w3resource.com/node.js/nodejs-sqlite.php
+        getWebPageDatas(callback: any): any {
+            var sql = "select sp.id, sp.key, sp.value from sys_param sp";
+            //var sql = "select sp.id, sp.key, sp.value from sys_param sp where sp.key = 'DEVELOPER'";
+            dbase.all(sql, function (err, rows) {
+                if (err) {
+                    console.log('@db err: ' + err);
+                    callback(err, null);
+                } else {
+                    console.log('@db rows id: ' + rows.id + ' rows key: ' + rows.key + ' rows value: ' + rows.value);
+                    callback(null, rows);
                 }
             });
         }
@@ -100,4 +117,3 @@ export namespace DatabaseControlNameSpace {
     }
 
 }
-
