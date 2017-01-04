@@ -132,8 +132,7 @@ export namespace DatabaseControlNameSpace {
                     //},
 
                     getWebpageStaticDatas: function _getWebpageStaticDatas(callback) {                        
-                        dbCtrl.getWebPageDatas(function getWebpageDatasCallback(err, result) {
-                            console.log('@async result id: ' + result.id + ' key: ' + result.key + ' value: ' + result.value);
+                        dbCtrl.getWebPageDatas(function getWebpageDatasCallback(err, result) {                            
                             setTimeout(function () {      
                                 if (err) {
                                     console.log('@async getWebpageStaticDatas ERROR: ' + err.message);
@@ -155,7 +154,7 @@ export namespace DatabaseControlNameSpace {
                         console.log('@async 3 - ERROR: ' + err.message);
                     } else {
                         console.log('@async 4 - OK');
-                        console.log('@async 4 : results: ' + results.getWebpageStaticDatas.key);                        
+                        //console.log('@async 4 : results: ' + results.getWebpageStaticDatas.key);                        
                         //Callback was already called.
                         //this.testArray.push('egy');
                         //this.testArray.push('kettő');

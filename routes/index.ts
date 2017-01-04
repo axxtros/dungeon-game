@@ -43,16 +43,18 @@ exports.index = function (req, res) {
             res.send(err);
         } else {    
 
-            setTimeout(function () {
-                res.render('index', {
-                    program_name: results.func_prog_name,
-                    program_version: results.func_prog_ver,
-                    test_a: appCtrl._testArray[0],
-                    t_array: appCtrl._testArray
-                });    
-            }, 1000);
+            //setTimeout(function () {
+            //    res.render('index', {
+            //        program_name: results.func_prog_name,
+            //        program_version: results.func_prog_ver,
+            //        test_a: appCtrl._testArray[0],
+            //        t_array: appCtrl._testArray
+            //    });                                  
+            //}, 5000);
 
-            
+            setTimeout(function () {
+                res.redirect('/game');            
+            }, 1000);
         }
     });
     

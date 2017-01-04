@@ -108,7 +108,7 @@ export namespace DatabaseControlNameSpace {
                     console.log('@db err: ' + err);
                     callback(err, null);
                 } else {
-                    console.log('@db rows id: ' + rows.id + ' rows key: ' + rows.key + ' rows value: ' + rows.value);
+                    //console.log('@db rows id: ' + rows.id + ' rows key: ' + rows.key + ' rows value: ' + rows.value);
                     callback(null, rows);
                 }
             });
