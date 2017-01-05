@@ -48,7 +48,7 @@ exports.index = function (req, res) {
 
             setTimeout(function () {
 
-                res.redirect('/game');
+                res.redirect('/game');      //amíg a fejlesztés tart, hogy ne keljen manuálisan a linkre kattintani, majd szedd ki :) -> (2017.01.05.)
 
                 res.render('index.ejs', {
                     program_name: webLabelDAO.WebpageLabelsNameSpace.WebPageLabels.PROGRAM_NAME,

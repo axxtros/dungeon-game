@@ -38,3 +38,7 @@ http.createServer(app).listen(app.get('port'), function () {
     let appCtrl = new appControl.DatabaseControlNameSpace.ApplicationClass();   //a szerver létrehozása előttre kell minden betöltést (inicializálást) ide betenni
     console.log('Express server listening on port ' + app.get('port'));
 });
+
+
+//session kezelés
+//https://stormpath.com/blog/everything-you-ever-wanted-to-know-about-node-dot-js-sessions
