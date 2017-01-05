@@ -13,6 +13,7 @@
     "ejs": "^2.5.5",
     "express": "3.4.4",
     "jade": "*",
+    "socket.io": "^1.7.2",
     "sqlite3": "^3.1.8",
     "stylus": "*"
   }

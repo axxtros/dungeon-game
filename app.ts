@@ -1,7 +1,7 @@
 ﻿import express = require('express');
 //import user = require('./routes/user');
-import http = require('http');
 import path = require('path');
+import http = require('http');
 
 import * as appControl from './modules/application';    //itt csak egy pont kell az url elé :)
 
@@ -42,3 +42,7 @@ http.createServer(app).listen(app.get('port'), function () {
 
 //session kezelés
 //https://stormpath.com/blog/everything-you-ever-wanted-to-know-about-node-dot-js-sessions
+
+//socket tutorials
+//http://stackabuse.com/node-js-websocket-examples-with-socket-io/
+//http://socket.io/get-started/chat/
