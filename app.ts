@@ -3,6 +3,8 @@
 import http = require('http');
 import path = require('path');
 
+import * as appControl from './modules/application';    //itt csak egy pont kell az url elé :)
+
 var app = express();
 
 var routes = require('./routes');
@@ -33,5 +35,6 @@ app.get('/', routes.index);
 app.get('/game', gamepage.game);
 
 http.createServer(app).listen(app.get('port'), function () {
+    let appCtrl = new appControl.DatabaseControlNameSpace.ApplicationClass();   //a szerver létrehozása előttre kell minden betöltést (inicializálást) ide betenni
     console.log('Express server listening on port ' + app.get('port'));
 });

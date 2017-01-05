@@ -161,7 +161,7 @@ export namespace DatabaseControlNameSpace {
                     }
                 })
             } catch (err) {
-                console.log('@async CATCH ERROR: ' + err);
+                console.log('@async CATCH ERROR: ' + err.message);
             }
         }        
 
