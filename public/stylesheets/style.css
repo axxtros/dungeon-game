@@ -33,9 +33,11 @@ body {
 div.headerDiv {
     background-color: darkgray;
     width: auto;
+    height: 20px;
 }
 
 div.contentDiv {
+    display: block;
     background-color: white;
     width: auto;
 }
@@ -47,5 +49,10 @@ div.gameDiv {
 div.footerDiv {
     background-color: darkgray;
     width: auto;
+    height: 20px;
+}
+
+div.developerAndVersionDiv {
+    float: right;
 }
 

@@ -5,6 +5,7 @@
 
 import * as databaseControl from "../modules/db";
 import * as storage from "../modules/storage";
+import * as webLabelDAO from "../modules/webPageLabelsDAO";
 
 export namespace DatabaseControlNameSpace {
 
@@ -13,7 +14,7 @@ export namespace DatabaseControlNameSpace {
     //var await = require('asyncawait/await');
     var dbCtrl = new databaseControl.DatabaseControlNameSpace.DBControl();
     //var webPageDbCtrl = new databaseControl.DatabaseControlNameSpace.WebPageDatas();
-    var webData = new storage.DataStorageNameSpace.WebPageDataStorage();
+    var webData = new storage.DataStorageNameSpace.WebPageDataStorage();    
 
     export class ApplicationClass {                
    
@@ -26,35 +27,35 @@ export namespace DatabaseControlNameSpace {
         ];        
 
         constructor() {            
-            console.log('@ApplicationClass constructor');
-            this.testArray = new Array();
-            this.pageData.push({ key: 'aaa', value: 'bbb' });
+            //console.log('@ApplicationClass constructor');
+            //this.testArray = new Array();
+            //this.pageData.push({ key: 'aaa', value: 'bbb' });
             this.pageDataLoader();
         }
 
         private pageDataLoader(): void {            
-            console.log('@ApplicationClass pageDataLoader()');                        
-            this.testArray.push('element 1');
-            this.testArray.push('element 2');
+            //console.log('@ApplicationClass pageDataLoader()');                        
+            //this.testArray.push('element 1');
+            //this.testArray.push('element 2');
 
             //ez működik
-            for (let i = 3; i != 6; i++) {
-                this.testArray.push('element ' + i);
-            }
+            //for (let i = 3; i != 6; i++) {
+            //    this.testArray.push('element ' + i);
+            //}
             
-            for (let item in this.testArray) {
-                console.log('@testArray: ' + ' ' + this.testArray[item]);
-            }
+            //for (let item in this.testArray) {
+            //    console.log('@testArray: ' + ' ' + this.testArray[item]);
+            //}
 
             //ez működik, de a GET után fut le
-            let pr_name = dbCtrl.getProgramName(function getPrName(err, result) {            
-                console.log('@getProgName: ' + result);
-                //this.addValue(result);
-                //this.testArray.push('element' + result);               
-                //callback(err, result);
-            });
+            //let pr_name = dbCtrl.getProgramName(function getPrName(err, result) {            
+            //    console.log('@getProgName: ' + result);
+            //    //this.addValue(result);
+            //    //this.testArray.push('element' + result);               
+            //    //callback(err, result);
+            //});
 
-            console.log('@pr_name: ' + pr_name);
+            //console.log('@pr_name: ' + pr_name);
 
             //async.parallel({
             //    getWebpageStaticDatas: function _getWebpageStaticDatas(callback) {
@@ -82,11 +83,8 @@ export namespace DatabaseControlNameSpace {
             //], cb);
 
             //function func1(cb) { console.log('#1'); cb(); }
-
             //function func2(cb) { console.log('#2'); cb(); }
-
             //function func3(cb) { console.log('#3'); cb(); }
-
             //function cb() { console.log('#async end!'); }
 
             try {
@@ -139,8 +137,9 @@ export namespace DatabaseControlNameSpace {
                                 } else {
                                     if (result.length > 0) {
                                         for (var i = 0; i != result.length; i++) {
-                                            console.log('@async getWebpageStaticDatas result key: ' + result[i].key + ' value: ' + result[i].value);
-                                            storage.DataStorageNameSpace.BaseClass.addItem(result[i].key, result[i].value);
+                                            //console.log('@async getWebpageStaticDatas result key: ' + result[i].key + ' value: ' + result[i].value);
+                                            webLabelDAO.WebpageLabelsNameSpace.WebPageLabels.fillPageLabel(result[i].key, result[i].value);
+                                            //storage.DataStorageNameSpace.BaseClass.addItem(result[i].key, result[i].value);
                                         }
                                     }                                    
                                 }                                

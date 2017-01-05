@@ -37,6 +37,7 @@
     <TypeScriptCompile Include="modules\application.ts" />
     <TypeScriptCompile Include="modules\db.ts" />
     <TypeScriptCompile Include="modules\storage.ts" />
+    <TypeScriptCompile Include="modules\webPageLabelsDAO.ts" />
     <TypeScriptCompile Include="routes\game.ts" />
     <TypeScriptCompile Include="routes\index.ts" />
     <TypeScriptCompile Include="routes\user.ts" />
@@ -45,6 +46,7 @@
     <TypeScriptCompile Include="Scripts\typings\stylus\stylus.d.ts" />
     <Content Include="package.json" />
     <Content Include="README.md" />
+    <Content Include="views\demo.ejs" />
     <Content Include="views\game.ejs" />
     <Content Include="views\index.ejs" />
   </ItemGroup>

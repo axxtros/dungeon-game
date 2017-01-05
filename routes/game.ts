@@ -8,6 +8,7 @@ var async = require('async');
 
 //import * as appControl from "../modules/application";
 import * as storage from "../modules/storage";
+import * as webLabelDAO from "../modules/webPageLabelsDAO";
 
 exports.game = function (req, res, next) {    
 
@@ -30,6 +31,10 @@ exports.game = function (req, res, next) {
     //normál megoldás, azonali render - működik
     //res.render('game.ejs', { test_a: appCtrl._testArray[0], t_array: appCtrl._testArray });
 
-    res.render('game.ejs', { GAME_PAGE: 'GAME PAGE', pr_developer: storage.DataStorageNameSpace.BaseClass.pageData[0] });
+    res.render('game.ejs', {
+        program_name: webLabelDAO.WebpageLabelsNameSpace.WebPageLabels.PROGRAM_NAME,
+        program_version: webLabelDAO.WebpageLabelsNameSpace.WebPageLabels.PROGRAM_VERSION,
+        program_developer: webLabelDAO.WebpageLabelsNameSpace.WebPageLabels.PROGRAM_DEVELOPER       
+    });
     
 }

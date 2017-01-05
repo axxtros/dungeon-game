@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
-    <title><%= program_name %> v.<%= program_version %></title>
+    <title><%= program_name %></title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
     <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
     <link rel="stylesheet" href="/stylesheets/style.css">
@@ -11,31 +11,19 @@
 <body>
     
     <div class="headerDiv">
-        <%= program_name %> <%= program_version %>
+        <%= program_name %>
     </div>
 
     <div class="contentDiv">
-        <ul>
-            <% for(var i = 0; i != t_array.length; i++) {%>
-            <li>
-                <%= t_array[i] %>
-            </li>
-            <% } %>
-        </ul>
-        
-
-        Index page...
-
-        <br/>
-        <%= developer %>
-        <br />
 
         <a href="/game">Jump to game page</a>
 
     </div>
 
     <div class="footerDiv">
-        
+        <div class="developerAndVersionDiv">
+            by <%= program_developer %> v.<%= program_version %>
+        </div>        
     </div>
         <!--<script src="/javascripts/Test.js"></script>-->
 </body>

@@ -11,6 +11,7 @@ var devCanvas;
 
 function initCanvasComponents() {    
     log('Initalizate client side HTML components. START!');
+    
     //gameDiv
     var gamediv = document.getElementById('gamediv');
     if (gamediv === null || gamediv === 'undefined') {
@@ -62,4 +63,11 @@ function main() {
     initCanvasComponents();    
 }
 
-main();
+window.onresize = function(event) {
+    main();
+};
+
+window.onload = function (event) {
+    main();
+};
+

@@ -258,3 +258,4 @@ modules/db.js
 modules/application.js
 routes/game.js
 modules/storage.js
+modules/webPageLabelsDAO.js

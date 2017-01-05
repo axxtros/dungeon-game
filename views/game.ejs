@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
-    
+    <title><%= program_name %></title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
     <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
     <link rel="stylesheet" href="/stylesheets/style.css">
@@ -11,9 +11,9 @@
 <body>
 
     <div class="headerDiv">
-        #headerDiv...   <%= pr_developer.key %> <%= pr_developer.value %>
+        <%= program_name %>
     </div>
-
+    
     <div class="contentDiv">
         <div id="gamediv" style="display: block; margin: 4px 0 4px 0; margin-left: auto; margin-right: auto;">
             <canvas id="mapcanvas" style="position: absolute; z-index: 0;">
@@ -24,9 +24,11 @@
             <canvas id="devcanvas" style="position: absolute; z-index: 100;"></canvas>
         </div>
     </div>
-
+        
     <div class="footerDiv">
-        #footer
+        <div class="developerAndVersionDiv">
+            by <%= program_developer %> v.<%= program_version %>
+        </div>
     </div>
 
     <script src="/javascripts/client_util.js"></script>

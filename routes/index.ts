@@ -3,19 +3,20 @@ var async = require('async');
 var dbModule = require('../modules/db');
 //var db2 = require('../modules/db2');
 import * as appControl from "../modules/application";
+import * as webLabelDAO from "../modules/webPageLabelsDAO";
 
 import * as storage from "../modules/storage";
 
 exports.index = function (req, res) {      
 
     var databaseControl = new dbModule.DatabaseControlNameSpace.DBControl();
-    let appCtrl = new appControl.DatabaseControlNameSpace.ApplicationClass();
+    //let appCtrl = new appControl.DatabaseControlNameSpace.ApplicationClass();
 
     console.log('@index.ts');
 
-    for (let item in appCtrl._testArray) {
-        console.log('@appCtrl._testArray: ' + appCtrl._testArray[item]);
-    }
+    //for (let item in appCtrl._testArray) {
+    //    console.log('@appCtrl._testArray: ' + appCtrl._testArray[item]);
+    //}
 
     async.parallel({
 
@@ -46,13 +47,20 @@ exports.index = function (req, res) {
         } else {    
 
             setTimeout(function () {
-                res.render('index', {
-                    program_name: results.func_prog_name,
-                    program_version: results.func_prog_ver,                                        
-                    test_a: appCtrl._testArray[0],
-                    t_array: appCtrl._testArray,
-                    developer: storage.DataStorageNameSpace.BaseClass.pageData[2].value
-                });                                  
+
+                res.redirect('/game');
+
+                res.render('index.ejs', {
+                    program_name: webLabelDAO.WebpageLabelsNameSpace.WebPageLabels.PROGRAM_NAME,
+                    program_version: webLabelDAO.WebpageLabelsNameSpace.WebPageLabels.PROGRAM_VERSION,
+                    program_developer: webLabelDAO.WebpageLabelsNameSpace.WebPageLabels.PROGRAM_DEVELOPER
+                    //program_name: results.func_prog_name,
+                    //program_version: results.func_prog_ver,                                        
+                    //test_a: appCtrl._testArray[0],
+                    //t_array: appCtrl._testArray,
+                    //developer: storage.DataStorageNameSpace.BaseClass.pageData[2].value
+                });
+                
             }, 1000);
 
             //setTimeout(function () {
