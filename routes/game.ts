@@ -4,13 +4,21 @@ import express = require('express');
 var router = express.session(); //Router();
 var app = express();
 var async = require('async');
+
+
+var server = require('http').createServer(app);
+var io = require('socket.io')(server);
+
 //var appModule = require('../modules/application');
 
 //import * as appControl from "../modules/application";
 import * as storage from "../modules/storage";
 import * as webLabelDAO from "../modules/webPageLabelsDAO";
+import * as socketControl from '../modules/socket';
 
 exports.game = function (req, res, next) {    
+    
+    var socketEvent = new socketControl.SocketClass();
 
     /*
     let appCtrl = new appControl.DatabaseControlNameSpace.ApplicationClass();    

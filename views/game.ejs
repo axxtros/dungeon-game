@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <title><%= program_name %></title>
+    <script src="http://localhost:1337/socket.io/socket.io.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
     <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
     <link rel="stylesheet" href="/stylesheets/style.css">
@@ -31,8 +32,9 @@
         </div>
     </div>
 
+    <script src="/javascripts/socket_comm.js"></script>
     <script src="/javascripts/client_util.js"></script>
     <script src="/javascripts/init_game_area.js"></script>
-
+    
 </body>
 </html>

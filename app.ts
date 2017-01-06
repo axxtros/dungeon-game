@@ -3,9 +3,12 @@
 import path = require('path');
 import http = require('http');
 
+
 import * as appControl from './modules/application';    //itt csak egy pont kell az url elé :)
 
 var app = express();
+var server = require('http').createServer(app);
+var io = require('socket.io')(server);
 
 var routes = require('./routes');
 var gamepage = require('./routes/game');
@@ -31,6 +34,10 @@ if ('development' == app.get('env')) {
     app.use(express.errorHandler());
 }
 
+//var socketEvents = require('./modules/socket');
+import * as socketControl from './modules/socket';
+var socketEvent = new socketControl.SocketClass();
+
 app.get('/', routes.index);
 app.get('/game', gamepage.game);
 
@@ -38,7 +45,6 @@ http.createServer(app).listen(app.get('port'), function () {
     let appCtrl = new appControl.DatabaseControlNameSpace.ApplicationClass();   //a szerver létrehozása előttre kell minden betöltést (inicializálást) ide betenni
     console.log('Express server listening on port ' + app.get('port'));
 });
-
 
 //session kezelés
 //https://stormpath.com/blog/everything-you-ever-wanted-to-know-about-node-dot-js-sessions

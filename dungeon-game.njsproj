@@ -36,6 +36,7 @@
     <TypeScriptCompile Include="app.ts" />
     <TypeScriptCompile Include="modules\application.ts" />
     <TypeScriptCompile Include="modules\db.ts" />
+    <TypeScriptCompile Include="modules\socket.ts" />
     <TypeScriptCompile Include="modules\storage.ts" />
     <TypeScriptCompile Include="modules\webPageLabelsDAO.ts" />
     <TypeScriptCompile Include="routes\game.ts" />
@@ -69,6 +70,7 @@
     <Compile Include="modules\db2.js" />
     <Compile Include="public\javascripts\client_util.js" />
     <Compile Include="public\javascripts\init_game_area.js" />
+    <Compile Include="public\javascripts\socket_comm.js" />
   </ItemGroup>
   <!-- Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them. -->
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
