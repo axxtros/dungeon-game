@@ -4,52 +4,36 @@
 
 'use strict';
 
-//import WebSocket = require('ws');
-
-/*
-var port: number = process.env.PORT || 3000;
-var WebSocketServer = WebSocket.Server;
-var server = new WebSocketServer({ port: port });
-*/
-
-
 import express = require('express');
 var WebSocket = require('ws');
-var port: number = process.env.PORT || 3000;
+var port: number = 3000;
 var WebSocketServer = WebSocket.Server;
 var server = new WebSocketServer({ port: port });
 
+server.on('connection', ws => {
+
+    console.log('@ws: ' + ws);
+
+    ws.on('message', message => {
+        try {
+            console.log('@ws message' + message);
+        } catch (e) {
+            console.error(e.message);
+        }
+    });
+
+});
 
 /*
-var app = express();
-var websocket = require('http').createServer(app); 
-var io = require('socket.io')(websocket);
-var WebSocketServer = websocket.Server;
-var port: number = process.env.PORT || 3000;
-var server = new WebSocketServer({ port: port });
-*/
-
-
-export class SocketClass {    
-
-    /*
-    WebSocket = require('ws');
-    port: number = process.env.PORT || 3000;
-    WebSocketServer = WebSocket.Server;
-    socket = new WebSocketServer({ port: port });
-    */
-
-
+export class SocketClass {
+    
     constructor(io: any) {
         //this.socketEventHandler(io);
-    }
+    }    
 
-    public socketEventHandler(io: any): void {
+    public socketEventHandler(io: any): void {                
 
-        console.log('Websocketserver is running on port', io);          
-
-
-        io.sockets.on('connection', ws => {
+        io.sockets.on('connection', io => {
 
             io.socket.on('welcome_message', message => {
                 try {
@@ -61,18 +45,13 @@ export class SocketClass {
 
             io.socket.emit('done_msg', 'Server OK!');
 
-            console.log('Websocketserver is running on port', io.socket.port);          
-        })        
+            console.log('websocketserver is running on port', io.socket.port);          
+        })
+        
     }
 
 }
-
-
-//module.exports = function () {
-//    return {        
-                                          
-//    }
-//}
+*/
 
 //tutorials:
 //https://www.codeproject.com/articles/871622/writing-a-chat-server-using-node-js-typescript-and

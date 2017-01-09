@@ -18,7 +18,6 @@ socket.onmessage = function (event) {
             break;
     }
 
-
 };
 
 

@@ -1,13 +1,14 @@
 ﻿import express = require('express');
+import http = require('http');
 var app = express();
 var port = 3000;
-var server = require('http').createServer(app);
+var server = http.createServer(app);
 var io = require('socket.io')(server);
-//server.listen(port);
+server.listen(port);
 
 //import user = require('./routes/user');
 import path = require('path');
-import http = require('http');
+
 
 
 import * as appControl from './modules/application';    //itt csak egy pont kell az url elé :)
@@ -19,7 +20,7 @@ var routes = require('./routes');
 var gamepage = require('./routes/game');
 
 // all environments
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 3001);
 //app.set('websocket_port', '3000');
 
 var io = require('socket.io').listen(server);
@@ -46,9 +47,9 @@ if ('development' == app.get('env')) {
 
 //var socketEvents = require('./modules/socket');
 import * as socketControl from './modules/socket';
-var socketEv = new socketControl.SocketClass(io);
-socketEv.socketEventHandler(io);
 
+//var socketEv = new socketControl.SocketClass(io);
+//socketEv.socketEventHandler(io);
 
 app.get('/', routes.index);
 app.get('/game', gamepage.game);
