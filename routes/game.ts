@@ -18,7 +18,7 @@ import * as socketControl from '../modules/socket';
 
 exports.game = function (req, res, next) {    
     
-    var socketEvent = new socketControl.SocketClass();
+    //var socketEvent = new socketControl.SocketClass();
 
     /*
     let appCtrl = new appControl.DatabaseControlNameSpace.ApplicationClass();    

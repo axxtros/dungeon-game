@@ -1,12 +1,24 @@
 ﻿//socket control 06/01/2017
 
+///<reference path="../app.ts"/>
+
+'use strict';
+
+//import WebSocket = require('ws');
+
+/*
+var port: number = process.env.PORT || 3000;
+var WebSocketServer = WebSocket.Server;
+var server = new WebSocketServer({ port: port });
+*/
+
 
 import express = require('express');
-
 var WebSocket = require('ws');
 var port: number = process.env.PORT || 3000;
 var WebSocketServer = WebSocket.Server;
 var server = new WebSocketServer({ port: port });
+
 
 /*
 var app = express();
@@ -17,23 +29,39 @@ var port: number = process.env.PORT || 3000;
 var server = new WebSocketServer({ port: port });
 */
 
-export class SocketClass {
 
-    constructor() {
-        this.socketEventHandler();
+export class SocketClass {    
+
+    /*
+    WebSocket = require('ws');
+    port: number = process.env.PORT || 3000;
+    WebSocketServer = WebSocket.Server;
+    socket = new WebSocketServer({ port: port });
+    */
+
+
+    constructor(io: any) {
+        //this.socketEventHandler(io);
     }
 
-    public socketEventHandler(): any {
-        return server.on('connection', ws => {
+    public socketEventHandler(io: any): void {
 
-            ws.on('welcome_message', message => {
+        console.log('Websocketserver is running on port', io);          
+
+
+        io.sockets.on('connection', ws => {
+
+            io.socket.on('welcome_message', message => {
                 try {
                     console.log('Websocket server connection is success! Message: ' + message);
                 } catch (err) {
                     console.error(err.message);
                 }
             });
-            console.log('Websocketserver is running on port', port);          
+
+            io.socket.emit('done_msg', 'Server OK!');
+
+            console.log('Websocketserver is running on port', io.socket.port);          
         })        
     }
 

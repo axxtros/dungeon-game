@@ -10,7 +10,7 @@ var missileCanvas;
 var devCanvas;
 
 function initCanvasComponents() {    
-    log('Initalizate client side HTML components. START!');
+    //log('Initalizate client side HTML components. START!');
     
     //gameDiv
     var gamediv = document.getElementById('gamediv');
@@ -42,7 +42,7 @@ function initCanvasComponents() {
         devCanvas.style.display = 'none';
     } 
         
-    log('Initalizate client side HTML components. SUCCESS END!');
+    //log('Initalizate client side HTML components. SUCCESS END!');
 }
 
 function canvasInit(canvasElement, canvasOffset) {
