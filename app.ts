@@ -45,11 +45,10 @@ if ('development' == app.get('env')) {
     app.use(express.errorHandler());
 }
 
-//var socketEvents = require('./modules/socket');
-import * as socketControl from './modules/socket';
+//import * as socketControl from './modules/socket';
 
-//var socketEv = new socketControl.SocketClass(io);
-//socketEv.socketEventHandler(io);
+var socketEvents = require('./modules/socket.js')(io);
+socketEvents.attachEventHandlers();
 
 app.get('/', routes.index);
 app.get('/game', gamepage.game);

@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <title><%= program_name %></title>
-    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+    <script src="http://localhost:3000/socket.io/socket.io.js"></script>    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
     <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
     <link rel="stylesheet" href="/stylesheets/style.css">
@@ -24,6 +24,10 @@
             <canvas id="missilecanvas" style="position: absolute; z-index: 2;"></canvas>
             <canvas id="devcanvas" style="position: absolute; z-index: 100;"></canvas>
         </div>
+
+        <br/>
+        <button type="button" onclick="sendWelcomMsg()">Click Me!</button>
+
     </div>
         
     <div class="footerDiv">

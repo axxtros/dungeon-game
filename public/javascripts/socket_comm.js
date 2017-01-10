@@ -1,24 +1,10 @@
 ﻿//game socket communications 06/01/2017
 
 var host = window.location.hostname;
-//var socket = io.connect('http://' + window.document.location.host + '/game:3000');
-//var socket = new WebSocket('ws://' + window.location.hostname + '/game:1337', 'echo-protocol');
-
-var socket = new WebSocket("ws://" + host + ":3000");
-//var socket = io.connect('http://localhost:3000');
-
-socket.onmessage = function (event) {
-    console.log('Client connection message: ', message.data);
-
-    var msg = JSON.parse(event.data);
-
-    switch (msg.type) {
-        case "welcome_message":
-            console.log('from server side: ' + msg);
-            break;
-    }
-
-};
+var socket = new io.connect("ws://" + host + ":3000");
 
 
-//console.log('@socket client is ready');
+function sendWelcomMsg() {
+    console.log('Welcome message sending!');
+    socket.emit('welcome_msg', 'Hello server, I am client!');
+}

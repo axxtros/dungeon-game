@@ -14,7 +14,7 @@ var io = require('socket.io')(server);
 //import * as appControl from "../modules/application";
 import * as storage from "../modules/storage";
 import * as webLabelDAO from "../modules/webPageLabelsDAO";
-import * as socketControl from '../modules/socket';
+//import * as socketControl from '../modules/socket';
 
 exports.game = function (req, res, next) {    
     

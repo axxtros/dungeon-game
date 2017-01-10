@@ -4,12 +4,34 @@
 
 'use strict';
 
+/*
 import express = require('express');
 var WebSocket = require('ws');
 var port: number = 3000;
 var WebSocketServer = WebSocket.Server;
 var server = new WebSocketServer({ port: port });
+*/
 
+module.exports = function (io) {
+    return {
+        attachEventHandlers: function () {
+
+            io.sockets.on('connection', function (socket) {
+
+                console.log('@websocket: Client connected!');
+
+                socket.on('welcome_msg', function (data) {
+                    console.log('@websocket Welcome message from client: ' + data);                    
+                });
+
+            });
+
+            console.log('events attached');
+        }
+    }
+};
+
+/*
 server.on('connection', ws => {
 
     console.log('@ws: ' + ws);
@@ -23,6 +45,7 @@ server.on('connection', ws => {
     });
 
 });
+*/
 
 /*
 export class SocketClass {
