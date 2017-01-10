@@ -38,8 +38,8 @@ if ('development' == app.get('env')) {
 //websocket init
 //typescript-es megoldás ------------------------------------------------------
 import * as socketControl from './modules/socket';
-var ss = new socketControl.SocketClass();
-ss.socketEventHandler(io);
+var socketCtrl = new socketControl.SocketClass();
+socketCtrl.socketEventHandler(io);
 
 //hagyományos module-os megoldás ----------------------------------------------
 //var socketEvents = require('./modules/socket.js')(io);
