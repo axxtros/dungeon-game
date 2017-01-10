@@ -152,7 +152,7 @@ export namespace DatabaseControlNameSpace {
                     if (err) {
                         console.log('@async 3 - ERROR: ' + err.message);
                     } else {
-                        console.log('@async 4 - OK');
+                        //console.log('@async 4 - OK');
                         //console.log('@async 4 : results: ' + results.getWebpageStaticDatas.key);                        
                         //Callback was already called.
                         //this.testArray.push('egy');

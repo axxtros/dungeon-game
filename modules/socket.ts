@@ -57,11 +57,11 @@ export class SocketClass {
                 console.log('@websocket Welcome message from client: ' + data);
             });
 
-            socket.on('test_data_to_server', function (dungeonWidth, dungeonHeight) {
-                console.log('@websocket dungeon width: ' + dungeonWidth + ' dungeon height:' + dungeonHeight);                                
+            socket.on('map_generator', function (dungeonWidth, dungeonHeight) {
+                //console.log('@websocket dungeon width: ' + dungeonWidth + ' dungeon height:' + dungeonHeight);                                
                 var dungeonGenerator = new dungeonGeneratorModule.DungeonGenerator();                
                 var map = dungeonGenerator.generator(dungeonWidth, dungeonHeight);
-                socket.emit('test_data_from_server', map);
+                socket.emit('test_data_from_server', 'Map generated is done! Please look at in the server console.');
             });            
 
         });

@@ -12,7 +12,7 @@ exports.index = function (req, res) {
     var databaseControl = new dbModule.DatabaseControlNameSpace.DBControl();
     //let appCtrl = new appControl.DatabaseControlNameSpace.ApplicationClass();
 
-    console.log('@index.ts');
+    //console.log('@index.ts');
 
     //for (let item in appCtrl._testArray) {
     //    console.log('@appCtrl._testArray: ' + appCtrl._testArray[item]);
