@@ -40,14 +40,14 @@ function initCanvasComponents() {
         canvasInit(devCanvas, canvasOffset);
     } else { 
         devCanvas.style.display = 'none';
-    } 
+    }
         
     //log('Initalizate client side HTML components. SUCCESS END!');
 }
 
 function canvasInit(canvasElement, canvasOffset) {
     if (canvasElement === null || canvasElement === 'undefined') {
-        log('Nof find ' + canvasElement + ' element!');
+        log('Not find ' + canvasElement + ' element!');
         return;
     }    
     canvasElement.style.top = canvasOffset.top + 'px';
