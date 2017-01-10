@@ -1,31 +1,21 @@
 ﻿import express = require('express');
 import http = require('http');
-var app = express();
-var port = 3000;
-var server = http.createServer(app);
-var io = require('socket.io')(server);
-server.listen(port);
-
-//import user = require('./routes/user');
 import path = require('path');
-
-
+var app = express();
+var websocketPort = 3000;                                        //ezen a port-on fut a websocket
+var server = http.createServer(app);
+//var server = require('http').createServer(app);
+var io = require('socket.io')(server);
+//var io = require('socket.io').listen(server);
+server.listen(websocketPort);
 
 import * as appControl from './modules/application';    //itt csak egy pont kell az url elé :)
-
-
-//var server = require('http').createServer(app);
 
 var routes = require('./routes');
 var gamepage = require('./routes/game');
 
 // all environments
-app.set('port', process.env.PORT || 3001);
-//app.set('websocket_port', '3000');
-
-var io = require('socket.io').listen(server);
-//server.listen(app.get('websocket_port'));
-
+app.set('port', process.env.PORT || 3001);              //ezen a port-on fut a node szerver
 app.set('views', path.join(__dirname, 'views'));
 //app.set('view engine', 'jade');
 app.set('view engine', 'ejs');
@@ -45,6 +35,7 @@ if ('development' == app.get('env')) {
     app.use(express.errorHandler());
 }
 
+//websocket init
 //typescript-es megoldás ------------------------------------------------------
 import * as socketControl from './modules/socket';
 var ss = new socketControl.SocketClass();
@@ -54,12 +45,15 @@ ss.socketEventHandler(io);
 //var socketEvents = require('./modules/socket.js')(io);
 //socketEvents.attachEventHandlers();
 
+//routes init
 app.get('/', routes.index);
 app.get('/game', gamepage.game);
 
+//start server
 http.createServer(app).listen(app.get('port'), function () {
     let appCtrl = new appControl.DatabaseControlNameSpace.ApplicationClass();   //a szerver létrehozása előttre kell minden betöltést (inicializálást) ide betenni
-    console.log('Express server listening on port ' + app.get('port'));
+    console.log('Node Express server listening on port: ' + app.get('port'));
+    console.log('Websocket server listening on port: ' + websocketPort);
 });
 
 //session kezelés

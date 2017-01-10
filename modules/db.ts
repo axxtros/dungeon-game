@@ -117,3 +117,8 @@ export namespace DatabaseControlNameSpace {
     }
 
 }
+
+//tutorials
+//(saját)
+//https://prog.hu/tudastar/192946/node-js-async-muveletek-sorrendisege
+//https://prog.hu/tudastar/195497/node-js-adatok-osszegyujtese-response-elott
