@@ -12,9 +12,14 @@ var WebSocketServer = WebSocket.Server;
 var server = new WebSocketServer({ port: port });
 */
 
+//hagyományos module-os megoldás ----------------------------------------------
+
+/*
 module.exports = function (io) {
     return {
         attachEventHandlers: function () {
+
+            console.log('@websocket Websocket events started.');
 
             io.sockets.on('connection', function (socket) {
 
@@ -25,56 +30,37 @@ module.exports = function (io) {
                 });
 
             });
-
-            console.log('events attached');
+            
         }
     }
 };
-
-/*
-server.on('connection', ws => {
-
-    console.log('@ws: ' + ws);
-
-    ws.on('message', message => {
-        try {
-            console.log('@ws message' + message);
-        } catch (e) {
-            console.error(e.message);
-        }
-    });
-
-});
 */
 
-/*
+//typescript-es megoldás ------------------------------------------------------
+
 export class SocketClass {
     
-    constructor(io: any) {
-        //this.socketEventHandler(io);
+    constructor() {
+        
     }    
 
     public socketEventHandler(io: any): void {                
 
-        io.sockets.on('connection', io => {
+        console.log('@websocket Websocket events started.');
 
-            io.socket.on('welcome_message', message => {
-                try {
-                    console.log('Websocket server connection is success! Message: ' + message);
-                } catch (err) {
-                    console.error(err.message);
-                }
+        io.sockets.on('connection', function (socket) {
+
+            console.log('@websocket: Client connected!');
+
+            socket.on('welcome_msg', function (data) {
+                console.log('@websocket Welcome message from client: ' + data);
             });
 
-            io.socket.emit('done_msg', 'Server OK!');
-
-            console.log('websocketserver is running on port', io.socket.port);          
-        })
+        });        
         
     }
 
 }
-*/
 
 //tutorials:
 //https://www.codeproject.com/articles/871622/writing-a-chat-server-using-node-js-typescript-and

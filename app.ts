@@ -45,10 +45,14 @@ if ('development' == app.get('env')) {
     app.use(express.errorHandler());
 }
 
-//import * as socketControl from './modules/socket';
+//typescript-es megoldás ------------------------------------------------------
+import * as socketControl from './modules/socket';
+var ss = new socketControl.SocketClass();
+ss.socketEventHandler(io);
 
-var socketEvents = require('./modules/socket.js')(io);
-socketEvents.attachEventHandlers();
+//hagyományos module-os megoldás ----------------------------------------------
+//var socketEvents = require('./modules/socket.js')(io);
+//socketEvents.attachEventHandlers();
 
 app.get('/', routes.index);
 app.get('/game', gamepage.game);
