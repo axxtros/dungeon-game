@@ -1,6 +1,13 @@
-﻿import express = require('express');
+﻿/*
+ *  Dungeon game v.0.1
+ *  05/12/2016
+ *
+ */
+
+import express = require('express');
 import http = require('http');
 import path = require('path');
+import stylus = require('stylus');
 var app = express();
 var websocketPort = 3000;                                        //ezen a port-on fut a websocket
 var server = http.createServer(app);
@@ -26,7 +33,6 @@ app.use(express.urlencoded());
 app.use(express.methodOverride());
 app.use(app.router);
 
-import stylus = require('stylus');
 app.use(stylus.middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 
