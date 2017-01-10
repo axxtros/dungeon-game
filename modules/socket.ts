@@ -4,6 +4,8 @@
 
 'use strict';
 
+import * as dungeonGeneratorModule from '../modules/dungeonGenerator';
+
 /*
 import express = require('express');
 var WebSocket = require('ws');
@@ -38,31 +40,37 @@ module.exports = function (io) {
 
 //typescript-es megoldás ------------------------------------------------------
 
-export class SocketClass {
-    
+export class SocketClass {    
+
     constructor() {
-        
+        //this.dungeonMapGenerator = new dungeonGeneratorModule.DungeonGenerator();
     }    
 
     public socketEventHandler(io: any): void {                
 
-        console.log('@websocket Websocket events started.');
+        console.log('@websocket Websocket events started.');        
 
         io.sockets.on('connection', function (socket) {
-
             console.log('@websocket: Client connected!');
 
             socket.on('welcome_msg', function (data) {
                 console.log('@websocket Welcome message from client: ' + data);
             });
 
-        });        
+            socket.on('test_data_to_server', function (dungeonWidth, dungeonHeight) {
+                console.log('@websocket dungeon width: ' + dungeonWidth + ' dungeon height:' + dungeonHeight);                                
+                var dungeonGenerator = new dungeonGeneratorModule.DungeonGenerator();                
+                var map = dungeonGenerator.generator(dungeonWidth, dungeonHeight);
+                socket.emit('test_data_from_server', map);
+            });            
+
+        });
         
     }
 
 }
 
-//tutorials:
+//socket tutorials:
 //https://www.codeproject.com/articles/871622/writing-a-chat-server-using-node-js-typescript-and
 //https://github.com/daviddoran/typescript-reconnecting-websocket/blob/master/reconnecting-websocket.ts
 //http://codular.com/node-web-sockets

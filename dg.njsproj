@@ -37,6 +37,7 @@
     <TypeScriptCompile Include="app.ts" />
     <TypeScriptCompile Include="modules\application.ts" />
     <TypeScriptCompile Include="modules\db.ts" />
+    <TypeScriptCompile Include="modules\dungeonGenerator.ts" />
     <TypeScriptCompile Include="modules\socket.ts" />
     <TypeScriptCompile Include="modules\storage.ts" />
     <TypeScriptCompile Include="modules\webPageLabelsDAO.ts" />
