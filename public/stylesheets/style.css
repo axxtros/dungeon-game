@@ -40,6 +40,7 @@ div.contentDiv {
     display: block;
     background-color: white;
     width: auto;
+    margin: 2px 0 2px 0;
 }
 
 div.gameDiv {    

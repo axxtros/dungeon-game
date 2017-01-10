@@ -16,6 +16,11 @@
     </div>
     
     <div class="contentDiv">
+
+        <div style="display: block;">
+            <button type="button" onclick="sendWelcomMsg()">Map generator</button>
+        </div>        
+
         <div id="gamediv" style="display: block; margin: 4px 0 4px 0; margin-left: auto; margin-right: auto;">
             <canvas id="mapcanvas" style="position: absolute; z-index: 0;">
                 Your browser is not supported the HTML5 canvas!
@@ -23,11 +28,7 @@
             <canvas id="unitcanvas" style="position: absolute; z-index: 1;"></canvas>
             <canvas id="missilecanvas" style="position: absolute; z-index: 2;"></canvas>
             <canvas id="devcanvas" style="position: absolute; z-index: 100;"></canvas>
-        </div>
-
-        <br/>
-        <button type="button" onclick="sendWelcomMsg()">Click Me!</button>
-
+        </div>                
     </div>
         
     <div class="footerDiv">
