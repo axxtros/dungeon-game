@@ -74,3 +74,5 @@ export class SocketClass {
 //https://www.codeproject.com/articles/871622/writing-a-chat-server-using-node-js-typescript-and
 //https://github.com/daviddoran/typescript-reconnecting-websocket/blob/master/reconnecting-websocket.ts
 //http://codular.com/node-web-sockets
+//http://socket.io/docs/rooms-and-namespaces/
+//http://socket.io/download/    //itt van a kliens socket.io src leírása, elérése

@@ -1,5 +1,8 @@
 ﻿//game socket communications 06/01/2017
 
+//socket url a game-ejs-be. Ez kell a kliens számára, de nem jó, ha statikusan be van írva a localhost
+//<script src="http://localhost:3000/socket.io/socket.io.js"></script>  
+
 var host = window.location.hostname;
 var socket = new io.connect("ws://" + host + ":3000");
 

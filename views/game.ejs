@@ -1,9 +1,10 @@
 ﻿<!DOCTYPE html>
-
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="utf-8" />
+<head>    
+    <meta charset="utf-8" />    
     <title><%= program_name %></title>
+    <!--<script src="/socket.io/socket.io.js"></script>-->
+    <!--<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>-->
     <script src="http://localhost:3000/socket.io/socket.io.js"></script>    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
     <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
@@ -37,7 +38,7 @@
             by <%= program_developer %> v.<%= program_version %>
         </div>
     </div>
-
+        
     <script src="/javascripts/socket_comm.js"></script>
     <script src="/javascripts/client_util.js"></script>
     <script src="/javascripts/init_game_area.js"></script>
