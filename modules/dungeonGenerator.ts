@@ -18,8 +18,9 @@ var async = require('async');
 
 export class DungeonGenerator {
 
-    private MAZE: number = 0;
-    private WALL: number = 1;
+    private ENTR: string = 'H';
+    private MAZE: string = '#';
+    private WALL: string = ' ';  
 
     constructor() {
 
@@ -28,7 +29,7 @@ export class DungeonGenerator {
     public generator(width: number, height: number): any {
         console.log('@dungeonGenerator.generator() map width: ' + width + ' map height: ' + height);
         var map = this.initMap(width, height);        
-        this.mazeGenerator(map, 1, 1);      
+        this.mazeGenerator(map, 2, 2);
         this.writeMapToServerConsole(map);
         return map;
     }
@@ -48,9 +49,111 @@ export class DungeonGenerator {
         return map;
     }    
 
-    private mazeGenerator(map: any, x: number, y: number): void {
+    private mazeGenerator(map: any, x: number, y: number): void {        
+        var cellNum: number = (map.length * map[0].length);
+        var cells: { cx: number, cy: number }[] = new Array();
+        var selectedElement: number;
+        var cx: number = x;
+        var cy: number = y;        
 
-    }
+        //kezdeti elem elhelyezése a listába
+        //map[cy][cx] = this.ENTR;
+        cells.push({ cx: cx, cy: cy });
+
+        var idx: number = 20;
+        while (cells.length /*idx*/ != 0) {
+            idx--;
+            //valamelyik elem kiválasztása a listából
+            selectedElement = cells.length - 1;     //utolsó elem kiválasztása
+            cx = cells[selectedElement].cx;
+            cy = cells[selectedElement].cy;
+
+            //irányok összekeverése
+            var directions = [
+                0,  //up
+                1,  //down
+                2,  //left
+                3   //right
+            ];
+
+            for (var i = 0; i < directions.length; i++) {
+                var randDir = Math.floor((Math.random() * 4));
+                var tempDir = directions[i];
+                directions[i] = directions[randDir];
+                directions[randDir] = tempDir;
+            }
+
+            //végigmegyünk az összes irányon, és ha arra lehet menni, akkor azt betesszük a cells listába
+            var upDir: boolean = true;
+            var dwDir: boolean = true;
+            var ltDir: boolean = true;
+            var rtDir: boolean = true;
+            for (var i = 0; i < directions.length; i++) {
+                switch (directions[i]) {
+                    case 0:         //up    
+                        if (map[cy - 1][cx - 1] != this.WALL &&
+                                map[cy - 2][cx - 1] != this.WALL &&
+                                map[cy - 2][cx]     != this.WALL &&
+                                map[cy - 2][cx + 1] != this.WALL &&
+                                map[cy - 1][cx + 1] != this.WALL &&
+                                map[cy - 1][cx]     != this.WALL) {
+                            map[cy - 1][cx] = this.WALL;
+                            cells.push({ cx: cx, cy: (cy - 1) });
+                        } else {
+                            upDir = false;                                
+                        }                        
+                        break;
+                    case 1:         //down
+                        if (map[cy + 1][cx - 1] != this.WALL &&
+                                map[cy + 2][cx - 1] != this.WALL &&
+                                map[cy + 2][cx]     != this.WALL &&
+                                map[cy + 2][cx + 1] != this.WALL &&
+                                map[cy + 1][cx + 1] != this.WALL &&
+                                map[cy + 1][cx]     != this.WALL) {
+                            map[cy + 1][cx] = this.WALL;
+                            cells.push({ cx: cx, cy: (cy + 1) });
+                        } else {
+                            dwDir = false;
+                        }
+                        break;
+                    case 2:         //left
+                        if (map[cy - 1][cx - 1] != this.WALL &&
+                                map[cy - 1][cx - 2] != this.WALL &&
+                                map[cy][cx - 2]     != this.WALL &&
+                                map[cy - 1][cx - 2] != this.WALL &&
+                                map[cy - 1][cx - 1] != this.WALL &&
+                                map[cy][cx - 1]     != this.WALL) {
+                            map[cy][cx - 1] = this.WALL;
+                            cells.push({ cx: (cx - 1), cy: cy });
+                        } else {
+                            ltDir = false;
+                        }
+                        break;
+                    case 3:         //right
+                        if (map[cy - 1][cx + 1] != this.WALL &&
+                                map[cy - 1][cx + 2] != this.WALL &&
+                                map[cy][cx + 2]     != this.WALL &&
+                                map[cy + 1][cx + 2] != this.WALL &&
+                                map[cy + 1][cx + 1] != this.WALL &&
+                                map[cy][cx + 1]     != this.WALL) {
+                            map[cy][cx + 1] = this.WALL;
+                            cells.push({ cx: (cx + 1), cy: cy });
+                        } else {
+                            rtDir = false;
+                        }
+                        break;
+                }
+            }
+            
+            //ha egyik irányba sem lehet menni, akkor az adott elemet kivesszük a listából
+            if (!upDir && !dwDir && !ltDir && !rtDir) {
+                cells.splice(selectedElement, 1);         
+                //console.log('@cells element delete');                           
+            }
+            //console.log('@cells.length: ' + cells.length);
+        }   //while
+                
+    }    
 
     //private mazeGenerator(map: any, x: number, y: number): void {        
 
@@ -114,10 +217,10 @@ export class DungeonGenerator {
 
     private writeMapToServerConsole(map: any): void {
         console.log('\r\n');
-        for (var i = 0; i < map.length; i++) {
+        for (var y = 0; y < map.length; y++) {
             var line = '';           
-            for (var j = 0; j < map[i].length; j++) {                
-                line += map[i][j] + ' ';
+            for (var x = 0; x < map[y].length; x++) {                
+                line += map[y][x] + ' ';
             }
             console.log(line);                          //összefüzve egy sorba, mert a node szerver log egy cmd, és ott minden egyes log automatikusan egy-egy új sor :)            
         }
