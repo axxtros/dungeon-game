@@ -17,8 +17,9 @@ function generateNewDungeon() {
     socket.emit('map_generator', 51, 51);
 }
 
-socket.on('test_data_from_server', function (testMsg) {
+socket.on('test_data_from_server', function (testMsg, map) {
     console.log('Test message from server: ' + testMsg);
+    drawMap(map);
 })
 
 generateNewDungeon();

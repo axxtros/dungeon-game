@@ -61,11 +61,13 @@ export class SocketClass {
                 //console.log('@websocket dungeon width: ' + dungeonWidth + ' dungeon height:' + dungeonHeight);                                
                 var dungeonGenerator = new dungeonGeneratorModule.DungeonGenerator();                
                 var map = dungeonGenerator.generator(dungeonWidth, dungeonHeight);
-                socket.emit('test_data_from_server', 'Map generated is done! Please look at in the server console.');
+                socket.emit('test_data_from_server', 'Map generated is done! Please look at in the server console.', map);
             });            
 
         });
-        
+
+
+
     }
 
 }

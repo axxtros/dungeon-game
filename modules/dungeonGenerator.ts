@@ -18,19 +18,19 @@ var async = require('async');
 
 export class DungeonGenerator {
 
-    private ENTR: string = 'H';
-    private MAZE: string = '#';
-    private WALL: string = ' ';  
+    private ENTR: number = 2;
+    private MAZE: number = 1;
+    private WALL: number = 0;  
 
     constructor() {
 
     }
 
     public generator(width: number, height: number): any {
-        console.log('@dungeonGenerator.generator() map width: ' + width + ' map height: ' + height);
+        //console.log('@dungeonGenerator.generator() map width: ' + width + ' map height: ' + height);
         var map = this.initMap(width, height);        
         this.mazeGenerator(map, 2, 2);
-        this.writeMapToServerConsole(map);
+        //this.writeMapToServerConsole(map);
         return map;
     }
 
@@ -89,7 +89,8 @@ export class DungeonGenerator {
             var ltDir: boolean = true;
             var rtDir: boolean = true;
             for (var i = 0; i < directions.length; i++) {
-                switch (directions[i]) {
+            //var rDirection = Math.floor((Math.random() * 4));
+                switch (directions[i] /*rDirection*/) {
                     case 0:         //up    
                         if (map[cy - 1][cx - 1] != this.WALL &&
                                 map[cy - 2][cx - 1] != this.WALL &&
@@ -97,11 +98,13 @@ export class DungeonGenerator {
                                 map[cy - 2][cx + 1] != this.WALL &&
                                 map[cy - 1][cx + 1] != this.WALL &&
                                 map[cy - 1][cx]     != this.WALL) {
-                            map[cy - 1][cx] = this.WALL;
+                            map[cy - 1][cx] = this.WALL;                //mind a két járatot fel kell venni, a közvetlen szomszédot,...
                             cells.push({ cx: cx, cy: (cy - 1) });
+                            map[cy - 2][cx] = this.WALL;                //...és a következőt is, így nem lesz egymás mellett kettő
+                            cells.push({ cx: cx, cy: (cy - 2) });                   
                         } else {
                             upDir = false;                                
-                        }                        
+                        }
                         break;
                     case 1:         //down
                         if (map[cy + 1][cx - 1] != this.WALL &&
@@ -112,6 +115,8 @@ export class DungeonGenerator {
                                 map[cy + 1][cx]     != this.WALL) {
                             map[cy + 1][cx] = this.WALL;
                             cells.push({ cx: cx, cy: (cy + 1) });
+                            map[cy + 2][cx] = this.WALL;
+                            cells.push({ cx: cx, cy: (cy + 2) });
                         } else {
                             dwDir = false;
                         }
@@ -125,6 +130,8 @@ export class DungeonGenerator {
                                 map[cy][cx - 1]     != this.WALL) {
                             map[cy][cx - 1] = this.WALL;
                             cells.push({ cx: (cx - 1), cy: cy });
+                            map[cy][cx - 2] = this.WALL;
+                            cells.push({ cx: (cx - 2), cy: cy });
                         } else {
                             ltDir = false;
                         }
@@ -138,6 +145,8 @@ export class DungeonGenerator {
                                 map[cy][cx + 1]     != this.WALL) {
                             map[cy][cx + 1] = this.WALL;
                             cells.push({ cx: (cx + 1), cy: cy });
+                            map[cy][cx + 2] = this.WALL;
+                            cells.push({ cx: (cx + 2), cy: cy });
                         } else {
                             rtDir = false;
                         }
@@ -154,67 +163,7 @@ export class DungeonGenerator {
         }   //while
                 
     }    
-
-    //private mazeGenerator(map: any, x: number, y: number): void {        
-
-    //    var directions = [
-    //        0,  //up
-    //        1,  //down
-    //        2,  //left
-    //        3   //right
-    //    ];
-
-    //    map[x][y] = 1;  //maze
-
-    //    for (var i = 0; i < directions.length; i++) {
-    //        var randDir = Math.floor((Math.random() * 4));
-    //        var tempDir = directions[i];
-    //        directions[i] = directions[randDir];
-    //        directions[randDir] = tempDir;
-    //    }
-
-    //    for (var i = 0; i < directions.length; i++) {
-    //        switch (directions[i]) {
-    //            case 0:     //up
-    //                if (y >= 2 && map[y - 2][x] != 1) {
-    //                    map[y - 1][x] = 1;
-    //                    //this.mazeGenerator(map, x, y - 2);
-    //                    setTimeout(function () {
-    //                        this.mazeGenerator(map, x, (y - 2));
-    //                    }, 1000);
-    //                }
-    //                break;
-    //            case 1:     //down
-    //                if (y < map.length - 2 && map[y + 2][x] != 1) {
-    //                    map[y + 1][x] = 1;
-    //                    //this.mazeGenerator(map, x, y + 2);                        
-    //                    setTimeout(function () {
-    //                        this.mazeGenerator(map, x, (y + 2));                        
-    //                    }, 1000);
-    //                }
-    //                break;
-    //            case 2:     //left
-    //                if (x >= 2 && map[y][x - 2] != 1) {
-    //                    map[y][x - 1] = 1;
-    //                    //this.mazeGenerator(map, x - 2, y);                        
-    //                    setTimeout(function () {
-    //                        this.mazeGenerator(map, (x - 2), y);                        
-    //                    }, 1000);
-    //                }
-    //                break;
-    //            case 3:     //right
-    //                if (x < map[0].length - 2 && map[y][x + 2] != 1) {
-    //                    map[y][x + 1] = 1;
-    //                    //this.mazeGenerator(map, x + 2, y);
-    //                    setTimeout(function () {
-    //                        this.mazeGenerator(map, (x + 2), y);
-    //                    }, 1000);
-    //                }
-    //                break;
-    //        }
-    //    }        
-    //}
-
+    
     private writeMapToServerConsole(map: any): void {
         console.log('\r\n');
         for (var y = 0; y < map.length; y++) {
