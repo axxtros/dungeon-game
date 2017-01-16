@@ -9,12 +9,16 @@ function drawMap(map) {
         mapCanvasContext.clearRect(0, 0, mapCanvasContext.canvas.width, mapCanvasContext.canvas.height);
         for (var y = 0; y != map.length; y++) {
             for (var x = 0; x != map[y].length; x++) {
-                if (map[y][x] === 1) {
-                    mapCanvasContext.beginPath();
-                    mapCanvasContext.rect(mapElementX, mapElementY, MAP_ELEMENT_SIZE, MAP_ELEMENT_SIZE);
-                    mapCanvasContext.fillStyle = 'grey';
-                    mapCanvasContext.fill();                    
+                mapCanvasContext.beginPath();
+                mapCanvasContext.rect(mapElementX, mapElementY, MAP_ELEMENT_SIZE, MAP_ELEMENT_SIZE);
+                if (map[y][x] === 0) {
+                    mapCanvasContext.fillStyle = 'white';
+                } else if (map[y][x] === 1) {                    
+                    mapCanvasContext.fillStyle = 'grey';                    
+                } else if (map[y][x] === 2) {
+                    mapCanvasContext.fillStyle = 'green';
                 }
+                mapCanvasContext.fill();                    
                 mapElementX += MAP_ELEMENT_SIZE;
             }
             mapElementX = 0;

@@ -18,16 +18,15 @@ var async = require('async');
 
 export class DungeonGenerator {
 
-    private ENTR: number = 2;
-    private MAZE: number = 1;
-    private WALL: number = 0;  
+    private MAZE: number = 0;                   //folyosó (járható)
+    private WALL: number = 1;                   //fall (nem járható)
+    private MBRD: number = 2;                   //térkép határ
 
     constructor() {
 
     }
 
-    public generator(width: number, height: number): any {
-        //console.log('@dungeonGenerator.generator() map width: ' + width + ' map height: ' + height);
+    public generator(width: number, height: number): any {        
         var map = this.initMap(width, height);        
         this.mazeGenerator(map, 2, 2);
         //this.writeMapToServerConsole(map);
@@ -39,13 +38,15 @@ export class DungeonGenerator {
         for (var y = 0; y < mapHeight; y++) {
             map[y] = [];
             for (var x = 0; x < mapWidth; x++) {                
-                if ( (x == 0 || x == mapWidth - 1) || (y == 0 || y == mapHeight - 1) ) {      //a szélek miatt
-                    map[y][x] = this.WALL;
-                } else {
+                if ( (x == 0 || x == mapWidth - 1) || (y == 0 || y == mapHeight - 1) ) {      //a térkép szélek bejelölése
                     map[y][x] = this.MAZE;
+                    //map[y][x] = this.MBRD;
+                } else {
+                    map[y][x] = this.WALL;
                 }                                                 
             }
         }
+        console.log('@map mapWidth: ' + mapWidth + ' mapHeight: ' + mapHeight);
         return map;
     }    
 
@@ -92,60 +93,60 @@ export class DungeonGenerator {
             //var rDirection = Math.floor((Math.random() * 4));
                 switch (directions[i] /*rDirection*/) {
                     case 0:         //up    
-                        if (map[cy - 1][cx - 1] != this.WALL &&
-                                map[cy - 2][cx - 1] != this.WALL &&
-                                map[cy - 2][cx]     != this.WALL &&
-                                map[cy - 2][cx + 1] != this.WALL &&
-                                map[cy - 1][cx + 1] != this.WALL &&
-                                map[cy - 1][cx]     != this.WALL) {
-                            map[cy - 1][cx] = this.WALL;                //mind a két járatot fel kell venni, a közvetlen szomszédot,...
+                        if (map[cy - 1][cx - 1] != this.MAZE &&
+                                map[cy - 2][cx - 1] != this.MAZE &&
+                                map[cy - 2][cx]     != this.MAZE &&
+                                map[cy - 2][cx + 1] != this.MAZE &&
+                                map[cy - 1][cx + 1] != this.MAZE &&
+                                map[cy - 1][cx]     != this.MAZE) {
+                            map[cy - 1][cx] = this.MAZE;                //mind a két járatot fel kell venni, a közvetlen szomszédot,...
                             cells.push({ cx: cx, cy: (cy - 1) });
-                            map[cy - 2][cx] = this.WALL;                //...és a következőt is, így nem lesz egymás mellett kettő
+                            map[cy - 2][cx] = this.MAZE;                //...és a következőt is, így nem lesz egymás mellett kettő
                             cells.push({ cx: cx, cy: (cy - 2) });                   
                         } else {
                             upDir = false;                                
                         }
                         break;
                     case 1:         //down
-                        if (map[cy + 1][cx - 1] != this.WALL &&
-                                map[cy + 2][cx - 1] != this.WALL &&
-                                map[cy + 2][cx]     != this.WALL &&
-                                map[cy + 2][cx + 1] != this.WALL &&
-                                map[cy + 1][cx + 1] != this.WALL &&
-                                map[cy + 1][cx]     != this.WALL) {
-                            map[cy + 1][cx] = this.WALL;
+                        if (map[cy + 1][cx - 1] != this.MAZE &&
+                                map[cy + 2][cx - 1] != this.MAZE &&
+                                map[cy + 2][cx]     != this.MAZE &&
+                                map[cy + 2][cx + 1] != this.MAZE &&
+                                map[cy + 1][cx + 1] != this.MAZE &&
+                                map[cy + 1][cx]     != this.MAZE) {
+                            map[cy + 1][cx] = this.MAZE;
                             cells.push({ cx: cx, cy: (cy + 1) });
-                            map[cy + 2][cx] = this.WALL;
+                            map[cy + 2][cx] = this.MAZE;
                             cells.push({ cx: cx, cy: (cy + 2) });
                         } else {
                             dwDir = false;
                         }
                         break;
                     case 2:         //left
-                        if (map[cy - 1][cx - 1] != this.WALL &&
-                                map[cy - 1][cx - 2] != this.WALL &&
-                                map[cy][cx - 2]     != this.WALL &&
-                                map[cy - 1][cx - 2] != this.WALL &&
-                                map[cy - 1][cx - 1] != this.WALL &&
-                                map[cy][cx - 1]     != this.WALL) {
-                            map[cy][cx - 1] = this.WALL;
+                        if (map[cy - 1][cx - 1] != this.MAZE &&
+                                map[cy - 1][cx - 2] != this.MAZE &&
+                                map[cy][cx - 2]     != this.MAZE &&
+                                map[cy - 1][cx - 2] != this.MAZE &&
+                                map[cy - 1][cx - 1] != this.MAZE &&
+                                map[cy][cx - 1]     != this.MAZE) {
+                            map[cy][cx - 1] = this.MAZE;
                             cells.push({ cx: (cx - 1), cy: cy });
-                            map[cy][cx - 2] = this.WALL;
+                            map[cy][cx - 2] = this.MAZE;
                             cells.push({ cx: (cx - 2), cy: cy });
                         } else {
                             ltDir = false;
                         }
                         break;
                     case 3:         //right
-                        if (map[cy - 1][cx + 1] != this.WALL &&
-                                map[cy - 1][cx + 2] != this.WALL &&
-                                map[cy][cx + 2]     != this.WALL &&
-                                map[cy + 1][cx + 2] != this.WALL &&
-                                map[cy + 1][cx + 1] != this.WALL &&
-                                map[cy][cx + 1]     != this.WALL) {
-                            map[cy][cx + 1] = this.WALL;
+                        if (map[cy - 1][cx + 1] != this.MAZE &&
+                                map[cy - 1][cx + 2] != this.MAZE &&
+                                map[cy][cx + 2]     != this.MAZE &&
+                                map[cy + 1][cx + 2] != this.MAZE &&
+                                map[cy + 1][cx + 1] != this.MAZE &&
+                                map[cy][cx + 1]     != this.MAZE) {
+                            map[cy][cx + 1] = this.MAZE;
                             cells.push({ cx: (cx + 1), cy: cy });
-                            map[cy][cx + 2] = this.WALL;
+                            map[cy][cx + 2] = this.MAZE;
                             cells.push({ cx: (cx + 2), cy: cy });
                         } else {
                             rtDir = false;
@@ -162,8 +163,16 @@ export class DungeonGenerator {
             //console.log('@cells.length: ' + cells.length);
         }   //while
                 
-    }    
-    
+    }
+
+    private checkMapCell(map: any, cy: number, cx: number): boolean {
+        if (map[cy, cx] != this.MAZE &&
+            map[cy, cx] != this.MBRD) {
+            return true
+        }
+        return false;
+    }
+
     private writeMapToServerConsole(map: any): void {
         console.log('\r\n');
         for (var y = 0; y < map.length; y++) {
