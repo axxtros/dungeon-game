@@ -33,7 +33,8 @@ export class DungeonGenerator {
         //this.roomGenerator(map, 10);
         //this.roomGenerator2(map, 10);
         //this.mazeGenerator(map, 2, 2);
-        this.mazeGenerator2(map, 20, 20);
+        //this.mazeGenerator2(map, 3, 3);
+        this.mazeGenerator3(map, 2, 2);
         //this.writeMapToServerConsole(map);
         return map;
     }
@@ -53,6 +54,48 @@ export class DungeonGenerator {
         console.log('@map mapWidth: ' + mapWidth + ' mapHeight: ' + mapHeight);
         return map;
     }    
+
+    private mazeGenerator3(map: any, startX: number, startY: number): void {
+        var cellNum: number = (map.length * map[0].length);
+        var cells: { cy: number, cx: number }[] = new Array();
+        var cy: number;
+        var cx: number;
+        var selectedElement: number;
+
+        cells.push({ cy: startY, cx: startX });
+
+        
+        var tempIdx = 10;
+        while (tempIdx != 0) {
+            tempIdx--;
+            
+            selectedElement = cells.length - 1;
+            cx = cells[selectedElement].cx;
+            cy = cells[selectedElement].cy;
+            var selectedRandDirection = Math.floor((Math.random() * 4));                //0: UP, 1: DOWN, 2: LEFT, 3: RIGHT
+            switch (selectedRandDirection) {
+                case 0:     //UP
+                    if (this.checkMapCell(cells[cy - 1][cx]) &&
+                        this.checkMapCell(cells[cy - 1][cx - 1]) &&
+                        this.checkMapCell(cells[cy - 2][cx - 1]) &&
+                        this.checkMapCell(cells[cy - 2][cx]) &&
+                        this.checkMapCell(cells[cy - 2][cx + 1]) &&
+                        this.checkMapCell(cells[cy - 1][cx + 1])) {
+                        map[cy - 1][cx] = this.MAZE;
+                        cells.push({ cy: cy - 1, cx: cx });
+                    }
+                    break;
+                case 1:     //DOWN
+                    break;
+                case 2:     //LEFT
+                    break;
+                case 3:     //RIGHT
+                    break;
+            }
+
+        }
+
+    }
 
     private roomGenerator(map: any, roomNumber: number): void {
         for (var i = 0; i != roomNumber; i++) {
