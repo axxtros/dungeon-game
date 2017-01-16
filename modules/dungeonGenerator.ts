@@ -30,10 +30,11 @@ export class DungeonGenerator {
 
     public generator(width: number, height: number): any {        
         var map = this.initMap(width, height);
-        this.roomGenerator(map, 10);
+        //this.roomGenerator(map, 10);
+        //this.roomGenerator2(map, 10);
         //this.mazeGenerator(map, 2, 2);
-        this.mazeGenerator2(map, 2, 2);
-        this.writeMapToServerConsole(map);
+        this.mazeGenerator2(map, 20, 20);
+        //this.writeMapToServerConsole(map);
         return map;
     }
 
@@ -42,11 +43,10 @@ export class DungeonGenerator {
         for (var y = 0; y < mapHeight; y++) {
             map[y] = [];
             for (var x = 0; x < mapWidth; x++) {                
-                if ( (x == 0 || x == mapWidth - 1) || (y == 0 || y == mapHeight - 1) ) {      //a térkép szélek bejelölése
-                    //map[y][x] = this.MAZE;
-                    map[y][x] = this.MBRD;
+                if ((x == 0 || x == mapWidth - 1) || (y == 0 || y == mapHeight - 1)) {      //a térkép szélek bejelölése
+                    map[y][x] = this.MBRD;                    
                 } else {
-                    map[y][x] = this.WALL;
+                    map[y][x] = this.WALL;                    
                 }                                                 
             }
         }
@@ -139,6 +139,15 @@ export class DungeonGenerator {
                 }
             }
         }
+    }
+
+    private roomGenerator2(map: any, roomNumber: number): void {
+        map[2][2] = this.ROOM;
+        map[3][2] = this.ROOM;
+        map[4][2] = this.ROOM;
+        map[2][3] = this.ROOM;
+        map[2][4] = this.ROOM;
+        map[2][5] = this.ROOM;
     }
 
     private mazeGenerator(map: any, startCellX: number, startCellY: number): void {        
@@ -295,7 +304,7 @@ export class DungeonGenerator {
             var dwDir: boolean = true;
             var ltDir: boolean = true;
             var rtDir: boolean = true;
-            var next = false;
+            var next: boolean = false;
             //for (var i = 0; i < directions.length; i++) {
 
             while (!((next) || (!upDir && !dwDir && !ltDir && !rtDir))) {
@@ -381,7 +390,7 @@ export class DungeonGenerator {
     }
 
     private checkMapCell(cell: number): boolean {
-        return cell != this.MAZE && cell != this.MBRD;
+        return cell != this.MAZE && cell != this.MBRD && cell != this.ROOM;
     }
 
     private writeMapToServerConsole(map: any): void {

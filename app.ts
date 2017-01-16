@@ -1,8 +1,10 @@
-﻿/*
- *  Dungeon game v.0.1
- *  05/12/2016
- *
- */
+﻿/******************************************************************************
+ *  File:               Dungeon game v.0.1
+ *  Version:            0.1
+ *  Date:               05/12/2016
+ *  Developer:          
+ *  Description:        
+ *****************************************************************************/
 
 import express = require('express');
 import http = require('http');
