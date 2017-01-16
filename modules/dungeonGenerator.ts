@@ -14,13 +14,12 @@
 
 'use strict';
 
-//var async = require('async');
+var async = require('async');
 
 export class DungeonGenerator {
 
-    private POSSIBLE_ROOM_SIZES = [2, 3, 4];      //lehetséges szoba méretek, a középponttól mérve    
+    private ENTR: number = 2;
     private MAZE: number = 1;
-    private BRDW: number = 2;
     private WALL: number = 0;  
 
     constructor() {
@@ -29,8 +28,7 @@ export class DungeonGenerator {
 
     public generator(width: number, height: number): any {
         //console.log('@dungeonGenerator.generator() map width: ' + width + ' map height: ' + height);
-        var map = this.initMap(width, height);
-        //this.roomGenerator(map, 10);
+        var map = this.initMap(width, height);        
         this.mazeGenerator(map, 2, 2);
         //this.writeMapToServerConsole(map);
         return map;
@@ -48,44 +46,8 @@ export class DungeonGenerator {
                 }                                                 
             }
         }
-        console.log('@map init wodth: ' + mapWidth + ' mapHeight:' + mapHeight);
         return map;
-    }
-    
-    private roomGenerator(map: any, roomNumber: number): void {
-        for (var i = 0; i < roomNumber; i++) {
-            var roomCenterX: number = Math.floor((Math.random() * map[0].length));
-            var roomCenterY: number = Math.floor((Math.random() * map.length));
-            var rWidth: number = Math.floor((Math.random() * this.POSSIBLE_ROOM_SIZES.length));            
-            var roomWidth: number = this.POSSIBLE_ROOM_SIZES[rWidth];
-            var rHeight: number = Math.floor((Math.random() * this.POSSIBLE_ROOM_SIZES.length));
-            var roomHeight: number = this.POSSIBLE_ROOM_SIZES[rHeight];
-            console.log('@room roomCenterX: ' + roomCenterX + ' roomCenterY: ' + roomCenterY + ' roomWidth:' + roomWidth + ' roomHeight: ' + roomHeight);
-            //a szoba nem lóghat ki a térképről
-            var roomInMap = true;
-            if ( ((roomCenterY - roomHeight) <= 0) || ((roomCenterY + roomHeight) >= map.length) || ((roomCenterX - roomWidth) <= 0) || ((roomCenterX + roomWidth) >= map[0].length) ) {
-                console.log('a room kilóg a térképről');
-                roomInMap = false;
-                continue;
-            }            
-            //a szoba nem fedhet le másik szobát (overlapping), illetve nem lehet közvetlenűl a térkép szélén
-            var roomOverlapping = false;
-            for (var roomYElement = (roomCenterY - roomHeight); roomYElement != (roomCenterY + roomHeight); roomYElement++) {
-                for (var roomXElement = (roomCenterX - roomWidth); roomXElement != (roomCenterX + roomWidth); roomXElement++) {
-                    if (map[roomYElement][roomXElement] == this.WALL) {
-                        console.log('a room a térkép szélén van, vagy egy másik szobát fedne le');
-                        roomOverlapping = true;
-                        continue;
-                    }
-                }
-            }                               
-            //két szoba között minimum három, de mindenképpen páratlan térképrácsnak kell lennie - minden oldalról
-
-
-            //a szoba validálva van, mehet a térképbe
-
-        }
-    }
+    }    
 
     private mazeGenerator(map: any, x: number, y: number): void {        
         var cellNum: number = (map.length * map[0].length);
@@ -127,7 +89,7 @@ export class DungeonGenerator {
             var ltDir: boolean = true;
             var rtDir: boolean = true;
             for (var i = 0; i < directions.length; i++) {
-                //var rDirection = Math.floor((Math.random() * 4));
+            //var rDirection = Math.floor((Math.random() * 4));
                 switch (directions[i] /*rDirection*/) {
                     case 0:         //up    
                         if (map[cy - 1][cx - 1] != this.WALL &&
