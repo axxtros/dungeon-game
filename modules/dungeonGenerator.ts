@@ -29,7 +29,7 @@ export class DungeonGenerator {
     public generator(width: number, height: number): any {        
         var map = this.initMap(width, height);        
         this.mazeGenerator(map, 2, 2);
-        //this.writeMapToServerConsole(map);
+        this.writeMapToServerConsole(map);
         return map;
     }
 
@@ -39,8 +39,8 @@ export class DungeonGenerator {
             map[y] = [];
             for (var x = 0; x < mapWidth; x++) {                
                 if ( (x == 0 || x == mapWidth - 1) || (y == 0 || y == mapHeight - 1) ) {      //a térkép szélek bejelölése
-                    map[y][x] = this.MAZE;
-                    //map[y][x] = this.MBRD;
+                    //map[y][x] = this.MAZE;
+                    map[y][x] = this.MBRD;
                 } else {
                     map[y][x] = this.WALL;
                 }                                                 
@@ -50,12 +50,12 @@ export class DungeonGenerator {
         return map;
     }    
 
-    private mazeGenerator(map: any, x: number, y: number): void {        
+    private mazeGenerator(map: any, startCellX: number, startCellY: number): void {        
         var cellNum: number = (map.length * map[0].length);
         var cells: { cx: number, cy: number }[] = new Array();
         var selectedElement: number;
-        var cx: number = x;
-        var cy: number = y;        
+        var cx: number = startCellX;                //bejárati cella X
+        var cy: number = startCellY;                //bejárat  cella Y
 
         //kezdeti elem elhelyezése a listába
         //map[cy][cx] = this.ENTR;
@@ -92,28 +92,41 @@ export class DungeonGenerator {
             for (var i = 0; i < directions.length; i++) {
             //var rDirection = Math.floor((Math.random() * 4));
                 switch (directions[i] /*rDirection*/) {
-                    case 0:         //up    
-                        if (map[cy - 1][cx - 1] != this.MAZE &&
-                                map[cy - 2][cx - 1] != this.MAZE &&
-                                map[cy - 2][cx]     != this.MAZE &&
-                                map[cy - 2][cx + 1] != this.MAZE &&
-                                map[cy - 1][cx + 1] != this.MAZE &&
-                                map[cy - 1][cx]     != this.MAZE) {
+                    case 0:         //up   
+                        if (this.checkMapCell(map[cy - 1][cx - 1]) &&
+                            this.checkMapCell(map[cy - 2][cx - 1]) &&
+                            this.checkMapCell(map[cy - 2][cx]) &&
+                            this.checkMapCell(map[cy - 2][cx + 1]) &&
+                            this.checkMapCell(map[cy - 1][cx + 1]) &&
+                            this.checkMapCell(map[cy - 1][cx])) {
                             map[cy - 1][cx] = this.MAZE;                //mind a két járatot fel kell venni, a közvetlen szomszédot,...
                             cells.push({ cx: cx, cy: (cy - 1) });
                             map[cy - 2][cx] = this.MAZE;                //...és a következőt is, így nem lesz egymás mellett kettő
-                            cells.push({ cx: cx, cy: (cy - 2) });                   
+                            cells.push({ cx: cx, cy: (cy - 2) });
                         } else {
-                            upDir = false;                                
+                                upDir = false;
                         }
+                        //if (map[cy - 1][cx - 1] != this.MAZE &&
+                        //        map[cy - 2][cx - 1] != this.MAZE &&
+                        //        map[cy - 2][cx]     != this.MAZE &&
+                        //        map[cy - 2][cx + 1] != this.MAZE &&
+                        //        map[cy - 1][cx + 1] != this.MAZE &&
+                        //        map[cy - 1][cx]     != this.MAZE) {
+                        //    map[cy - 1][cx] = this.MAZE;                //mind a két járatot fel kell venni, a közvetlen szomszédot,...
+                        //    cells.push({ cx: cx, cy: (cy - 1) });
+                        //    map[cy - 2][cx] = this.MAZE;                //...és a következőt is, így nem lesz egymás mellett kettő
+                        //    cells.push({ cx: cx, cy: (cy - 2) });                   
+                        //} else {
+                        //    upDir = false;                                
+                        //}
                         break;
                     case 1:         //down
-                        if (map[cy + 1][cx - 1] != this.MAZE &&
-                                map[cy + 2][cx - 1] != this.MAZE &&
-                                map[cy + 2][cx]     != this.MAZE &&
-                                map[cy + 2][cx + 1] != this.MAZE &&
-                                map[cy + 1][cx + 1] != this.MAZE &&
-                                map[cy + 1][cx]     != this.MAZE) {
+                        if (this.checkMapCell(map[cy + 1][cx - 1]) &&
+                            this.checkMapCell(map[cy + 2][cx - 1]) &&
+                            this.checkMapCell(map[cy + 2][cx]) &&
+                            this.checkMapCell(map[cy + 2][cx + 1]) &&
+                            this.checkMapCell(map[cy + 1][cx + 1]) &&
+                            this.checkMapCell(map[cy + 1][cx])) {
                             map[cy + 1][cx] = this.MAZE;
                             cells.push({ cx: cx, cy: (cy + 1) });
                             map[cy + 2][cx] = this.MAZE;
@@ -121,14 +134,27 @@ export class DungeonGenerator {
                         } else {
                             dwDir = false;
                         }
+                        //if (map[cy + 1][cx - 1] != this.MAZE &&
+                        //        map[cy + 2][cx - 1] != this.MAZE &&
+                        //        map[cy + 2][cx]     != this.MAZE &&
+                        //        map[cy + 2][cx + 1] != this.MAZE &&
+                        //        map[cy + 1][cx + 1] != this.MAZE &&
+                        //        map[cy + 1][cx]     != this.MAZE) {
+                        //    map[cy + 1][cx] = this.MAZE;
+                        //    cells.push({ cx: cx, cy: (cy + 1) });
+                        //    map[cy + 2][cx] = this.MAZE;
+                        //    cells.push({ cx: cx, cy: (cy + 2) });
+                        //} else {
+                        //    dwDir = false;
+                        //}
                         break;
                     case 2:         //left
-                        if (map[cy - 1][cx - 1] != this.MAZE &&
-                                map[cy - 1][cx - 2] != this.MAZE &&
-                                map[cy][cx - 2]     != this.MAZE &&
-                                map[cy - 1][cx - 2] != this.MAZE &&
-                                map[cy - 1][cx - 1] != this.MAZE &&
-                                map[cy][cx - 1]     != this.MAZE) {
+                        if (this.checkMapCell(map[cy - 1][cx - 1]) &&
+                            this.checkMapCell(map[cy - 1][cx - 2]) &&
+                            this.checkMapCell(map[cy][cx - 2]) &&
+                            this.checkMapCell(map[cy - 1][cx - 2]) &&
+                            this.checkMapCell(map[cy - 1][cx - 1]) &&
+                            this.checkMapCell(map[cy][cx - 1])) {
                             map[cy][cx - 1] = this.MAZE;
                             cells.push({ cx: (cx - 1), cy: cy });
                             map[cy][cx - 2] = this.MAZE;
@@ -136,14 +162,27 @@ export class DungeonGenerator {
                         } else {
                             ltDir = false;
                         }
+                        //if (map[cy - 1][cx - 1] != this.MAZE &&
+                        //        map[cy - 1][cx - 2] != this.MAZE &&
+                        //        map[cy][cx - 2]     != this.MAZE &&
+                        //        map[cy - 1][cx - 2] != this.MAZE &&
+                        //        map[cy - 1][cx - 1] != this.MAZE &&
+                        //        map[cy][cx - 1]     != this.MAZE) {
+                        //    map[cy][cx - 1] = this.MAZE;
+                        //    cells.push({ cx: (cx - 1), cy: cy });
+                        //    map[cy][cx - 2] = this.MAZE;
+                        //    cells.push({ cx: (cx - 2), cy: cy });
+                        //} else {
+                        //    ltDir = false;
+                        //}
                         break;
                     case 3:         //right
-                        if (map[cy - 1][cx + 1] != this.MAZE &&
-                                map[cy - 1][cx + 2] != this.MAZE &&
-                                map[cy][cx + 2]     != this.MAZE &&
-                                map[cy + 1][cx + 2] != this.MAZE &&
-                                map[cy + 1][cx + 1] != this.MAZE &&
-                                map[cy][cx + 1]     != this.MAZE) {
+                        if (this.checkMapCell(map[cy - 1][cx + 1]) &&
+                            this.checkMapCell(map[cy - 1][cx + 2]) &&
+                            this.checkMapCell(map[cy][cx + 2]) &&
+                            this.checkMapCell(map[cy + 1][cx + 2]) &&
+                            this.checkMapCell(map[cy + 1][cx + 1]) &&
+                            this.checkMapCell(map[cy][cx + 1])) {
                             map[cy][cx + 1] = this.MAZE;
                             cells.push({ cx: (cx + 1), cy: cy });
                             map[cy][cx + 2] = this.MAZE;
@@ -151,6 +190,19 @@ export class DungeonGenerator {
                         } else {
                             rtDir = false;
                         }
+                        //if (map[cy - 1][cx + 1] != this.MAZE &&
+                        //        map[cy - 1][cx + 2] != this.MAZE &&
+                        //        map[cy][cx + 2]     != this.MAZE &&
+                        //        map[cy + 1][cx + 2] != this.MAZE &&
+                        //        map[cy + 1][cx + 1] != this.MAZE &&
+                        //        map[cy][cx + 1]     != this.MAZE) {
+                        //    map[cy][cx + 1] = this.MAZE;
+                        //    cells.push({ cx: (cx + 1), cy: cy });
+                        //    map[cy][cx + 2] = this.MAZE;
+                        //    cells.push({ cx: (cx + 2), cy: cy });
+                        //} else {
+                        //    rtDir = false;
+                        //}
                         break;
                 }
             }
@@ -165,20 +217,22 @@ export class DungeonGenerator {
                 
     }
 
-    private checkMapCell(map: any, cy: number, cx: number): boolean {
-        if (map[cy, cx] != this.MAZE &&
-            map[cy, cx] != this.MBRD) {
-            return true
-        }
-        return false;
+    private checkMapCell(cell: number): boolean {
+        return cell != this.MAZE && cell != this.MBRD;
     }
 
     private writeMapToServerConsole(map: any): void {
         console.log('\r\n');
         for (var y = 0; y < map.length; y++) {
-            var line = '';           
+            var line = '';            
             for (var x = 0; x < map[y].length; x++) {                
-                line += map[y][x] + ' ';
+                if (map[y][x] == this.MAZE) {
+                    line += ' ';
+                } else if (map[y][x] == this.WALL) {
+                    line += 'X';
+                } else if (map[y][x] == this.MBRD) {
+                    line += 'B';
+                }                
             }
             console.log(line);                          //összefüzve egy sorba, mert a node szerver log egy cmd, és ott minden egyes log automatikusan egy-egy új sor :)            
         }

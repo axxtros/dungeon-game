@@ -16,7 +16,7 @@ function drawMap(map) {
                 } else if (map[y][x] === 1) {                    
                     mapCanvasContext.fillStyle = 'grey';                    
                 } else if (map[y][x] === 2) {
-                    mapCanvasContext.fillStyle = 'green';
+                    mapCanvasContext.fillStyle = 'darkgrey';
                 }
                 mapCanvasContext.fill();                    
                 mapElementX += MAP_ELEMENT_SIZE;
