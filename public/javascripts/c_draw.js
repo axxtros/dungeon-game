@@ -1,6 +1,6 @@
 ﻿//game draws functions and controls 13/01/2017
 
-var MAP_ELEMENT_SIZE = 10;
+var MAP_ELEMENT_SIZE = 5;
 
 function drawMap(map) {
     var mapElementX = 0;
@@ -11,14 +11,16 @@ function drawMap(map) {
             for (var x = 0; x != map[y].length; x++) {
                 mapCanvasContext.beginPath();
                 mapCanvasContext.rect(mapElementX, mapElementY, MAP_ELEMENT_SIZE, MAP_ELEMENT_SIZE);
-                if (map[y][x] === 0) {
+                if (map[y][x] === 0) {                      //MAZE
                     mapCanvasContext.fillStyle = 'white';
-                } else if (map[y][x] === 1) {                    
+                } else if (map[y][x] === 1) {               //WALL        
                     mapCanvasContext.fillStyle = 'grey';                    
-                } else if (map[y][x] === 2) {
+                } else if (map[y][x] === 2) {               //MBRD
                     mapCanvasContext.fillStyle = 'darkgrey';
-                } else if (map[y][x] === 3) {
+                } else if (map[y][x] === 3) {               //ROOM
                     mapCanvasContext.fillStyle = 'darkred';
+                } else if (map[y][x] === 4) {               //DOOR
+                    mapCanvasContext.fillStyle = 'yellow';
                 }
                 mapCanvasContext.fill();                    
                 mapElementX += MAP_ELEMENT_SIZE;

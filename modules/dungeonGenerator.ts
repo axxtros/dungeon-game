@@ -73,7 +73,7 @@ export class DungeonGenerator {
     private roomGenerator(map: any, roomNumber: number): void {
         if (roomNumber == 0)
             return;
-
+        var generatedRoomCounter: number = 0;               //hagyd benne!
         for (var i = 0; i != roomNumber; i++) {
             //FONTOS:   Egy adott szoba X, Y cella koordinátájának mindig páros számmnak kell lennie, a szoba szélességének, 
             //          illetve hosszúságának pedig mindig páratlannak kell lennie!
@@ -106,16 +106,17 @@ export class DungeonGenerator {
             //két szoba között minimum egy, de mindenképpen páratlan térképrácsnak kell lennie - minden oldalról
             //Ez a feltétel, a szoba fenti (számolt) lehelyezéséből adódóan mindig igaz lesz.
 
-            //ha szoba validációja rendben lefutott, akkor beírjuk a térképbe a szobát
+            //ha szoba validációja rendben lefutott, akkor beírjuk a szobát a térképbe
             if (roomValidate) {
+                generatedRoomCounter++;
                 for (var ry = roomY; ry != (roomY + roomHeight); ry++) {
                     for (var rx = roomX; rx != (roomX + roomWidth); rx++) {
                         map[ry][rx] = this.ROOM;
                     }
                 }
-            }
-                        
+            }                        
         }
+        console.log('@room Needed room number / generated room: ' + roomNumber + ' / ' + generatedRoomCounter);
     }
 
     /**
@@ -257,10 +258,22 @@ export class DungeonGenerator {
 
     /**
      * Ajtógenerálás, szoba-labirintus, illetve szoba-szoba között.
-     * @param map
+     * @param map Térkép.
      */
     private doorGenerator(map: any): void {
-        
+        //összeszedjük a szobákat, azokat a térkép cellákat keressük meg, amelyek egy adott szoba bal-felső sarkát reprezentálják        
+        var roomCells: { cy: number, cx: number }[] = new Array();
+        for (var cy = 1; cy < map.length; cy++) {
+            for (var cx = 1; cx < map[0].length; cx++) {
+                if (map[cy][cx] == this.ROOM && map[cy][cx - 1] == this.WALL && map[cy - 1][cx] == this.WALL) {
+                    roomCells.push({ cy: cy, cx: cx });
+                }
+            }
+        }
+        if (roomCells.length > 0) {
+            console.log('@door Finding rooms: ' + roomCells.length);
+
+        }
     }
 
     private writeMapToServerConsole(map: any): void {
@@ -276,6 +289,8 @@ export class DungeonGenerator {
                     line += 'B';
                 } else if (map[y][x] == this.ROOM) {
                     line += 'R';
+                } else if (map[y][x] == this.DOOR) {
+                    line += 'D';
                 }
             }
             console.log(line);                          //összefüzve egy sorba, mert a node szerver log egy cmd, és ott minden egyes log automatikusan egy-egy új sor :)            
