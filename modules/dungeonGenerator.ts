@@ -18,13 +18,13 @@ var async = require('async');
 
 export class DungeonGenerator {
 
-    //egy szoba lehetséges cella szélessége/magassága a kiválasztott középponthoz képest
-    private POSSIBLE_ROOM_SIZES = [5, 7, 9, 11, 13, 15, 17, 19, 21];
+    //egy szoba lehetséges cella szélessége/magassága a kiválasztott középponthoz képest, csak páratlan érték lehet!!!
+    private POSSIBLE_ROOM_SIZES = [3, 5];
 
     private MAZE: number = 0;                   //folyosó (egységek által járható cellák)
     private WALL: number = 1;                   //fal (egységek által nem járható cellák)
     private MBRD: number = 2;                   //térkép határ (MBRD = map border) (nem járható, és ide semmilyen más specifikus cella nem generálható)
-    private ROOM: number = 3;                   //szoba (egységek által járható cellák)    
+    private ROOM: number = 3;                   //szoba (egységek által járható cellák)
 
     constructor() {
 
@@ -32,11 +32,18 @@ export class DungeonGenerator {
 
     public generator(width: number, height: number): any {        
         var map = this.initMap(width, height);
-        this.roomGenerator(map, 30);             
-        this.mazeGenerator(map, 2, 2);
+        this.roomGenerator(map, 30);
+        //kitöltetlen helyek keresése labirintus generálásra
+        for (var y = 1; y < height - 1; y++) {
+            for (var x = 1; x < width - 1; x++) {
+                if (this.checkIsNeedMazeGenerated(map, y, x)) {
+                    this.mazeGenerator(map, x, y);
+                }
+            }
+        }        
         //this.writeMapToServerConsole(map);
         return map;
-    }
+    }    
 
     private initMap(mapWidth: number, mapHeight: number): any {
         var map = [];
@@ -56,6 +63,11 @@ export class DungeonGenerator {
         return map;
     }    
 
+    /**
+     * A térképen található szobák generálása.
+     * @param map Térkép.
+     * @param roomNumber Ennyi szobát próbál meg begenerálni, de ha átlapolás van már egy korábban lerakott szobával, akkor azt kihagyja.
+     */
     private roomGenerator(map: any, roomNumber: number): void {
         if (roomNumber == 0)
             return;
@@ -90,7 +102,7 @@ export class DungeonGenerator {
             }
 
             //két szoba között minimum három, de mindenképpen páratlan térképrácsnak kell lennie - minden oldalról
-
+            //Ez a szoba a fenti (számolt) lehelyezéséből adódóan mindig igaz lesz.
 
             //ha szoba validációja rendben lefutott, akkor beírjuk a térképbe
             if (roomValidate) {
@@ -105,10 +117,30 @@ export class DungeonGenerator {
     }
 
     /**
+     * True, ha egy adott cellát teljes egészében fal vesz körül, mert akkor ott labirintust kell generálni,
+     * hogy ne legyenek kitöltetlen helyek a térképen. (Például két szoba összezáródásánál.)
+     * @param cellY Adott térkép cell Y koordinátátja.
+     * @param cellX Adott térkép cell X koordinátátja.
+     */
+    private checkIsNeedMazeGenerated(map: any, cellY: number, cellX: number): boolean {
+        if (map[cellY - 1][cellX - 1] == this.WALL &&
+            map[cellY - 1][cellX] == this.WALL &&
+            map[cellY - 1][cellX + 1] == this.WALL &&
+            map[cellY][cellX + 1] == this.WALL &&
+            map[cellY + 1][cellX + 1] == this.WALL &&
+            map[cellY + 1][cellX] == this.WALL &&
+            map[cellY + 1][cellX - 1] == this.WALL &&
+            map[cellY][cellX - 1] == this.WALL) {
+            return true;            
+        } 
+        return false;
+    }
+
+    /**
      * Körmentes (perfect) labirintus generátor.
-     * @param map
-     * @param startX
-     * @param startY
+     * @param map Térkép
+     * @param startX Kezdő térkép cellája X koordinátája.
+     * @param startY Kezdő térkép cellája Y koordinátája.
      */
     private mazeGenerator(map: any, startX: number, startY: number): void {
         startX += (startX % 2 != 0 ? 1 : 0);                                                //a kezdeti celláknak mindig páros koordinátákon kell elhelyezkednie
@@ -214,11 +246,39 @@ export class DungeonGenerator {
         }
     }        
 
+    private checkMapCell(cell: number): boolean {
+        return (
+            (cell != this.MAZE) &&
+            (cell != this.MBRD) &&
+            (cell != this.ROOM));
+    }
+
+    private writeMapToServerConsole(map: any): void {
+        console.log('\r\n');
+        for (var y = 0; y < map.length; y++) {
+            var line = '';
+            for (var x = 0; x < map[y].length; x++) {
+                if (map[y][x] == this.MAZE) {
+                    line += ' ';
+                } else if (map[y][x] == this.WALL) {
+                    line += 'X';
+                } else if (map[y][x] == this.MBRD) {
+                    line += 'B';
+                } else if (map[y][x] == this.ROOM) {
+                    line += 'R';
+                }
+            }
+            console.log(line);                          //összefüzve egy sorba, mert a node szerver log egy cmd, és ott minden egyes log automatikusan egy-egy új sor :)            
+        }
+        console.log('\r\n');
+    }
+
     /**
+     * @deprecated Nincs használva.
      * 'Fűrészfogas' maze generátor. (Minden körben, minden oldalra új random irány.)
-     * @param map
-     * @param startCellX
-     * @param startCellY
+     * @param map Térkép.
+     * @param startCellX Kezdeti cella X koordinátája.
+     * @param startCellY Kezdeti cella Y koordinátája.
      */
     private sawtoothMazeGenerator(map: any, startCellX: number, startCellY: number): void {        
         var cellNum: number = (map.length * map[0].length);
@@ -331,31 +391,6 @@ export class DungeonGenerator {
             }
             //console.log('@cells.length: ' + cells.length);
         }   //while                
-    }    
-
-    private checkMapCell(cell: number): boolean {
-        return (
-            (cell != this.MAZE) &&
-            (cell != this.MBRD) &&
-            (cell != this.ROOM));
-    }
-
-    private writeMapToServerConsole(map: any): void {
-        console.log('\r\n');
-        for (var y = 0; y < map.length; y++) {
-            var line = '';            
-            for (var x = 0; x < map[y].length; x++) {                
-                if (map[y][x] == this.MAZE) {
-                    line += ' ';
-                } else if (map[y][x] == this.WALL) {
-                    line += 'X';
-                } else if (map[y][x] == this.MBRD) {
-                    line += 'B';
-                }                
-            }
-            console.log(line);                          //összefüzve egy sorba, mert a node szerver log egy cmd, és ott minden egyes log automatikusan egy-egy új sor :)            
-        }
-        console.log('\r\n');
-    }
+    }        
 
 }
