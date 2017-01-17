@@ -14,7 +14,7 @@ function sendWelcomMsg() {
 }
 
 function generateNewDungeon() {
-    socket.emit('map_generator', 41, 41);
+    socket.emit('map_generator', 51, 51);
 }
 
 socket.on('test_data_from_server', function (testMsg, map) {

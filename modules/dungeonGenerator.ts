@@ -18,11 +18,13 @@ var async = require('async');
 
 export class DungeonGenerator {
 
-    private POSSIBLE_ROOM_SIZES = [3, 5, 7];    //egy szoba lehetséges cella szélessége/magassága a kiválasztott középponthoz képest
+    //egy szoba lehetséges cella szélessége/magassága a kiválasztott középponthoz képest
+    private POSSIBLE_ROOM_SIZES = [5, 7, 9, 11, 13, 15, 17, 19, 21];
+
     private MAZE: number = 0;                   //folyosó (egységek által járható cellák)
     private WALL: number = 1;                   //fal (egységek által nem járható cellák)
-    private MBRD: number = 2;                   //térkép határ (MBRD = map border) (ide semmilyen specifikus cella nem generálható)
-    private ROOM: number = 3;                   //szoba (egységek által járható cellák)
+    private MBRD: number = 2;                   //térkép határ (MBRD = map border) (nem járható, és ide semmilyen más specifikus cella nem generálható)
+    private ROOM: number = 3;                   //szoba (egységek által járható cellák)    
 
     constructor() {
 
@@ -30,7 +32,7 @@ export class DungeonGenerator {
 
     public generator(width: number, height: number): any {        
         var map = this.initMap(width, height);
-        //this.roomGenerator(map, 10);             
+        this.roomGenerator(map, 30);             
         this.mazeGenerator(map, 2, 2);
         //this.writeMapToServerConsole(map);
         return map;
@@ -55,89 +57,50 @@ export class DungeonGenerator {
     }    
 
     private roomGenerator(map: any, roomNumber: number): void {
+        if (roomNumber == 0)
+            return;
+
         for (var i = 0; i != roomNumber; i++) {
-            var roomCenterX: number = Math.floor((Math.random() * map[0].length));
-            roomCenterX += (roomCenterX % 2 == 0 ? 1 : 0);                              //hogy csak páratlan legyen a közepe X-re
-            var roomCenterY: number = Math.floor((Math.random() * map.length));
-            roomCenterY += (roomCenterY % 2 == 0 ? 1 : 0);                              //hogy csak páratlan legyen a közepe Y-ra
-            var rWidth: number = Math.floor((Math.random() * this.POSSIBLE_ROOM_SIZES.length));
-            var roomWidth: number = this.POSSIBLE_ROOM_SIZES[rWidth];
-            roomWidth += (roomWidth % 2 == 0 ? 1 : 0);
-            var rHeight: number = Math.floor((Math.random() * this.POSSIBLE_ROOM_SIZES.length));
-            var roomHeight: number = this.POSSIBLE_ROOM_SIZES[rHeight];
-            roomHeight += (roomHeight % 2 == 0 ? 1 : 0);
-            console.log('@room roomCenterX: ' + roomCenterX + ' roomCenterY: ' + roomCenterY + ' roomWidth:' + roomWidth + ' roomHeight: ' + roomHeight);
+            //FONTOS:   Egy adott szoba X, Y cella koordinátájának mindig páros számmnak kell lennie, a szoba szélességének, 
+            //          illetve hosszúságának pedig mindig páratlannak kell lennie!
+            var roomWidth = this.POSSIBLE_ROOM_SIZES[Math.floor((Math.random() * this.POSSIBLE_ROOM_SIZES.length))];
+            var roomHeight = this.POSSIBLE_ROOM_SIZES[Math.floor((Math.random() * this.POSSIBLE_ROOM_SIZES.length))];
 
+            //a szoba nem lóghat ki a térképről, ezért az X és Y meghatározása a szélek figyelésével generálódik
+            //+ a szoba egyetlen cellája sem lehet rajta a térkép határon (nem lehet közvetlenül a térkép szélén) [ezért van a +2 , -2]
+            var roomX = Math.floor((Math.random() * ((map[0].length - 2) - roomWidth))) + 2;    //-2, hogy bal oldalt ne lógjon ki a szélre, +2, hogy jobb oldalon ne lógjon ki a térképről
+            roomX -= (roomX % 2 != 0 ? 1 : 0);
+            var roomY = Math.floor((Math.random() * ((map.length - 2) - roomHeight))) + 2;      //-2, hogy alul ne lógjon ki a szélre, +2, hogy felül ne lógjon ki a térképről
+            roomY -= (roomY % 2 != 0 ? 1 : 0);
+
+            console.log('@room roomX: ' + roomX + ' roomY: ' + roomY + ' roomWidth:' + roomWidth + ' roomHeight: ' + roomHeight);            
             var roomValidate = true;
-            //a szoba nem lóghat ki a térképről
-            if ((roomCenterY - roomHeight - 2) <= 0 || (roomCenterY + roomHeight + 2) >= map.length || (roomCenterX - roomWidth - 2) <= 0 || (roomCenterX + roomWidth + 2) >= map[0].length) {
-                console.log('@room A szoba nincs rajta a térképen teljes terjedelmében!');
-                roomValidate = false;
+
+            //a szoba nem fedhet le másik szobát (overlapping)
+            for (var ry = roomY; ry != (roomY + roomHeight); ry++) {
+                for (var rx = roomX; rx != (roomX + roomWidth); rx++) {
+                    if (map[ry][rx] == this.ROOM) {
+                        roomValidate = false;
+                        console.log('@room overlapping');
+                        break;
+                    }
+                    if (!roomValidate) break;
+                }
+                if (!roomValidate) break;
             }
+
+            //két szoba között minimum három, de mindenképpen páratlan térképrácsnak kell lennie - minden oldalról
+
+
+            //ha szoba validációja rendben lefutott, akkor beírjuk a térképbe
             if (roomValidate) {
-                for (var roomYElement = (roomCenterY - roomHeight); roomYElement != (roomCenterY + roomHeight); roomYElement++) {
-                    for (var roomXElement = (roomCenterX - roomWidth); roomXElement != (roomCenterX + roomWidth); roomXElement++) {
-                        if (!roomValidate) {
-                            break;
-                        }
-                        //a szoba egyetlen cellája sem lehet rajta a térkép határon (nem lehet közvetlenül a térkép szélén)
-                        if (map[roomYElement][roomXElement] == this.MBRD) {
-                            console.log('@room A szoba egy vagy több cellája a térképhatárra esik!');
-                            roomValidate = false;
-                        }
-                        //a szoba nem fedhet le másik szobát (overlapping)
-                        if (map[roomYElement][roomXElement] == this.ROOM) {
-                            console.log('@room A szoba egy vagy több cellája egy másik szobára esik!');
-                            roomValidate = false;
-                        }
-                        //két szoba között minimum három, de mindenképpen páratlan térképrácsnak kell lennie - minden oldalról
-                        if (map[roomYElement - 1][roomXElement - 1] == this.ROOM ||
-                            map[roomYElement - 1][roomXElement] == this.ROOM ||
-                            map[roomYElement - 1][roomXElement + 1] == this.ROOM ||
-                            map[roomYElement][roomXElement + 1] == this.ROOM ||
-                            map[roomYElement + 1][roomXElement + 1] == this.ROOM ||
-                            map[roomYElement + 1][roomXElement] == this.ROOM ||
-                            map[roomYElement + 1][roomXElement - 1] == this.ROOM ||
-                            map[roomYElement][roomXElement - 1] == this.ROOM) {
-                            console.log('@room A szoba határának minimális távolsága nincs meg egy másik szobához képest!');
-                            roomValidate = false;
-                        }
-                        if (roomValidate) {
-                            if (map[roomYElement - 2][roomXElement - 2] == this.ROOM ||
-                                map[roomYElement - 2][roomXElement - 1] == this.ROOM ||
-                                map[roomYElement - 2][roomXElement] == this.ROOM ||
-                                map[roomYElement - 2][roomXElement + 1] == this.ROOM ||
-                                map[roomYElement - 2][roomXElement + 2] == this.ROOM ||
-
-                                map[roomYElement - 1][roomXElement + 2] == this.ROOM ||
-                                map[roomYElement][roomXElement + 2] == this.ROOM ||
-                                map[roomYElement + 1][roomXElement + 2] == this.ROOM ||
-                                map[roomYElement + 2][roomXElement + 2] == this.ROOM ||
-
-                                map[roomYElement + 2][roomXElement + 1] == this.ROOM ||
-                                map[roomYElement + 2][roomXElement] == this.ROOM ||
-                                map[roomYElement + 2][roomXElement - 1] == this.ROOM ||
-                                map[roomYElement + 2][roomXElement - 2] == this.ROOM ||
-
-                                map[roomYElement + 1][roomXElement - 2] == this.ROOM ||
-                                map[roomYElement][roomXElement - 2] == this.ROOM ||
-                                map[roomYElement - 1][roomXElement - 2] == this.ROOM) {
-                                console.log('@room A szoba határának minimális távolsága nincs meg egy másik szobához képest!');
-                                roomValidate = false;
-                            }
-                        }
-
+                for (var ry = roomY; ry != (roomY + roomHeight); ry++) {
+                    for (var rx = roomX; rx != (roomX + roomWidth); rx++) {
+                        map[ry][rx] = this.ROOM;
                     }
                 }
             }
-            //a szoba validálva van, mehet a térképbe
-            if (roomValidate) {
-                for (var roomYElement = (roomCenterY - roomHeight); roomYElement != (roomCenterY + roomHeight); roomYElement++) {
-                    for (var roomXElement = (roomCenterX - roomWidth); roomXElement != (roomCenterX + roomWidth); roomXElement++) {
-                        map[roomYElement][roomXElement] = this.ROOM;
-                    }
-                }
-            }
+                        
         }
     }
 
@@ -307,9 +270,9 @@ export class DungeonGenerator {
                             this.checkMapCell(map[cy - 1][cx + 1]) &&
                             this.checkMapCell(map[cy - 1][cx])) {
                             map[cy - 1][cx] = this.MAZE;                //mind a két járatot fel kell venni, a közvetlen szomszédot,...
-                            cells.push({ cx: cx, cy: (cy - 1) });
+                            cells.push({ cx: cx, cy: (cy - 1) });                            
                             map[cy - 2][cx] = this.MAZE;                //...és a következőt is, így nem lesz egymás mellett kettő
-                            cells.push({ cx: cx, cy: (cy - 2) });
+                            cells.push({ cx: cx, cy: (cy - 2) });                                                        
                         } else {
                                 upDir = false;
                         }                        
@@ -322,9 +285,9 @@ export class DungeonGenerator {
                             this.checkMapCell(map[cy + 1][cx + 1]) &&
                             this.checkMapCell(map[cy + 1][cx])) {
                             map[cy + 1][cx] = this.MAZE;
-                            cells.push({ cx: cx, cy: (cy + 1) });
+                            cells.push({ cx: cx, cy: (cy + 1) });                            
                             map[cy + 2][cx] = this.MAZE;
-                            cells.push({ cx: cx, cy: (cy + 2) });
+                            cells.push({ cx: cx, cy: (cy + 2) });                                                                                            
                         } else {
                             dwDir = false;
                         }                        
@@ -337,9 +300,9 @@ export class DungeonGenerator {
                             this.checkMapCell(map[cy - 1][cx - 1]) &&
                             this.checkMapCell(map[cy][cx - 1])) {
                             map[cy][cx - 1] = this.MAZE;
-                            cells.push({ cx: (cx - 1), cy: cy });
+                            cells.push({ cx: (cx - 1), cy: cy });                            
                             map[cy][cx - 2] = this.MAZE;
-                            cells.push({ cx: (cx - 2), cy: cy });
+                            cells.push({ cx: (cx - 2), cy: cy });                                                        
                         } else {
                             ltDir = false;
                         }                        
@@ -352,15 +315,15 @@ export class DungeonGenerator {
                             this.checkMapCell(map[cy + 1][cx + 1]) &&
                             this.checkMapCell(map[cy][cx + 1])) {
                             map[cy][cx + 1] = this.MAZE;
-                            cells.push({ cx: (cx + 1), cy: cy });
+                            cells.push({ cx: (cx + 1), cy: cy });                            
                             map[cy][cx + 2] = this.MAZE;
-                            cells.push({ cx: (cx + 2), cy: cy });
+                            cells.push({ cx: (cx + 2), cy: cy });                                                        
                         } else {
                             rtDir = false;
                         }                        
                         break;
                 }
-            }            
+            }
             //ha egyik irányba sem lehet menni, akkor az adott elemet kivesszük a listából
             if (!upDir && !dwDir && !ltDir && !rtDir) {
                 cells.splice(selectedElement, 1);         
