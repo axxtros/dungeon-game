@@ -16,10 +16,7 @@
 
 //var async = require('async');
 
-export class DungeonGenerator {
-
-    //egy szoba lehetséges cella szélessége/magassága a kiválasztott középponthoz képest, csak páratlan érték lehet!!!
-    private POSSIBLE_ROOM_SIZES = [3, 5, 7, 9, 11];
+export class DungeonGenerator {    
 
     private MAZE: number = 0;                   //folyosó (egységek által járható cellák)
     private WALL: number = 1;                   //fal (egységek által nem járható cellák)
@@ -73,12 +70,16 @@ export class DungeonGenerator {
     private roomGenerator(map: any, roomNumber: number): void {
         if (roomNumber == 0)
             return;
+
+        //egy szoba lehetséges cella szélessége/magassága a kiválasztott középponthoz képest, csak páratlan érték lehet!!!
+        var POSSIBLE_ROOM_SIZES = [5, 7, 9, 11];        
         var generatedRoomCounter: number = 0;               //hagyd benne!
+
         for (var i = 0; i != roomNumber; i++) {
             //FONTOS:   Egy adott szoba X, Y cella koordinátájának mindig páros számmnak kell lennie, a szoba szélességének, 
             //          illetve hosszúságának pedig mindig páratlannak kell lennie!
-            var roomWidth = this.POSSIBLE_ROOM_SIZES[Math.floor((Math.random() * this.POSSIBLE_ROOM_SIZES.length))];
-            var roomHeight = this.POSSIBLE_ROOM_SIZES[Math.floor((Math.random() * this.POSSIBLE_ROOM_SIZES.length))];
+            var roomWidth = POSSIBLE_ROOM_SIZES[Math.floor((Math.random() * POSSIBLE_ROOM_SIZES.length))];
+            var roomHeight = POSSIBLE_ROOM_SIZES[Math.floor((Math.random() * POSSIBLE_ROOM_SIZES.length))];
 
             //a szoba nem lóghat ki a térképről, ezért az X és Y meghatározása a szélek figyelésével generálódik
             //+ a szoba egyetlen cellája sem lehet rajta a térkép határon (nem lehet közvetlenül a térkép szélén) [ezért van a +2 , -2]
@@ -261,19 +262,58 @@ export class DungeonGenerator {
      * @param map Térkép.
      */
     private doorGenerator(map: any): void {
-        //összeszedjük a szobákat, azokat a térkép cellákat keressük meg, amelyek egy adott szoba bal-felső sarkát reprezentálják        
-        var roomCells: { cy: number, cx: number }[] = new Array();
+        //Összeszedjük a szobákat, azokat a térkép cellákat keressük meg, amelyek egy adott szoba bal-felső sarkát reprezentálják.
+        //Utána minden egyes megtalált szoba szélein végig kell menni, és össze kell gyűjteni azokat a celláikat, 
+        //amelyek mellett egy WALL, utána pedig vagy MAZE, vagy egy ROOM cella található.Ezek melletti WALL cellát lehet
+        //kicserélni DOOR típusú cellára, amely egy ajtót reprezentál a térképen. A megtalált cellák közül véletlenszerűen kell
+        //választani egyet, de úgy, hogy mindig legyen egy MAZE-re, és - ha van, akkor - egy másik ROOM-ba vezető ajtó kialakítva.        
+        var doorCells: { cy: number, cx: number }[] = new Array();
         for (var cy = 1; cy < map.length; cy++) {
             for (var cx = 1; cx < map[0].length; cx++) {
-                if (map[cy][cx] == this.ROOM && map[cy][cx - 1] == this.WALL && map[cy - 1][cx] == this.WALL) {
-                    roomCells.push({ cy: cy, cx: cx });
+                if (map[cy][cx] == this.ROOM && map[cy][cx - 1] == this.WALL && map[cy - 1][cx] == this.WALL) {                                 //egy szoba bal-felső sarka
+                    var roomBorderCells: { cy: number, cx: number }[] = new Array();
+                    var roomY: number = cy;
+                    var roomX: number = cx;
+                    //az óramutató járásának megfelelően körbejárjuk a szoba széleit alkotó cellákat
+                    //felső szobahatár cellák keresése                    
+                    while (map[roomY][roomX] != this.WALL) {                                                                                    //jobb-felső sarok elérése                    
+                        if (map[roomY][roomX] == this.ROOM && map[roomY - 1][roomX] == this.WALL && (map[roomY - 2][roomX] == this.MAZE || map[roomY - 2][roomX] == this.ROOM)) {
+                            roomBorderCells.push({ cy: (roomY - 1), cx: roomX });
+                        }
+                        roomX++;
+                    }
+                    roomX--;    //korrekció, hogy újra a ROOM-on legyen a kurzor
+                    //jobb oldali szobahatár cella kereső
+                    while (map[roomY][roomX] != this.WALL) {                                                                                    //jobb-alsó sarok elérése
+                        if (map[roomY][roomX] == this.ROOM && map[roomY][roomX + 1] == this.WALL && (map[roomY][roomX + 2] == this.MAZE || map[roomY][roomX + 2] == this.ROOM)) {
+                            roomBorderCells.push({ cy: roomY, cx: (roomX + 1) });
+                        }
+                        roomY++;
+                    }
+                    roomY--;    //korrekció, hogy újra a ROOM-on legyen a kurzor
+                    //alsó szobahatár cella kereső
+                    while (map[roomY][roomX] != this.WALL) {                                                                                    //bal-alsó sarok elérése
+                        if (map[roomY][roomX] == this.ROOM && map[roomY + 1][roomX] == this.WALL && (map[roomY + 2][roomX] == this.MAZE || map[roomY + 2][roomX] == this.ROOM)) {
+                            roomBorderCells.push({ cy: (roomY + 1), cx: roomX });
+                        }
+                        roomX--;
+                    }
+                    roomX++;    //korrekció, hogy újra a ROOM-on legyen a kurzor
+                    //bal oldali szobahatár cella kereső
+                    while (map[roomY][roomX] != this.WALL) {                                                                                    //újra vissza a bal-felső sarokba
+                        if (map[roomY][roomX] == this.ROOM && map[roomY][roomX - 1] == this.WALL && (map[roomY][roomX - 2] == this.MAZE || map[roomY][roomX - 2] == this.ROOM)) {
+                            roomBorderCells.push({ cy: roomY, cx: (roomX - 1) });
+                        }
+                        roomY--;
+                    }
+
+                    //ajtócellák kiválasztása
+                    for (var i = 0; i != roomBorderCells.length; i++) {
+                        map[roomBorderCells[i].cy][roomBorderCells[i].cx] = this.DOOR;
+                    }        
                 }
             }
-        }
-        if (roomCells.length > 0) {
-            console.log('@door Finding rooms: ' + roomCells.length);
-
-        }
+        }        
     }
 
     private writeMapToServerConsole(map: any): void {
