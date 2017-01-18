@@ -57,10 +57,10 @@ export class SocketClass {
                 console.log('@websocket Welcome message from client: ' + data);
             });
 
-            socket.on('map_generator', function (mapWidth, mapHeight, roomNumber) {
+            socket.on('map_generator', function (mapWidth, mapHeight, roomNumber, doorsPerRoom) {
                 //console.log('@websocket dungeon width: ' + dungeonWidth + ' dungeon height:' + dungeonHeight);                                
                 var dungeonGenerator = new dungeonGeneratorModule.DungeonGenerator();                
-                var map = dungeonGenerator.generator(mapWidth, mapHeight, roomNumber);
+                var map = dungeonGenerator.generator(mapWidth, mapHeight, roomNumber, doorsPerRoom);
                 socket.emit('test_data_from_server', 'Map generated is done! Please look at in the server console.', map);
             });            
 

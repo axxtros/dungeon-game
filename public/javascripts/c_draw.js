@@ -20,6 +20,8 @@ function drawMap(map) {
                 } else if (map[y][x] === 3) {               //ROOM
                     mapCanvasContext.fillStyle = 'darkred';
                 } else if (map[y][x] === 4) {               //DOOR
+                    mapCanvasContext.fillStyle = 'orange';
+                } else if (map[y][x] === 5) {               //PDOR
                     mapCanvasContext.fillStyle = 'yellow';
                 }
                 mapCanvasContext.fill();                    
