@@ -80,7 +80,7 @@ export class DungeonGenerator {
             return;
 
         //egy szoba lehetséges cella szélessége/magassága a kiválasztott középponthoz képest, csak páratlan érték lehet!!!
-        var POSSIBLE_ROOM_SIZES = [5, 7, 9, 11];        
+        var POSSIBLE_ROOM_SIZES = [3, 5, /*7, 9, 11, 13, 15, 17, 19, 21*/];
         var generatedRoomCounter: number = 0;               //hagyd benne!
 
         for (var i = 0; i != roomNumber; i++) {
@@ -416,12 +416,47 @@ export class DungeonGenerator {
      * @param map
      */
     private removeDeadEndCells(map: any): void {
-        //Olyan MAZE map cellákat keresünk, és törlünk (visszaállítjuk WALL-ra), amelyeket három WALL cella vesz körül.       
+        //Olyan maze map cellákat keresünk, és törlünk (visszaállítjuk wall-ra), amelyeket három wall típusú cella vesz körül.
         var done: boolean = false;
+        var foundDeletedCell: boolean = false;
+        while (!done) {            
+            foundDeletedCell = false;
+            for (var cy = 1; cy != map.length - 1; cy++) {
+                for (var cx = 1; cx != map[0].length - 1; cx++) {
+                    if (this.isNeedDeleteCell(map, cy, cx)) {
+                        map[cy][cx] = this.WALL;
+                        foundDeletedCell = true;                        
+                    }
+                }
+            }
+            if (!foundDeletedCell) {
+                done = true;
+            }
+        }        
+    }
 
-        while (!done) {
-                        
+    /**
+     * True, ha törölhető az adott (zsákutcában vezető) cella. Akkor törölhető, ha három oldalról WALL típusú cella veszi körül.
+     * @param map
+     * @param cellX
+     * @param cellY
+     */
+    private isNeedDeleteCell(map: any, cellY: number, cellX: number) {
+        var wallCellNumber = 0;
+        if (map[cellY][cellX] == this.MAZE && map[cellY - 1][cellX] == this.WALL) {
+            wallCellNumber++;
         }
+        if (map[cellY][cellX] == this.MAZE && map[cellY + 1][cellX] == this.WALL) {
+            wallCellNumber++;
+        }
+        if (map[cellY][cellX] == this.MAZE && map[cellY][cellX - 1] == this.WALL) {
+            wallCellNumber++;
+        }
+        if (map[cellY][cellX] == this.MAZE && map[cellY][cellX + 1] == this.WALL) {
+            wallCellNumber++;
+        }
+        //console.log('wallcellnumber: ' + wallCellNumber);
+        return wallCellNumber == 3;
     }
 
     private writeMapToServerConsole(map: any): void {
