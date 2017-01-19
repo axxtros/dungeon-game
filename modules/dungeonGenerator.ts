@@ -18,8 +18,16 @@
 
 export class DungeonGenerator {    
 
-    private DEBUG: boolean = false;
-    private WRITE_MAP_TO_CONSOLE: boolean = false;
+    private DEBUG: boolean = false;    
+
+    //a dungeon generálás egyes fázisainak engedélyezése/tiltása
+    private ROOM_GENERATOR_ENABLED: boolean = true;
+    private MAZE_GENERATOR_ENABLED: boolean = true;
+    private DOOR_GENERATOR_ENABLED: boolean = true;
+    private REMOVE_DEAD_CELLS_ENABLED: boolean = true;
+    private POST_PROCESSES_ENABLED: boolean = true;
+    private MAP_ENTRANCE_CHECK_ENABLED: boolean = false;
+    private WRITE_MAP_TO_CONSOLE_ENABLED: boolean = false;
 
     //cella típusok
     private MAZE: number = 0;                           //folyosó (egységek által járható cellák)
@@ -39,21 +47,34 @@ export class DungeonGenerator {
 
     public generator(mapWidth: number, mapHeight: number, roomNumber: number, doorsPerRoom: number): any {        
         var map = this.initMap(mapWidth, mapHeight);
-        this.roomGenerator(map, roomNumber);
-        //kitöltetlen helyek keresése labirintus generálásra
-        for (var y = 1; y < mapHeight - 1; y++) {
-            for (var x = 1; x < mapWidth - 1; x++) {
-                if (this.checkIsNeedMazeGenerated(map, y, x)) {
-                    this.mazeGenerator(map, x, y);
+        if (this.ROOM_GENERATOR_ENABLED) {
+            this.roomGenerator(map, roomNumber);
+        }
+        if (this.MAZE_GENERATOR_ENABLED) {
+            //kitöltetlen helyek keresése labirintus generálásra
+            for (var cellY = 1; cellY < map.length - 1; cellY++) {
+                for (var cellX = 1; cellX < map[0].length - 1; cellX++) {
+                    if (this.checkIsNeedMazeGenerated(map, cellY, cellX)) {
+                        this.mazeGenerator(map, cellY, cellX);
+                    }
                 }
             }
         }
-        this.doorGenerator(map, doorsPerRoom);
-        this.removeDeadEndCells(map);
-        this.mapPostProcesses(map);
-        if (this.WRITE_MAP_TO_CONSOLE) {
+        if (this.ROOM_GENERATOR_ENABLED && this.DOOR_GENERATOR_ENABLED) {
+            this.doorGenerator(map, doorsPerRoom);
+        }
+        if (this.MAZE_GENERATOR_ENABLED && this.REMOVE_DEAD_CELLS_ENABLED) {
+            this.removeDeadEndCells(map);
+        }
+        if (this.ROOM_GENERATOR_ENABLED && this.MAZE_GENERATOR_ENABLED && this.DOOR_GENERATOR_ENABLED && this.REMOVE_DEAD_CELLS_ENABLED && this.POST_PROCESSES_ENABLED) {
+            this.mapPostProcesses(map);
+        }    
+        if (this.ROOM_GENERATOR_ENABLED && this.MAZE_GENERATOR_ENABLED && this.DOOR_GENERATOR_ENABLED && this.MAP_ENTRANCE_CHECK_ENABLED) {
+            this.mapEntranceCheck(map);
+        }
+        if (this.WRITE_MAP_TO_CONSOLE_ENABLED) {
             this.writeMapToServerConsole(map);
-        }        
+        }
         return map;
     }
 
@@ -160,7 +181,7 @@ export class DungeonGenerator {
      * @param startX Kezdő térkép cellája X koordinátája.
      * @param startY Kezdő térkép cellája Y koordinátája.
      */
-    private mazeGenerator(map: any, startX: number, startY: number): void {
+    private mazeGenerator(map: any, startY: number, startX: number): void {
         startX += (startX % 2 != 0 ? 1 : 0);                                                //a kezdeti celláknak mindig páros koordinátákon kell elhelyezkednie
         startY += (startY % 2 != 0 ? 1 : 0);
         if (startX < 2) { startX = 2; }                                                     //biztosítékok, hogy a kezdő hely ne legyen a térképen kívűl
@@ -264,6 +285,10 @@ export class DungeonGenerator {
         }
     }        
 
+    /**
+     * True, ha a paraméterben megadott cella nem a felsoroltak közül való.
+     * @param cell
+     */
     private checkMapCell(cell: number): boolean {
         return (
             (cell != this.MAZE) &&
@@ -459,10 +484,7 @@ export class DungeonGenerator {
                     map[cy][cx] = this.WALL;
                 }
             }
-        }        
-        //Nem maradhat a térképen olyan szoba, amelynek egyetlen egy ajtaja sincs, így nem csatlakozik sehová sem. Az ilyen szobákat törölni kell.
-        //Ehhez be kell járni a teljes térképet. (maze + door + room).
-        this.mapEntrance(map);
+        }                        
     }
 
     /**
@@ -493,7 +515,12 @@ export class DungeonGenerator {
             return wallCellNumber == 4;
     }
 
-    private mapEntrance(map: any): void {
+    /**
+     * Nem maradhat a térképen olyan szoba, amelynek egyetlen egy ajtaja sincs, így nem csatlakozik sehová sem. Az ilyen szobákat törölni kell.
+     * Ehhez be kell járni a teljes térképet. (maze + door + room).
+     * @param map
+     */
+    private mapEntranceCheck(map: any): void {        
         //kezdő maze cella kiválasztása, innen indul a bejárás
         var startY: number = 0;
         var startX: number = 0;
@@ -521,13 +548,14 @@ export class DungeonGenerator {
         while (!((next) || (!upDir && !dwDir && !ltDir && !rtDir))) {
             var selectedRandDirection = Math.floor((Math.random() * 4));                //0: UP, 1: DOWN, 2: LEFT, 3: RIGHT
             switch (selectedRandDirection) {
-                case 0:
+                case 0:         //UP
+
                     break;
-                case 1:
+                case 1:         //DOWN
                     break;
-                case 2:
+                case 2:         //LEFT
                     break;
-                case 3:
+                case 3:         //RIGHT
                     break;
             }
         }
