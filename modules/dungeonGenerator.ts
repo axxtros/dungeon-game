@@ -27,7 +27,7 @@ export class DungeonGenerator {
     private MBRD: number = 2;                   //térkép határ (MBRD = map border) (nem járható, és ide semmilyen más specifikus cella nem generálható)
     private ROOM: number = 3;                   //szoba (egységek által járható cellák)    
     private DOOR: number = 4;                   //ajtó
-    private PDOR: number = 5;                   //lehetséges ajtó (teszt miatt)
+    private POSS_DOOR: number = 5;              //lehetséges ajtók (teszt miatt)    
 
     constructor() {
 
@@ -46,6 +46,7 @@ export class DungeonGenerator {
         }
         this.doorGenerator(map, doorsPerRoom);
         this.removeDeadEndCells(map);
+        this.mapPostProcesses(map);
         if (this.WRITE_MAP_TO_CONSOLE) {
             this.writeMapToServerConsole(map);
         }        
@@ -80,7 +81,7 @@ export class DungeonGenerator {
             return;
 
         //egy szoba lehetséges cella szélessége/magassága a kiválasztott középponthoz képest, csak páratlan érték lehet!!!
-        var POSSIBLE_ROOM_SIZES = [3, 5, /*7, 9, 11, 13, 15, 17, 19, 21*/];
+        var POSSIBLE_ROOM_SIZES = [3, 5/*, 7, 9, 11, 13, 15, 17, 19, 21*/];
         var generatedRoomCounter: number = 0;               //hagyd benne!
 
         for (var i = 0; i != roomNumber; i++) {
@@ -389,7 +390,7 @@ export class DungeonGenerator {
         if (VISIBLE_POSSIBLE_DOORS) {
             for (var i = 0; i != allDoorCells.length; i++) {
                 if (map[allDoorCells[i].cy][allDoorCells[i].cx] != this.DOOR) {
-                    map[allDoorCells[i].cy][allDoorCells[i].cx] = this.PDOR;
+                    map[allDoorCells[i].cy][allDoorCells[i].cx] = this.POSS_DOOR;
                 }
             }
         }        
@@ -412,7 +413,7 @@ export class DungeonGenerator {
     }
 
     /**
-     * Törli azokat a MAZE cellákat a térképről, amelyek zsákutcába vezetnek.
+     * Törli azokat a MAZE cellákat a térképről, amelyek zsákutcába vezetnek. (Ez hosszabb művelet lehet, a térkép bonyolultságától függően.)
      * @param map
      */
     private removeDeadEndCells(map: any): void {
@@ -423,7 +424,7 @@ export class DungeonGenerator {
             foundDeletedCell = false;
             for (var cy = 1; cy != map.length - 1; cy++) {
                 for (var cx = 1; cx != map[0].length - 1; cx++) {
-                    if (this.isNeedDeleteCell(map, cy, cx)) {
+                    if (this.isNeedDeleteCell(map, cy, cx, this.MAZE, false)) {
                         map[cy][cx] = this.WALL;
                         foundDeletedCell = true;                        
                     }
@@ -433,30 +434,59 @@ export class DungeonGenerator {
                 done = true;
             }
         }        
+    }    
+
+    /**
+     * Utólagos műveletek elvégzése a térképen. Semmihez sem kapcsolodó cellák és magányos szobák törlése.
+     * @param map
+     */
+    private mapPostProcesses(map: any): void {        
+        for (var cy = 0; cy != map.length - 1; cy++) {
+            for (var cx = 0; cx != map[0].length - 1; cx++) {
+                //A folysók visszatörléséből adódóan, azoknál a részeknél, amelyek nem tudnak csatlakozni a fő labirintushoz, ott az utolsó cella önmagában megmarad, ezt törölni kell.
+                //(Azért marad meg, mert az utolsó visszatörölt maze cellát négy wall típusú cella veszi körül, a visszatörlés pedig csak három szomszédos wall cellát figyel.)
+                if (this.isNeedDeleteCell(map, cy, cx, this.MAZE, true)) {
+                    map[cy][cx] = this.WALL;
+                }
+                //Lehetnek olyan szoba ajtók, amelyek nem csatlakoznak maze-hez, vagy másik room-hoz. (A semmibe vezetnek, egy wall cellába.) 
+                //Azért lehetnek ilyenek, mert eredetileg olyan labirintus szakazhoz lettek kigenerálva, amelyek nem csatlakoznak a fő labirintushoz, 
+                //és teljes egészében vissza lettek törölve.
+                if (this.isNeedDeleteCell(map, cy, cx, this.DOOR, false)) {
+                    map[cy][cx] = this.WALL;
+                }
+            }
+        }        
+        //Nem maradhat a térképen olyan szoba, amelynek egyetlen egy ajtaja sincs, így nem csatlakozik sehová sem. Az ilyen szobákat törölni kell.
+            
+
     }
 
     /**
-     * True, ha törölhető az adott (zsákutcában vezető) cella. Akkor törölhető, ha három oldalról WALL típusú cella veszi körül.
-     * @param map
-     * @param cellX
-     * @param cellY
+     * True, ha törölhető az adott cella. Akkor törölhető, ha az adott 'cellType' cellát három oldaláról WALL típusú cella veszi körül.
+     * @param map Térkép.
+     * @param cellY Adott cella y koordinátája.
+     * @param cellX Adott cella x koordinátája.
+     * @param cellType Milyen típusú törlendő cellát keresünk.
+     * @param searchLastMazeCell Utolsó-e az a cella, amit keresünk. Ha igen, akkor azt négy wall típusú cella veszi körül.
      */
-    private isNeedDeleteCell(map: any, cellY: number, cellX: number) {
+    private isNeedDeleteCell(map: any, cellY: number, cellX: number, cellType: number, searchLastCell: boolean) {        
         var wallCellNumber = 0;
-        if (map[cellY][cellX] == this.MAZE && map[cellY - 1][cellX] == this.WALL) {
+        if (map[cellY][cellX] == cellType && map[cellY - 1][cellX] == this.WALL) {
             wallCellNumber++;
         }
-        if (map[cellY][cellX] == this.MAZE && map[cellY + 1][cellX] == this.WALL) {
+        if (map[cellY][cellX] == cellType && map[cellY + 1][cellX] == this.WALL) {
             wallCellNumber++;
         }
-        if (map[cellY][cellX] == this.MAZE && map[cellY][cellX - 1] == this.WALL) {
+        if (map[cellY][cellX] == cellType && map[cellY][cellX - 1] == this.WALL) {
             wallCellNumber++;
         }
-        if (map[cellY][cellX] == this.MAZE && map[cellY][cellX + 1] == this.WALL) {
+        if (map[cellY][cellX] == cellType && map[cellY][cellX + 1] == this.WALL) {
             wallCellNumber++;
         }
-        //console.log('wallcellnumber: ' + wallCellNumber);
-        return wallCellNumber == 3;
+        if (!searchLastCell)
+            return wallCellNumber == 3;
+        else
+            return wallCellNumber == 4;
     }
 
     private writeMapToServerConsole(map: any): void {
@@ -474,7 +504,7 @@ export class DungeonGenerator {
                     line += 'R';
                 } else if (map[y][x] == this.DOOR) {
                     line += 'D';
-                } else if (map[y][x] == this.PDOR) {
+                } else if (map[y][x] == this.POSS_DOOR) {
                     line += 'P';
                 }
             }
