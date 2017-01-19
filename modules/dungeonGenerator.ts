@@ -34,9 +34,9 @@ export class DungeonGenerator {
     private MAZE_GENERATOR_ENABLED: boolean = true;
     private DOOR_GENERATOR_ENABLED: boolean = true;
     private VISIBLE_POSSIBLE_DOORS: boolean = false;
-    private REMOVE_DEAD_CELLS_ENABLED: boolean = true;
+    private REMOVE_DEAD_CELLS_ENABLED: boolean = false;
     private POST_PROCESSES_ENABLED: boolean = true;
-    private MAP_ENTRANCE_CHECK_ENABLED: boolean = true;
+    private MAP_ENTRANCE_CHECK_ENABLED: boolean = false;
     private WRITE_MAP_TO_CONSOLE_ENABLED: boolean = false;
 
     //cella típusok
@@ -61,14 +61,7 @@ export class DungeonGenerator {
             this.roomGenerator(map, roomNumber);
         }
         if (this.MAZE_GENERATOR_ENABLED) {
-            //kitöltetlen helyek keresése labirintus generálásra
-            for (var cellY = 1; cellY < map.length - 1; cellY++) {
-                for (var cellX = 1; cellX < map[0].length - 1; cellX++) {
-                    if (this.checkIsNeedMazeGenerated(map, cellY, cellX)) {
-                        this.mazeGenerator(map, cellY, cellX);
-                    }
-                }
-            }
+            this.mazeGenerator(map);
         }
         if (this.ROOM_GENERATOR_ENABLED && this.DOOR_GENERATOR_ENABLED) {
             this.doorGenerator(map, doorsPerRoom);
@@ -164,6 +157,17 @@ export class DungeonGenerator {
         this._DEBUG_LOG('@room Needed room number / generated room: ' + roomNumber + ' / ' + generatedRoomCounter);
     }
 
+    private mazeGenerator(map: any): void {
+        //kitöltetlen helyek keresése labirintus generálásra
+        for (var cellY = 1; cellY < map.length - 1; cellY++) {
+            for (var cellX = 1; cellX < map[0].length - 1; cellX++) {
+                if (this.checkIsNeedMazeGenerated(map, cellY, cellX)) {
+                    this.createMaze(map, cellY, cellX);
+                }
+            }
+        }
+    }
+
     /**
      * True, ha egy adott cellát teljes egészében fal vesz körül, mert akkor ott labirintust kell generálni,
      * hogy ne legyenek kitöltetlen helyek a térképen. (Például két szoba összezáródásánál.)
@@ -190,7 +194,7 @@ export class DungeonGenerator {
      * @param startX Kezdő térkép cellája X koordinátája.
      * @param startY Kezdő térkép cellája Y koordinátája.
      */
-    private mazeGenerator(map: any, startY: number, startX: number): void {
+    private createMaze(map: any, startY: number, startX: number): void {
         startX += (startX % 2 != 0 ? 1 : 0);                                                //a kezdeti celláknak mindig páros koordinátákon kell elhelyezkednie
         startY += (startY % 2 != 0 ? 1 : 0);
         if (startX < 2) { startX = 2; }                                                     //biztosítékok, hogy a kezdő hely ne legyen a térképen kívűl
