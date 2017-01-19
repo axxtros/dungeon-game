@@ -27,13 +27,14 @@
 
 export class DungeonGenerator {    
 
-    private DEBUG: boolean = false;    
+    private DEBUG_CONSOLE_PRINT: boolean = false;
 
     //a dungeon generálás egyes fázisainak engedélyezése/tiltása
     private ROOM_GENERATOR_ENABLED: boolean = true;
     private MAZE_GENERATOR_ENABLED: boolean = true;
     private DOOR_GENERATOR_ENABLED: boolean = true;
-    private REMOVE_DEAD_CELLS_ENABLED: boolean = false;
+    private VISIBLE_POSSIBLE_DOORS: boolean = false;
+    private REMOVE_DEAD_CELLS_ENABLED: boolean = true;
     private POST_PROCESSES_ENABLED: boolean = true;
     private MAP_ENTRANCE_CHECK_ENABLED: boolean = true;
     private WRITE_MAP_TO_CONSOLE_ENABLED: boolean = false;
@@ -311,9 +312,7 @@ export class DungeonGenerator {
      */
     private doorGenerator(map: any, doorsPerRoom: number): void {
         if (doorsPerRoom == 0)
-            return;
-
-        var VISIBLE_POSSIBLE_DOORS: boolean = false;
+            return;        
 
         doorsPerRoom = 2;           //Azért van beégetve, mert így szép a labirintus. Egy ajtóval nem biztos, hogy minden szobának lesz ajtaja,
                                     //ennél több ajtóval pedig 'hülyén' néz ki a labirintus. Ez így legyen jó, később majd meglátjuk. :)        
@@ -324,7 +323,7 @@ export class DungeonGenerator {
         //kicserélni DOOR típusú cellára, amely egy ajtót reprezentál a térképen. A megtalált cellák közül véletlenszerűen kell
         //választani egyet vagy többet.
         var mapDoorCells: { cy: number, cx: number }[] = new Array();
-        if (VISIBLE_POSSIBLE_DOORS) {
+        if (this.VISIBLE_POSSIBLE_DOORS) {
             var allDoorCells: { cy: number, cx: number }[] = new Array();       //tesztre, hogy lássak minden lehetséges ajtó cellát, ne töröld ki!!!
         }
 
@@ -415,7 +414,7 @@ export class DungeonGenerator {
                         }
                     }                    
 
-                    if (VISIBLE_POSSIBLE_DOORS) {
+                    if (this.VISIBLE_POSSIBLE_DOORS) {
                         allDoorCells.push.apply(allDoorCells, possibleMazeDoors);
                         allDoorCells.push.apply(allDoorCells, possibleRoomDoors);
                     }                    
@@ -424,7 +423,7 @@ export class DungeonGenerator {
         }
 
         //az összes lehetséges ajtócella hozzáadása a térképhez
-        if (VISIBLE_POSSIBLE_DOORS) {
+        if (this.VISIBLE_POSSIBLE_DOORS) {
             for (var i = 0; i != allDoorCells.length; i++) {
                 if (map[allDoorCells[i].cy][allDoorCells[i].cx] != this.DOOR) {
                     map[allDoorCells[i].cy][allDoorCells[i].cx] = this.TEST_POSS_DOOR;
@@ -680,7 +679,7 @@ export class DungeonGenerator {
     }
 
     private _DEBUG_LOG(msg: string): void {
-        if (this.DEBUG) {
+        if (this.DEBUG_CONSOLE_PRINT) {
             console.log('@dungeonGenerator.js :' + msg);
         }
     }
