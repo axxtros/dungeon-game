@@ -33,9 +33,9 @@ export class DungeonGenerator {
     private ROOM_GENERATOR_ENABLED: boolean = true;
     private MAZE_GENERATOR_ENABLED: boolean = true;
     private DOOR_GENERATOR_ENABLED: boolean = true;
-    private VISIBLE_POSSIBLE_DOORS: boolean = false;
+    private VISIBLE_POSSIBLE_DOORS: boolean = true;
     private REMOVE_DEAD_CELLS_ENABLED: boolean = false;
-    private POST_PROCESSES_ENABLED: boolean = true;
+    private POST_PROCESSES_ENABLED: boolean = false;
     private MAP_ENTRANCE_CHECK_ENABLED: boolean = false;
     private WRITE_MAP_TO_CONSOLE_ENABLED: boolean = false;
 
@@ -416,7 +416,7 @@ export class DungeonGenerator {
                         if (i >= 2) {
                             //NOP...
                         }
-                    }                    
+                    }
 
                     if (this.VISIBLE_POSSIBLE_DOORS) {
                         allDoorCells.push.apply(allDoorCells, possibleMazeDoors);
