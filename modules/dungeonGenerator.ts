@@ -33,10 +33,10 @@ export class DungeonGenerator {
     private ROOM_GENERATOR_ENABLED: boolean = true;
     private MAZE_GENERATOR_ENABLED: boolean = true;
     private DOOR_GENERATOR_ENABLED: boolean = true;
-    private REMOVE_DEAD_CELLS_ENABLED: boolean = true;
+    private REMOVE_DEAD_CELLS_ENABLED: boolean = false;
     private POST_PROCESSES_ENABLED: boolean = true;
     private MAP_ENTRANCE_CHECK_ENABLED: boolean = true;
-    private WRITE_MAP_TO_CONSOLE_ENABLED: boolean = true;
+    private WRITE_MAP_TO_CONSOLE_ENABLED: boolean = false;
 
     //cella típusok
     private MAZE: number = 0;                           //folyosó (egységek által járható cellák)
@@ -103,7 +103,7 @@ export class DungeonGenerator {
         }
         this._DEBUG_LOG('@map init mapWidth: ' + mapWidth + ' mapHeight: ' + mapHeight);        
         return map;
-    }    
+    }
 
     /**
      * A térképen található szobák generálása.
@@ -528,14 +528,25 @@ export class DungeonGenerator {
      * Ehhez be kell járni a teljes térképet. (maze + door + room).
      * @param map
      */
-    private mapEntranceCheck(map: any): void {        
+    private mapEntranceCheck(checkMap: any): void {        
+
+        //hogy ne az eredeti térképen történjen az ellenőrzés, átmásoljuk az eredeti térkép tartalmát
+        //var checkMap = [];     
+        //for (var cy = 0; cy != originalMap.length - 1; cy++) {
+        //    checkMap[cy] = [];
+        //    for (var cx = 0; cx != originalMap[0].length - 1; cx++) {
+        //        var cellElement = originalMap[cy][cx];
+        //        checkMap[cy][cx] = cellElement;
+        //    }
+        //}
+
         //kezdő maze cella kiválasztása, innen indul a bejárás
         var startY: number = 0;
         var startX: number = 0;
         var isDoneStartPos: boolean = false;
-        for (var cy = 0; cy != map.length - 1; cy++) {
-            for (var cx = 0; cx != map[0].length - 1; cx++) {
-                if (this.isPassableUnitCell(map, cy, cx)) {
+        for (var cy = 0; cy != checkMap.length - 1; cy++) {
+            for (var cx = 0; cx != checkMap[0].length - 1; cx++) {
+                if (this.isPassableUnitCell(checkMap, cy, cx)) {
                     startY = cy;
                     startX = cx;
                     isDoneStartPos = true;
@@ -570,8 +581,8 @@ export class DungeonGenerator {
                 switch (selectedRandDirection) {
                     case 0:         //UP
                         if (upDir &&
-                            this.isPassableUnitCell(map, cellY - 1, cellX)) {
-                            map[cellY - 1][cellX] = this.OKCELL;
+                            this.isPassableUnitCell(checkMap, cellY - 1, cellX)) {
+                            checkMap[cellY - 1][cellX] = this.OKCELL;
                             cells.push({ cy: cellY - 1, cx: cellX });
                             upDir = false;                            
                         } else {
@@ -580,8 +591,8 @@ export class DungeonGenerator {
                         break;
                     case 1:         //DOWN
                         if (dwDir &&
-                            this.isPassableUnitCell(map, cellY + 1, cellX)) {
-                            map[cellY + 1][cellX] = this.OKCELL;
+                            this.isPassableUnitCell(checkMap, cellY + 1, cellX)) {
+                            checkMap[cellY + 1][cellX] = this.OKCELL;
                             cells.push({ cy: cellY + 1, cx: cellX });
                             dwDir = false;                            
                         } else {
@@ -590,8 +601,8 @@ export class DungeonGenerator {
                         break;
                     case 2:         //LEFT
                         if (ltDir &&
-                            this.isPassableUnitCell(map, cellY, cellX - 1)) {
-                            map[cellY][cellX - 1] = this.OKCELL;
+                            this.isPassableUnitCell(checkMap, cellY, cellX - 1)) {
+                            checkMap[cellY][cellX - 1] = this.OKCELL;
                             cells.push({ cy: cellY, cx: cellX - 1 });
                             ltDir = false;                            
                         } else {
@@ -600,8 +611,8 @@ export class DungeonGenerator {
                         break;
                     case 3:         //RIGHT
                         if (rtDir &&
-                            this.isPassableUnitCell(map, cellY, cellX + 1)) {
-                            map[cellY][cellX + 1] = this.OKCELL;
+                            this.isPassableUnitCell(checkMap, cellY, cellX + 1)) {
+                            checkMap[cellY][cellX + 1] = this.OKCELL;
                             cells.push({ cy: cellY, cx: cellX + 1 });
                             rtDir = false;                            
                         } else {
