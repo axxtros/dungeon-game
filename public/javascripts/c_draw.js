@@ -23,6 +23,8 @@ function drawMap(map) {
                     mapCanvasContext.fillStyle = 'orange';
                 } else if (map[y][x] === 5) {               //PDOR
                     mapCanvasContext.fillStyle = 'yellow';
+                } else if (map[y][x] === 6) {               //OKCELL
+                    mapCanvasContext.fillStyle = 'lightblue';
                 }
                 mapCanvasContext.fill();                    
                 mapElementX += MAP_ELEMENT_SIZE;

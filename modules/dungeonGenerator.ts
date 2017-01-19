@@ -4,6 +4,15 @@
  */
 
 /*
+    Ismert hibák:
+    A szobákat valailyen módon interpolálva kell elhlyezni, hogy nagyjából a térkép területén 'egyenletesen' legyenek elosztva. A teljesen véletlen elhelyezés
+    problémákat vet fel.
+    Lehetséges, hogy csak egy szoba lesz legenerálva - mert mindegyik belelóg - akkor a maze törlő eltünteti az összes maze cellát, nem lesz labriintus.
+    Előfordulhat olyan térkép generálás, amelyben egy vagy több szoba önálló labirintus részhez kapcsolódik, és ez az egész pedig nem kapcsolódik a fő labirintushoz,
+    tehát a teljes térkép nem bejárható.
+*/
+
+/*
  * Tutorials:
  * http://journal.stuffwithstuff.com/2014/12/21/rooms-and-mazes/
  * https://infoc.eet.bme.hu/labirintus/ (magyar)
@@ -26,7 +35,7 @@ export class DungeonGenerator {
     private DOOR_GENERATOR_ENABLED: boolean = true;
     private REMOVE_DEAD_CELLS_ENABLED: boolean = true;
     private POST_PROCESSES_ENABLED: boolean = true;
-    private MAP_ENTRANCE_CHECK_ENABLED: boolean = false;
+    private MAP_ENTRANCE_CHECK_ENABLED: boolean = true;
     private WRITE_MAP_TO_CONSOLE_ENABLED: boolean = false;
 
     //cella típusok
@@ -38,8 +47,8 @@ export class DungeonGenerator {
     private TEST_POSS_DOOR: number = 5;                 //lehetséges ajtók (teszt miatt)
     private OKCELL: number = 6;                         //cella bejárva (teszt miatt)
 
-    private PASSABLE_UNIT_CELLS_TYPE = [this.MAZE, this.DOOR, this.ROOM];   //egység által bejárható cella típusok
-    private NOT_PASSABLE_UNIT_CELLS_TYPE = [this.WALL, this.MBRD];          //egység által nem bejárható cella típusok
+    private PASSABLE_UNIT_CELLS_TYPE = [this.MAZE, this.DOOR, this.ROOM];                   //egység által bejárható cella típusok
+    private NOT_PASSABLE_UNIT_CELLS_TYPE = [this.WALL, this.MBRD, this.OKCELL];             //egység által nem bejárható cella típusok
 
     constructor() {
 
@@ -68,13 +77,13 @@ export class DungeonGenerator {
         }
         if (this.ROOM_GENERATOR_ENABLED && this.MAZE_GENERATOR_ENABLED && this.DOOR_GENERATOR_ENABLED && this.REMOVE_DEAD_CELLS_ENABLED && this.POST_PROCESSES_ENABLED) {
             this.mapPostProcesses(map);
-        }    
-        if (this.ROOM_GENERATOR_ENABLED && this.MAZE_GENERATOR_ENABLED && this.DOOR_GENERATOR_ENABLED && this.MAP_ENTRANCE_CHECK_ENABLED) {
-            this.mapEntranceCheck(map);
         }
         if (this.WRITE_MAP_TO_CONSOLE_ENABLED) {
             this.writeMapToServerConsole(map);
         }
+        if (this.ROOM_GENERATOR_ENABLED && this.MAZE_GENERATOR_ENABLED && this.DOOR_GENERATOR_ENABLED && this.MAP_ENTRANCE_CHECK_ENABLED) {
+            this.mapEntranceCheck(map);
+        }        
         return map;
     }
 
@@ -82,13 +91,13 @@ export class DungeonGenerator {
         var map = [];
         mapWidth += (mapWidth % 2 == 0 ? 1 : 0);                                            //hogy mindig biztosan páratlan legyen a térkép szélessége és
         mapHeight += (mapHeight % 2 == 0 ? 1 : 0);                                          //magassága
-        for (var y = 0; y < mapHeight; y++) {
-            map[y] = [];
-            for (var x = 0; x < mapWidth; x++) {                
-                if ((x == 0 || x == mapWidth - 1) || (y == 0 || y == mapHeight - 1)) {      //a térkép szélek bejelölése
-                    map[y][x] = this.MBRD;                    
+        for (var cellY = 0; cellY < mapHeight; cellY++) {
+            map[cellY] = [];
+            for (var cellX = 0; cellX < mapWidth; cellX++) {                
+                if ((cellX == 0 || cellX == mapWidth - 1) || (cellY == 0 || cellY == mapHeight - 1)) {      //a térkép szélek bejelölése
+                    map[cellY][cellX] = this.MBRD;                    
                 } else {
-                    map[y][x] = this.WALL;                    
+                    map[cellY][cellX] = this.WALL;                    
                 }                                                 
             }
         }
@@ -106,7 +115,7 @@ export class DungeonGenerator {
             return;
 
         //egy szoba lehetséges cella szélessége/magassága a kiválasztott középponthoz képest, csak páratlan érték lehet!!!
-        var POSSIBLE_ROOM_SIZES = [3, 5/*, 7, 9, 11, 13, 15, 17, 19, 21*/];
+        var POSSIBLE_ROOM_SIZES = [3, 5, 7, 9, /*11, 13, 15, 17, 19, 21*/];
         var generatedRoomCounter: number = 0;               //hagyd benne!
 
         for (var i = 0; i != roomNumber; i++) {
@@ -121,7 +130,6 @@ export class DungeonGenerator {
             roomX -= (roomX % 2 != 0 ? 1 : 0);
             var roomY = Math.floor((Math.random() * ((map.length - 2) - roomHeight))) + 2;      //-2, hogy alul ne lógjon ki a szélre, +2, hogy felül ne lógjon ki a térképről
             roomY -= (roomY % 2 != 0 ? 1 : 0);
-
             
             this._DEBUG_LOG('@room roomX: ' + roomX + ' roomY: ' + roomY + ' roomWidth:' + roomWidth + ' roomHeight: ' + roomHeight);
             var roomValidate = true;
@@ -463,7 +471,7 @@ export class DungeonGenerator {
                 done = true;
             }
         }        
-    }    
+    }
 
     /**
      * Utólagos műveletek elvégzése a térképen. Semmihez sem kapcsolodó cellák és magányos szobák törlése.
@@ -541,26 +549,71 @@ export class DungeonGenerator {
         var upDir: boolean = true;
         var dwDir: boolean = true;
         var ltDir: boolean = true;
-        var rtDir: boolean = true;
-        var next: boolean = false;
+        var rtDir: boolean = true;        
+        var selectedElement: number;
+        var cellY: number;
+        var cellX: number;        
+
         var cells: { cy: number, cx: number }[] = new Array();
         cells.push({ cy: startY, cx: startX });
-        while (!((next) || (!upDir && !dwDir && !ltDir && !rtDir))) {
-            var selectedRandDirection = Math.floor((Math.random() * 4));                //0: UP, 1: DOWN, 2: LEFT, 3: RIGHT
-            switch (selectedRandDirection) {
-                case 0:         //UP
-
-                    break;
-                case 1:         //DOWN
-                    break;
-                case 2:         //LEFT
-                    break;
-                case 3:         //RIGHT
-                    break;
+        
+        while (cells.length != 0) {
+            upDir = true;
+            dwDir = true;
+            ltDir = true;
+            rtDir = true;            
+            selectedElement = 0;
+            cellY = cells[selectedElement].cy;
+            cellX = cells[selectedElement].cx;            
+            while (!(!upDir && !dwDir && !ltDir && !rtDir)) {
+                var selectedRandDirection = Math.floor((Math.random() * 4));                //0: UP, 1: DOWN, 2: LEFT, 3: RIGHT
+                switch (selectedRandDirection) {
+                    case 0:         //UP
+                        if (upDir &&
+                            this.isPassableUnitCell(map, cellY - 1, cellX)) {
+                            map[cellY - 1][cellX] = this.OKCELL;
+                            cells.push({ cy: cellY - 1, cx: cellX });
+                            upDir = false;                            
+                        } else {
+                            upDir = false;                            
+                        }
+                        break;
+                    case 1:         //DOWN
+                        if (dwDir &&
+                            this.isPassableUnitCell(map, cellY + 1, cellX)) {
+                            map[cellY + 1][cellX] = this.OKCELL;
+                            cells.push({ cy: cellY + 1, cx: cellX });
+                            dwDir = false;                            
+                        } else {
+                            dwDir = false;                            
+                        }
+                        break;
+                    case 2:         //LEFT
+                        if (ltDir &&
+                            this.isPassableUnitCell(map, cellY, cellX - 1)) {
+                            map[cellY][cellX - 1] = this.OKCELL;
+                            cells.push({ cy: cellY, cx: cellX - 1 });
+                            ltDir = false;                            
+                        } else {
+                            ltDir = false;                            
+                        }
+                        break;
+                    case 3:         //RIGHT
+                        if (rtDir &&
+                            this.isPassableUnitCell(map, cellY, cellX + 1)) {
+                            map[cellY][cellX + 1] = this.OKCELL;
+                            cells.push({ cy: cellY, cx: cellX + 1 });
+                            rtDir = false;                            
+                        } else {
+                            rtDir = false;                            
+                        }
+                        break;
+                }
             }
-        }
-        //azokat a maze, door, room cellákat, amelyek nem sikerült bejárni, azokat törölni kell a térképről
-
+            if (!upDir && !dwDir && !ltDir && !rtDir) {
+                cells.splice(selectedElement, 1);
+            }
+        }                        
     }
 
     /**
@@ -603,7 +656,7 @@ export class DungeonGenerator {
                 } else if (map[y][x] == this.MBRD) {
                     line += 'B';
                 } else if (map[y][x] == this.ROOM) {
-                    line += 'R';
+                    line += '.';
                 } else if (map[y][x] == this.DOOR) {
                     line += 'D';
                 } else if (map[y][x] == this.TEST_POSS_DOOR) {
