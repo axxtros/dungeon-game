@@ -36,7 +36,7 @@ export class DungeonGenerator {
     private REMOVE_DEAD_CELLS_ENABLED: boolean = true;
     private POST_PROCESSES_ENABLED: boolean = true;
     private MAP_ENTRANCE_CHECK_ENABLED: boolean = true;
-    private WRITE_MAP_TO_CONSOLE_ENABLED: boolean = false;
+    private WRITE_MAP_TO_CONSOLE_ENABLED: boolean = true;
 
     //cella típusok
     private MAZE: number = 0;                           //folyosó (egységek által járható cellák)
