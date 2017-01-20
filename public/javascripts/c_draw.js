@@ -1,6 +1,6 @@
 ﻿//game draws functions and controls 13/01/2017
 
-var MAP_ELEMENT_SIZE = 10;
+var MAP_ELEMENT_SIZE = 8;
 
 function drawMap(map) {
     var mapElementX = 0;

@@ -25,6 +25,43 @@
 
 //var async = require('async');
 
+/**
+ * Egy adott térképcellát reprezentáló osztály.
+ */
+class MapCell {
+
+    private _cellY: number;
+    private _cellX: number;
+    private _type: number;
+
+    constructor() {
+    }    
+
+    get cellY(): number {
+        return this._cellY;
+    }
+
+    set cellY(cellY: number) {
+        this._cellY = cellY;
+    }
+
+    get cellX(): number {
+        return this._cellX;
+    }
+
+    set cellX(cellX: number) {
+        this._cellX = cellX;
+    }
+
+    get type(): number {
+        return this._type;
+    }
+
+    set type(type: number) {
+        this._type = type;
+    }
+}
+
 export class DungeonGenerator {    
 
     private DEBUG_CONSOLE_PRINT: boolean = false;
@@ -33,10 +70,11 @@ export class DungeonGenerator {
     private ROOM_GENERATOR_ENABLED: boolean = true;
     private MAZE_GENERATOR_ENABLED: boolean = true;
     private DOOR_GENERATOR_ENABLED: boolean = true;
-    private VISIBLE_POSSIBLE_DOORS: boolean = true;
-    private REMOVE_DEAD_CELLS_ENABLED: boolean = false;
-    private POST_PROCESSES_ENABLED: boolean = false;
-    private MAP_ENTRANCE_CHECK_ENABLED: boolean = false;
+    private MAP_ENTRANCE_CHECK_ENABLED: boolean = true;
+    private VISIBLE_POSSIBLE_DOORS: boolean = false;
+    private REMOVE_DEAD_CELLS_ENABLED: boolean = true;
+    private POST_PROCESSES_ENABLED: boolean = true;
+    private TEST_ENTRANCE_MAP_ENABLED: boolean = false;
     private WRITE_MAP_TO_CONSOLE_ENABLED: boolean = false;
 
     //cella típusok
@@ -57,6 +95,7 @@ export class DungeonGenerator {
 
     public generator(mapWidth: number, mapHeight: number, roomNumber: number, doorsPerRoom: number): any {        
         var map = this.initMap(mapWidth, mapHeight);
+        var entranceCheckMap: any;
         if (this.ROOM_GENERATOR_ENABLED) {
             this.roomGenerator(map, roomNumber);
         }
@@ -66,18 +105,22 @@ export class DungeonGenerator {
         if (this.ROOM_GENERATOR_ENABLED && this.DOOR_GENERATOR_ENABLED) {
             this.doorGenerator(map, doorsPerRoom);
         }
+        if (this.ROOM_GENERATOR_ENABLED && this.MAZE_GENERATOR_ENABLED && this.DOOR_GENERATOR_ENABLED && this.MAP_ENTRANCE_CHECK_ENABLED) {
+            entranceCheckMap = this.mapEntranceCheck(map, false);
+            this.eraseNotEntranceCellFromMap(map, entranceCheckMap);
+        }
         if (this.MAZE_GENERATOR_ENABLED && this.REMOVE_DEAD_CELLS_ENABLED) {
             this.removeDeadEndCells(map);
         }
         if (this.ROOM_GENERATOR_ENABLED && this.MAZE_GENERATOR_ENABLED && this.DOOR_GENERATOR_ENABLED && this.REMOVE_DEAD_CELLS_ENABLED && this.POST_PROCESSES_ENABLED) {
             this.mapPostProcesses(map);
         }
-        if (this.WRITE_MAP_TO_CONSOLE_ENABLED) {
-            this.writeMapToServerConsole(map);
+        if (this.TEST_ENTRANCE_MAP_ENABLED) {
+            this.mapEntranceCheck(map, true);
         }
-        if (this.ROOM_GENERATOR_ENABLED && this.MAZE_GENERATOR_ENABLED && this.DOOR_GENERATOR_ENABLED && this.MAP_ENTRANCE_CHECK_ENABLED) {
-            this.mapEntranceCheck(map);
-        }        
+        if (this.ROOM_GENERATOR_ENABLED && this.MAZE_GENERATOR_ENABLED && this.DOOR_GENERATOR_ENABLED && this.WRITE_MAP_TO_CONSOLE_ENABLED) {
+            this.writeMapToServerConsole(map);
+        }           
         return map;
     }
 
@@ -105,14 +148,16 @@ export class DungeonGenerator {
      * @param roomNumber Ennyi szobát próbál meg begenerálni, de ha átlapolás van már egy korábban lerakott szobával, akkor azt kihagyja.
      */
     private roomGenerator(map: any, roomNumber: number): void {
-        if (roomNumber == 0)
-            return;
-
+        roomNumber < 2 ? roomNumber = 2 : roomNumber = roomNumber;  //mert minimum két szoba kell a maze-ek törlése miatt
+        
         //egy szoba lehetséges cella szélessége/magassága a kiválasztott középponthoz képest, csak páratlan érték lehet!!!
-        var POSSIBLE_ROOM_SIZES = [3, 5, 7, 9, /*11, 13, 15, 17, 19, 21*/];
-        var generatedRoomCounter: number = 0;               //hagyd benne!
+        var POSSIBLE_ROOM_SIZES = [3, 5, 7, 9, 11, 13, 15, 17, 19, 21];
+        var generatedRoomCounter: number = 0;                   //hagyd benne!
+        var ROOM_OVERLAPPING_EXCEPTION_MAXIMUM: number = 100;   //ez egy viszonyítási szám, nagyjából kb. ha már 100-szor nem tud szobát elhelyezni a térképen, akkor már nincs hely újabb szobáknak
+        var overlappingCounter: number = 0;                     //ha már túl sok a szoba átfedés, akkor az már valószinüleg azért van, mert a térkép méretéhez képest
+        var overlappingException: boolean = false;              //nem lehet további szobákat lerakni, ekkor elég annyi szoba, amennyi már le van generálva
 
-        for (var i = 0; i != roomNumber; i++) {
+        while ((generatedRoomCounter != roomNumber) && !overlappingException) {           
             //FONTOS:   Egy adott szoba X, Y cella koordinátájának mindig páros számmnak kell lennie, a szoba szélességének, 
             //          illetve hosszúságának pedig mindig páratlannak kell lennie!
             var roomWidth = POSSIBLE_ROOM_SIZES[Math.floor((Math.random() * POSSIBLE_ROOM_SIZES.length))];
@@ -124,16 +169,16 @@ export class DungeonGenerator {
             roomX -= (roomX % 2 != 0 ? 1 : 0);
             var roomY = Math.floor((Math.random() * ((map.length - 2) - roomHeight))) + 2;      //-2, hogy alul ne lógjon ki a szélre, +2, hogy felül ne lógjon ki a térképről
             roomY -= (roomY % 2 != 0 ? 1 : 0);
-            
+
             this._DEBUG_LOG('@room roomX: ' + roomX + ' roomY: ' + roomY + ' roomWidth:' + roomWidth + ' roomHeight: ' + roomHeight);
             var roomValidate = true;
 
             //a szoba nem fedhet le másik szobát (overlapping)
             for (var ry = roomY; ry != (roomY + roomHeight); ry++) {
                 for (var rx = roomX; rx != (roomX + roomWidth); rx++) {
-                    if (map[ry][rx] == this.ROOM) {                        
+                    if (map[ry][rx] == this.ROOM) {
                         this._DEBUG_LOG('@room overlapping');
-                        roomValidate = false;                        
+                        roomValidate = false;
                         break;
                     }
                     if (!roomValidate) break;
@@ -152,8 +197,15 @@ export class DungeonGenerator {
                         map[ry][rx] = this.ROOM;
                     }
                 }
-            }                        
-        }        
+            } else {
+                overlappingCounter++;
+            }
+
+            if (overlappingCounter == ROOM_OVERLAPPING_EXCEPTION_MAXIMUM) {                
+                overlappingException = true;
+                this._DEBUG_LOG('@room overlapping exception');
+            }            
+        }                        
         this._DEBUG_LOG('@room Needed room number / generated room: ' + roomNumber + ' / ' + generatedRoomCounter);
     }
 
@@ -318,7 +370,7 @@ export class DungeonGenerator {
         if (doorsPerRoom == 0)
             return;        
 
-        doorsPerRoom = 2;           //Azért van beégetve, mert így szép a labirintus. Egy ajtóval nem biztos, hogy minden szobának lesz ajtaja,
+        doorsPerRoom = 3;           //Azért van beégetve, mert így szép a labirintus. Egy ajtóval nem biztos, hogy minden szobának lesz ajtaja,
                                     //ennél több ajtóval pedig 'hülyén' néz ki a labirintus. Ez így legyen jó, később majd meglátjuk. :)        
 
         //Összeszedjük a szobákat, azokat a térkép cellákat keressük meg, amelyek egy adott szoba bal-felső sarkát reprezentálják.
@@ -387,36 +439,44 @@ export class DungeonGenerator {
 
                     //az adott szoba ajtócelláinak véletlenszerű kiválasztása, és hozzáadása a térképhez                    
                     var doorsNum: number = (possibleMazeDoors.length) + (possibleRoomDoors.length);
-                    var onlyRoomDoors: boolean = possibleMazeDoors.length == 0 ? true : false;      //ha csak szobához csatlakoztatható része lenne a szobának                    
+                    var onlyRoomDoors: boolean = possibleMazeDoors.length == 0 ? true : false;              //ha csak szobához csatlakoztatható része lenne a szobának                    
+
+                    if (doorsNum < doorsPerRoom) {
+                        doorsPerRoom = doorsNum;
+                    }
+                    
                     for (var i = 0; i != doorsPerRoom; i++) {
                         //az első ajtó ha lehet, akkor mindig a labirintushoz (maze-hez) csatlakozzon, és csak utána egy másik szobához
-                        if (i == 0) {
+                        if (i == 0 || i == 1) {
                             if (possibleMazeDoors.length > 0) {
                                 var selectedDoor = Math.floor((Math.random() * (possibleMazeDoors.length - 1)));
                                 if (this.noOtherDoorCell(map, possibleMazeDoors[selectedDoor].cy, possibleMazeDoors[selectedDoor].cx)) {
                                     map[possibleMazeDoors[selectedDoor].cy][possibleMazeDoors[selectedDoor].cx] = this.DOOR;
-                                }                                
+                                        
+                                }
                             } else if (possibleRoomDoors.length > 0) {
                                 var selectedDoor = Math.floor((Math.random() * (possibleRoomDoors.length - 1)));
                                 if (this.noOtherDoorCell(map, possibleRoomDoors[selectedDoor].cy, possibleRoomDoors[selectedDoor].cx)) {
                                     map[possibleRoomDoors[selectedDoor].cy][possibleRoomDoors[selectedDoor].cx] = this.DOOR;
-                                }                                
+                                        
+                                }
                             }
                         }
                         //a második ajtó - ha még nincs másik szobához csatlakozás - akkor szobához csatlakozzon
-                        if (i == 1 && !onlyRoomDoors) {
+                        if (i == 2) {
                             if (possibleRoomDoors.length > 0) {
                                 var selectedDoor = Math.floor((Math.random() * (possibleRoomDoors.length - 1)));
                                 if (this.noOtherDoorCell(map, possibleRoomDoors[selectedDoor].cy, possibleRoomDoors[selectedDoor].cx)) {
                                     map[possibleRoomDoors[selectedDoor].cy][possibleRoomDoors[selectedDoor].cx] = this.DOOR;
-                                }                                
+                                        
+                                }
                             }
                         }
                         //minden további ajtó véletlenszerűen van kiválasztva, itt már nincs figyelve, hogy mihez csatlakozik
-                        if (i >= 2) {
+                        if (i >= 3) {
                             //NOP...
                         }
-                    }
+                    }                                        
 
                     if (this.VISIBLE_POSSIBLE_DOORS) {
                         allDoorCells.push.apply(allDoorCells, possibleMazeDoors);
@@ -530,35 +590,62 @@ export class DungeonGenerator {
      * Nem maradhat a térképen olyan szoba, amelynek egyetlen egy ajtaja sincs, így nem csatlakozik sehová sem. Az ilyen szobákat törölni kell.
      * Ehhez be kell járni a teljes térképet. (maze + door + room).
      * @param map
+     * @param test True, ha végelegesen felépített térkép teszt szükséges, és nem a generálás lépésekénti bejárás kell.
      */
-    private mapEntranceCheck(checkMap: any): void {        
+    private mapEntranceCheck(originalMap: any, test: boolean): any {        
 
         //hogy ne az eredeti térképen történjen az ellenőrzés, átmásoljuk az eredeti térkép tartalmát
-        //var checkMap = [];     
-        //for (var cy = 0; cy != originalMap.length - 1; cy++) {
-        //    checkMap[cy] = [];
-        //    for (var cx = 0; cx != originalMap[0].length - 1; cx++) {
-        //        var cellElement = originalMap[cy][cx];
-        //        checkMap[cy][cx] = cellElement;
-        //    }
-        //}
+        var checkMap = [];     
+        if (!test) {
+            for (var cy = 0; cy != originalMap.length - 1; cy++) {
+                checkMap[cy] = [];
+                for (var cx = 0; cx != originalMap[0].length - 1; cx++) {
+                    var cellElement = originalMap[cy][cx];
+                    checkMap[cy][cx] = cellElement;
+                }
+            }
+        } else {
+            checkMap = originalMap;     //ekkor nem lesz a térkép új objektum
+        }            
 
         //kezdő maze cella kiválasztása, innen indul a bejárás
         var startY: number = 0;
         var startX: number = 0;
-        var isDoneStartPos: boolean = false;
-        for (var cy = 0; cy != checkMap.length - 1; cy++) {
-            for (var cx = 0; cx != checkMap[0].length - 1; cx++) {
-                if (this.isPassableUnitCell(checkMap, cy, cx)) {
-                    startY = cy;
-                    startX = cx;
+        var mapHalfY: number = Math.floor(checkMap.length / 2);
+        var mapHalfX: number = Math.floor(checkMap[0].length / 2);        
+
+        if (this.isPassableUnitCell(checkMap, mapHalfY, mapHalfX)) {            //ha szerencsénk van, akkor pont beletalálunk - elsőre - egy járható cellába
+            startY = mapHalfY;
+            startX = mapHalfX;
+            //console.log('@mapEntrance ELSŐRE startY: ' + startY + ' startX: ' + startX + ' type: ' + checkMap[startY][startX]);
+        } else {                                                                //de ha nincs szerencsénk :), akkor megkeressük a térkép közepéhez relatív a legközelebbi járható cellát
+            var isDoneStartPos: boolean = false;
+            while (!isDoneStartPos) {
+                var randCellY = Math.floor((Math.random() * checkMap.length - 1)) + 1;
+                var randCellX = Math.floor((Math.random() * checkMap[0].length - 1)) + 1;
+                if (this.isPassableUnitCell(checkMap, randCellY, randCellX)) {
+                    startY = randCellY;
+                    startX = randCellX;                                                            
                     isDoneStartPos = true;
-                    break;
+                    //console.log('@mapEntrance startY: ' + startY + ' startX: ' + startX + ' type: ' + checkMap[startY][startX]);
                 }
-                if (isDoneStartPos) break;
             }
-            if (isDoneStartPos) break;
-        }
+        }                
+
+        //checkMap[startY][startX] = this.TEST_POSS_DOOR;
+        //for (var cy = 0; cy != checkMap.length - 1; cy++) {
+        //    for (var cx = 0; cx != checkMap[0].length - 1; cx++) {
+        //        if (this.isPassableUnitCell(checkMap, cy, cx)) {
+        //            startY = cy;
+        //            startX = cx;
+        //            isDoneStartPos = true;
+        //            break;
+        //        }
+        //        if (isDoneStartPos) break;
+        //    }
+        //    if (isDoneStartPos) break;
+        //}
+
         //bejárása az összes maze, door, room celláknak (és megjelölni őket, hogy már be vannak járva)        
         var upDir: boolean = true;
         var dwDir: boolean = true;
@@ -627,7 +714,23 @@ export class DungeonGenerator {
             if (!upDir && !dwDir && !ltDir && !rtDir) {
                 cells.splice(selectedElement, 1);
             }
-        }                        
+        }
+        return checkMap;                        
+    }    
+
+    /**
+     * A bejárt és ellenörzött térkép segítségével töröljük az eredeti térképről - a játékos által - nem elérhető cellákat.     
+     * @param originalMap
+     * @param entranceCheckMap
+     */
+    private eraseNotEntranceCellFromMap(originalMap: any, entranceCheckMap: any): void {
+        for (var cy = 0; cy != originalMap.length - 1; cy++) {
+            for (var cx = 0; cx != originalMap[0].length - 1; cx++) {
+                if ((!this.isNotPassableUnitCell(originalMap, cy, cx)) && entranceCheckMap[cy][cx] != this.OKCELL) {
+                    originalMap[cy][cx] = this.WALL;
+                }
+            }
+        }
     }
 
     /**
