@@ -14,7 +14,8 @@ function sendWelcomMsg() {
 }
 
 function generateNewDungeon() {
-    //kb. 10mp a legenerálása 401x401, 100 szoba
+    //kb. 10mp a max legenerálása 401x401, 100 szoba
+    //ideális: 95x95, 50 szoba
     socket.emit('map_generator', 95, 95, 50, 2);
 }
 
