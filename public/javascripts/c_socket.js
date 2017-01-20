@@ -15,7 +15,7 @@ function sendWelcomMsg() {
 
 function generateNewDungeon() {
     //kb. 10mp a legenerálása 401x401, 100 szoba
-    socket.emit('map_generator', 101, 101, 50, 2);
+    socket.emit('map_generator', 95, 95, 50, 2);
 }
 
 socket.on('test_data_from_server', function (testMsg, map) {

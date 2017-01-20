@@ -4,15 +4,6 @@
  */
 
 /*
-    Ismert hibák:
-    A szobákat valailyen módon interpolálva kell elhlyezni, hogy nagyjából a térkép területén 'egyenletesen' legyenek elosztva. A teljesen véletlen elhelyezés
-    problémákat vet fel.
-    Lehetséges, hogy csak egy szoba lesz legenerálva - mert mindegyik belelóg - akkor a maze törlő eltünteti az összes maze cellát, nem lesz labriintus.
-    Előfordulhat olyan térkép generálás, amelyben egy vagy több szoba önálló labirintus részhez kapcsolódik, és ez az egész pedig nem kapcsolódik a fő labirintushoz,
-    tehát a teljes térkép nem bejárható.
-*/
-
-/*
  * Tutorials:
  * http://journal.stuffwithstuff.com/2014/12/21/rooms-and-mazes/
  * https://infoc.eet.bme.hu/labirintus/ (magyar)
@@ -24,6 +15,14 @@
 'use strict';
 
 //var async = require('async');
+
+/*
+    FELADATOK:
+    Kód felgyorsítása, pl. a maze generálsánál addig van benne a while ciklusban, amíg mind a négy irány nem lesz false, ezt lehetne úgy gyorsítani, hogy
+    a még lehetséges irányokat tárljuk, és abból választunk, így sok - felesleges - random kört kikerülhetünk.
+
+    Szobák méreteinek jobb beállítása. Csak olyan szobák kerüljenek ki, amelyek vagy nxn-esek, vagy nx(n-1) vagy nx(n+1) méretűek a lehetséges méretek közül.
+*/
 
 /**
  * Egy adott térképcellát reprezentáló osztály.
@@ -159,7 +158,7 @@ export class DungeonGenerator {
 
         while ((generatedRoomCounter != roomNumber) && !overlappingException) {           
             //FONTOS:   Egy adott szoba X, Y cella koordinátájának mindig páros számmnak kell lennie, a szoba szélességének, 
-            //          illetve hosszúságának pedig mindig páratlannak kell lennie!
+            //          illetve hosszúságának pedig mindig páratlannak kell lennie!            
             var roomWidth = POSSIBLE_ROOM_SIZES[Math.floor((Math.random() * POSSIBLE_ROOM_SIZES.length))];
             var roomHeight = POSSIBLE_ROOM_SIZES[Math.floor((Math.random() * POSSIBLE_ROOM_SIZES.length))];
 
