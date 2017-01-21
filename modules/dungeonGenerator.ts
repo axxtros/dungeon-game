@@ -15,6 +15,7 @@
 'use strict';
 
 //var async = require('async');
+import * as utilModul from "../modules/util";
 
 /*
     FELADATOK:
@@ -88,6 +89,8 @@ export class DungeonGenerator {
     private PASSABLE_UNIT_CELLS_TYPE = [this.MAZE, this.DOOR, this.ROOM];                   //egység által bejárható cella típusok
     private NOT_PASSABLE_UNIT_CELLS_TYPE = [this.WALL, this.MBRD, this.OKCELL];             //egység által nem bejárható cella típusok
 
+    private util = new utilModul.Util();
+
     constructor() {
 
     }
@@ -96,7 +99,7 @@ export class DungeonGenerator {
         var map = this.initMap(mapWidth, mapHeight);
         var entranceCheckMap: any;
         if (this.ROOM_GENERATOR_ENABLED) {
-            this.roomGenerator(map, roomNumber);
+            this.roomGenerator(map, roomNumber, true);
         }
         if (this.MAZE_GENERATOR_ENABLED) {
             this.mazeGenerator(map);
@@ -145,12 +148,15 @@ export class DungeonGenerator {
      * A térképen található szobák generálása.
      * @param map Térkép.
      * @param roomNumber Ennyi szobát próbál meg begenerálni, de ha átlapolás van már egy korábban lerakott szobával, akkor azt kihagyja.
+     * @homogeneousRooms Ha true, akkor a szobák szélessége és magassága csak kis mértékben térnek el egymástól, 'kicsi, takaros' szobák lesznek.
      */
-    private roomGenerator(map: any, roomNumber: number): void {
+    private roomGenerator(map: any, roomNumber: number, homogeneousRooms: boolean): void {
         roomNumber < 2 ? roomNumber = 2 : roomNumber = roomNumber;  //mert minimum két szoba kell a maze-ek törlése miatt
         
         //egy szoba lehetséges cella szélessége/magassága a kiválasztott középponthoz képest, csak páratlan érték lehet!!!
         var POSSIBLE_ROOM_SIZES = [3, 5, 7, 9, 11, 13, 15, 17, 19, 21];
+        var ROOM_SIZE_MIN = POSSIBLE_ROOM_SIZES[0];
+        var ROOM_SIZE_MAX = POSSIBLE_ROOM_SIZES[POSSIBLE_ROOM_SIZES.length - 1];
         var generatedRoomCounter: number = 0;                   //hagyd benne!
         var ROOM_OVERLAPPING_EXCEPTION_MAXIMUM: number = 100;   //ez egy viszonyítási szám, nagyjából kb. ha már 100-szor nem tud szobát elhelyezni a térképen, akkor már nincs hely újabb szobáknak
         var overlappingCounter: number = 0;                     //ha már túl sok a szoba átfedés, akkor az már valószinüleg azért van, mert a térkép méretéhez képest
@@ -159,8 +165,29 @@ export class DungeonGenerator {
         while ((generatedRoomCounter != roomNumber) && !overlappingException) {           
             //FONTOS:   Egy adott szoba X, Y cella koordinátájának mindig páros számmnak kell lennie, a szoba szélességének, 
             //          illetve hosszúságának pedig mindig páratlannak kell lennie!            
-            var roomWidth = POSSIBLE_ROOM_SIZES[Math.floor((Math.random() * POSSIBLE_ROOM_SIZES.length))];
-            var roomHeight = POSSIBLE_ROOM_SIZES[Math.floor((Math.random() * POSSIBLE_ROOM_SIZES.length))];
+            var roomWidth: number;
+            var roomHeight: number;
+
+            if (homogeneousRooms) {
+                var randomRoomWidth: number = this.util.getRandomNumberMinMax(ROOM_SIZE_MIN, ROOM_SIZE_MAX);
+                var randomChoose = this.util.getRandomNumberMinMax(0, 1);
+                switch (randomChoose) {
+                    case 0: randomRoomWidth += (randomRoomWidth % 2 == 0 ? 1 : 0); break;
+                    case 1: randomRoomWidth -= (randomRoomWidth % 2 == 0 ? 1 : 0); break;
+                }
+                var randomRoomHeight: number;
+                randomChoose = this.util.getRandomNumberMinMax(0, 2);
+                switch (randomChoose) {
+                    case 0: randomRoomHeight = randomRoomWidth - 2; break;
+                    case 1: randomRoomHeight = randomRoomWidth; break;
+                    case 2: randomRoomHeight = randomRoomWidth + 2; break;
+                }
+                roomWidth = randomRoomWidth;
+                roomHeight = randomRoomHeight;
+            } else {
+                roomWidth = POSSIBLE_ROOM_SIZES[Math.floor((Math.random() * POSSIBLE_ROOM_SIZES.length))];
+                roomHeight = POSSIBLE_ROOM_SIZES[Math.floor((Math.random() * POSSIBLE_ROOM_SIZES.length))];
+            }            
 
             //a szoba nem lóghat ki a térképről, ezért az X és Y meghatározása a szélek figyelésével generálódik
             //+ a szoba egyetlen cellája sem lehet rajta a térkép határon (nem lehet közvetlenül a térkép szélén) [ezért van a +2 , -2]
