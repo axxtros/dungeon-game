@@ -178,9 +178,17 @@ export class DungeonGenerator {
                 var randomRoomHeight: number;
                 randomChoose = this.util.getRandomNumberMinMax(0, 2);
                 switch (randomChoose) {
-                    case 0: randomRoomHeight = randomRoomWidth - 2; break;
+                    case 0:
+                        if (randomRoomWidth != ROOM_SIZE_MIN) {
+                            randomRoomHeight = randomRoomWidth - 2;
+                        }                        
+                        break;
                     case 1: randomRoomHeight = randomRoomWidth; break;
-                    case 2: randomRoomHeight = randomRoomWidth + 2; break;
+                    case 2:
+                        if (randomRoomWidth != ROOM_SIZE_MAX) {
+                            randomRoomHeight = randomRoomWidth + 2;
+                        }                        
+                        break;
                 }
                 roomWidth = randomRoomWidth;
                 roomHeight = randomRoomHeight;
