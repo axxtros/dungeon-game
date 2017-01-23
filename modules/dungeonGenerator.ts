@@ -162,14 +162,15 @@ export class DungeonGenerator {
         var overlappingCounter: number = 0;                     //ha már túl sok a szoba átfedés, akkor az már valószinüleg azért van, mert a térkép méretéhez képest
         var overlappingException: boolean = false;              //nem lehet további szobákat lerakni, ekkor elég annyi szoba, amennyi már le van generálva
 
-        while ((generatedRoomCounter != roomNumber) && !overlappingException) {           
-            //FONTOS:   Egy adott szoba X, Y cella koordinátájának mindig páros számmnak kell lennie, a szoba szélességének, 
-            //          illetve hosszúságának pedig mindig páratlannak kell lennie!            
-            var roomWidth: number;
-            var roomHeight: number;
+        //FONTOS:   Egy adott szoba X, Y cella koordinátájának mindig páros számmnak kell lennie, a szoba szélességének, 
+        //          illetve hosszúságának pedig mindig páratlannak kell lennie!            
+        var roomWidth: number;
+        var roomHeight: number;
+
+        while ((generatedRoomCounter != roomNumber) && !overlappingException) {                       
 
             if (homogeneousRooms) {
-                var randomRoomWidth: number = this.util.getRandomNumberMinMax(ROOM_SIZE_MIN, ROOM_SIZE_MAX);
+                var randomRoomWidth: number = this.util.getRandomNumberMinMax(ROOM_SIZE_MIN, ROOM_SIZE_MAX);                
                 var randomChoose = this.util.getRandomNumberMinMax(0, 1);
                 switch (randomChoose) {
                     case 0: randomRoomWidth += (randomRoomWidth % 2 == 0 ? 1 : 0); break;
@@ -181,17 +182,23 @@ export class DungeonGenerator {
                     case 0:
                         if (randomRoomWidth != ROOM_SIZE_MIN) {
                             randomRoomHeight = randomRoomWidth - 2;
-                        }                        
+                        } else {
+                            randomRoomHeight = randomRoomWidth + 2;
+                        }                       
                         break;
-                    case 1: randomRoomHeight = randomRoomWidth; break;
+                    case 1: randomRoomHeight = randomRoomWidth;
+                        break;
                     case 2:
                         if (randomRoomWidth != ROOM_SIZE_MAX) {
                             randomRoomHeight = randomRoomWidth + 2;
-                        }                        
+                        } else {
+                            randomRoomHeight = randomRoomWidth - 2;
+                        }
                         break;
                 }
                 roomWidth = randomRoomWidth;
                 roomHeight = randomRoomHeight;
+                console.log('@room roomWidth: ' + roomWidth + ' roomHeight: ' + roomHeight);
             } else {
                 roomWidth = POSSIBLE_ROOM_SIZES[Math.floor((Math.random() * POSSIBLE_ROOM_SIZES.length))];
                 roomHeight = POSSIBLE_ROOM_SIZES[Math.floor((Math.random() * POSSIBLE_ROOM_SIZES.length))];

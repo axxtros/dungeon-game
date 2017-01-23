@@ -9,7 +9,7 @@ export class Util {
     }
 
     public getRandomNumberMinMax(min: number, max: number): number {
-        return Math.floor((Math.random() * max)) + min;
+        return Math.floor((Math.random() * max) + min);
     }
 
     
