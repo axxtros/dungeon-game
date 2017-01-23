@@ -67,7 +67,7 @@ export class SocketClass {
             socket.on('path_finder', function (map, startCellY, startCellX, targetCellY, targetCellX) {
                 var pathFinder = new pathFinderModule.Pathfinder(map, startCellY, startCellX, targetCellY, targetCellX);
                 var path = pathFinder.searchPath();
-                socket.emit('path_data_from_server', 'Unit path is generated! :)');
+                socket.emit('path_data_from_server', path);
             });
 
         });

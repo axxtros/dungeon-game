@@ -1,7 +1,7 @@
 ﻿//client util services
 
 var DEV_MODE = true;
-var DEBUG_MODE = true;
+var DEBUG_MODE = false;
 var ENABLED_MOUSE_EVENT = true;
 
 function isDebugMode() {

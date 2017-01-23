@@ -8,7 +8,7 @@ function mouseClickedEvent(event) {
 
     var cellY = Math.floor(clickedY / MAP_ELEMENT_SIZE);
     var cellX = Math.floor(clickedX / MAP_ELEMENT_SIZE);
-    DEBUG_LOG('@mousedown click cellY: ' + cellY + ' cellX:' + cellX + ' map cell type: ' + gameMap[cellY][cellX]);
+    DEBUG_LOG('@mousedown click cellY: ' + cellY + ' cellX:' + cellX + ' map cell type: ' + st_gameMap[cellY][cellX]);
         
     if (event.button === 0) {   //bal egérgomb
         DEBUG_LOG('@mousedown click left mouse button');
