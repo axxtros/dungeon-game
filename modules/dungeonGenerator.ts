@@ -62,7 +62,14 @@ class MapCell {
     }
 }
 
+const enum RoomType {
+    HOMOGENEOUS_ROOM = 1,    
+    RANDOM_ROOM = 2
+};
+
 export class DungeonGenerator {    
+
+    private util = new utilModul.Util();
 
     private DEBUG_CONSOLE_PRINT: boolean = false;
 
@@ -87,9 +94,7 @@ export class DungeonGenerator {
     private OKCELL: number = 6;                         //cella bejárva (teszt miatt)
 
     private PASSABLE_UNIT_CELLS_TYPE = [this.MAZE, this.DOOR, this.ROOM];                   //egység által bejárható cella típusok
-    private NOT_PASSABLE_UNIT_CELLS_TYPE = [this.WALL, this.MBRD, this.OKCELL];             //egység által nem bejárható cella típusok
-
-    private util = new utilModul.Util();
+    private NOT_PASSABLE_UNIT_CELLS_TYPE = [this.WALL, this.MBRD, this.OKCELL];             //egység által nem bejárható cella típusok            
 
     constructor() {
 
@@ -99,7 +104,7 @@ export class DungeonGenerator {
         var map = this.initMap(mapWidth, mapHeight);
         var entranceCheckMap: any;
         if (this.ROOM_GENERATOR_ENABLED) {
-            this.roomGenerator(map, roomNumber, true);
+            this.roomGenerator(map, roomNumber, RoomType.HOMOGENEOUS_ROOM);
         }
         if (this.MAZE_GENERATOR_ENABLED) {
             this.mazeGenerator(map);
@@ -150,11 +155,11 @@ export class DungeonGenerator {
      * @param roomNumber Ennyi szobát próbál meg begenerálni, de ha átlapolás van már egy korábban lerakott szobával, akkor azt kihagyja.
      * @homogeneousRooms Ha true, akkor a szobák szélessége és magassága csak kis mértékben térnek el egymástól, 'kicsi, takaros' szobák lesznek.
      */
-    private roomGenerator(map: any, roomNumber: number, homogeneousRooms: boolean): void {
+    private roomGenerator(map: any, roomNumber: number, roomType: RoomType): void {
         roomNumber < 2 ? roomNumber = 2 : roomNumber = roomNumber;  //mert minimum két szoba kell a maze-ek törlése miatt
         
         //egy szoba lehetséges cella szélessége/magassága a kiválasztott középponthoz képest, csak páratlan érték lehet!!!
-        var POSSIBLE_ROOM_SIZES = [3, 5, 7, 9, 11, 13, 15, 17, 19, 21];
+        var POSSIBLE_ROOM_SIZES = [3, 5, 7, 9/*, 11, 13, 15, 17, 19, 21*/];
         var ROOM_SIZE_MIN = POSSIBLE_ROOM_SIZES[0];
         var ROOM_SIZE_MAX = POSSIBLE_ROOM_SIZES[POSSIBLE_ROOM_SIZES.length - 1];
         var generatedRoomCounter: number = 0;                   //hagyd benne!
@@ -169,7 +174,7 @@ export class DungeonGenerator {
 
         while ((generatedRoomCounter != roomNumber) && !overlappingException) {                       
 
-            if (homogeneousRooms) {
+            if (roomType == RoomType.HOMOGENEOUS_ROOM) {
                 var randomRoomWidth: number = this.util.getRandomNumberMinMax(ROOM_SIZE_MIN, ROOM_SIZE_MAX);                
                 var randomChoose = this.util.getRandomNumberMinMax(0, 1);
                 switch (randomChoose) {
@@ -198,7 +203,7 @@ export class DungeonGenerator {
                 }
                 roomWidth = randomRoomWidth;
                 roomHeight = randomRoomHeight;
-                console.log('@room roomWidth: ' + roomWidth + ' roomHeight: ' + roomHeight);
+                this._DEBUG_LOG('@room roomWidth: ' + roomWidth + ' roomHeight: ' + roomHeight);                
             } else {
                 roomWidth = POSSIBLE_ROOM_SIZES[Math.floor((Math.random() * POSSIBLE_ROOM_SIZES.length))];
                 roomHeight = POSSIBLE_ROOM_SIZES[Math.floor((Math.random() * POSSIBLE_ROOM_SIZES.length))];
@@ -657,8 +662,7 @@ export class DungeonGenerator {
 
         if (this.isPassableUnitCell(checkMap, mapHalfY, mapHalfX)) {            //ha szerencsénk van, akkor pont beletalálunk - elsőre - egy járható cellába
             startY = mapHalfY;
-            startX = mapHalfX;
-            //console.log('@mapEntrance ELSŐRE startY: ' + startY + ' startX: ' + startX + ' type: ' + checkMap[startY][startX]);
+            startX = mapHalfX;            
         } else {                                                                //de ha nincs szerencsénk :), akkor megkeressük a térkép közepéhez relatív a legközelebbi járható cellát
             var isDoneStartPos: boolean = false;
             while (!isDoneStartPos) {
@@ -667,25 +671,10 @@ export class DungeonGenerator {
                 if (this.isPassableUnitCell(checkMap, randCellY, randCellX)) {
                     startY = randCellY;
                     startX = randCellX;                                                            
-                    isDoneStartPos = true;
-                    //console.log('@mapEntrance startY: ' + startY + ' startX: ' + startX + ' type: ' + checkMap[startY][startX]);
+                    isDoneStartPos = true;                    
                 }
             }
-        }                
-
-        //checkMap[startY][startX] = this.TEST_POSS_DOOR;
-        //for (var cy = 0; cy != checkMap.length - 1; cy++) {
-        //    for (var cx = 0; cx != checkMap[0].length - 1; cx++) {
-        //        if (this.isPassableUnitCell(checkMap, cy, cx)) {
-        //            startY = cy;
-        //            startX = cx;
-        //            isDoneStartPos = true;
-        //            break;
-        //        }
-        //        if (isDoneStartPos) break;
-        //    }
-        //    if (isDoneStartPos) break;
-        //}
+        }        
 
         //bejárása az összes maze, door, room celláknak (és megjelölni őket, hogy már be vannak járva)        
         var upDir: boolean = true;
