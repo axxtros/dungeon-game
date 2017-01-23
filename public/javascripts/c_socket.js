@@ -24,4 +24,4 @@ socket.on('map_data_from_server', function (testMsg, map) {
     drawMap(map);
 })
 
-generateNewDungeon();
+//generateNewDungeon();

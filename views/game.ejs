@@ -27,9 +27,10 @@
             <canvas id="mapcanvas" style="position: absolute; z-index: 0;">
                 Your browser is not supported the HTML5 canvas!
             </canvas>
-            <canvas id="unitcanvas" style="position: absolute; z-index: 1;"></canvas>
-            <canvas id="missilecanvas" style="position: absolute; z-index: 2;"></canvas>
-            <canvas id="devcanvas" style="position: absolute; z-index: 100;"></canvas>
+            <canvas id="unitcanvas" style="position: absolute; z-index: 100;"></canvas>
+            <canvas id="missilecanvas" style="position: absolute; z-index: 200;"></canvas>
+            <canvas id="devcanvas" style="position: absolute; z-index: 300;"></canvas>
+            <canvas id="mousecanvas" style="position: absolute; z-index: 400;"></canvas>
         </div>                
     </div>
         
@@ -42,6 +43,7 @@
     <script src="/javascripts/c_util.js"></script>
     <script src="/javascripts/c_socket.js"></script>    
     <script src="/javascripts/c_init.js"></script>
+    <script src="/javascripts/c_events.js"></script>
     <script src="/javascripts/c_draw.js"></script>
 
 </body>

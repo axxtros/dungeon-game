@@ -9,51 +9,61 @@ var mapCanvas;
 var unitCanvas;
 var missileCanvas;
 var devCanvas;
+var mouseCanvas;
 
 var mapCanvasContext;
 var unitcanvasContext;
 var missilecanvasContext;
 var devcanvasContext;
+var mouseCanvasContext;
+
+var canvasOffset;           //ebben van eltárolva, hogy mennyivel vannak eltolva az egyes canvas-ek. ez főleg az egér kurzor lekérdezésénél fontos (c_events.js)
 
 function initCanvasComponents() {    
-    //log('Initalizate client side HTML components. START!');
+    //DEBUG_LOG('Initalizate client side HTML components. START!');
     
     //gameDiv
     var gamediv = document.getElementById('gamediv');
     if (gamediv === null || gamediv === 'undefined') {
-        log('Nof find gamediv element!');
+        DEBUG_LOG('Nof find gamediv element!');
         return;
     }
     gamediv.style.width = GAME_DIV_WIDTH + 'px';
     gamediv.style.height = GAME_DIV_HEIGHT + 'px';
-    var canvasOffset = gamediv.getBoundingClientRect();  
+    canvasOffset = gamediv.getBoundingClientRect();  
     
     //mapCanvas
-    var mapCanvas = document.getElementById('mapcanvas');
-    initCanvas(mapCanvas, canvasOffset);
+    mapCanvas = document.getElementById('mapcanvas');
+    initCanvas(mapCanvas, canvasOffset);    
     
     //unitCanvas
-    var unitCanvas = document.getElementById('unitcanvas');
+    unitCanvas = document.getElementById('unitcanvas');
     initCanvas(unitCanvas, canvasOffset);
     
     //missileCanvas
-    var missileCanvas = document.getElementById('missilecanvas');
+    missileCanvas = document.getElementById('missilecanvas');
     initCanvas(missileCanvas, canvasOffset);
     
     //devCanvas    
-    var devCanvas = document.getElementById('devcanvas');
+    devCanvas = document.getElementById('devcanvas');
     if (isDevMode()) {                        
         initCanvas(devCanvas, canvasOffset);
     } else { 
         devCanvas.style.display = 'none';
     }
+    
+    mouseCanvas = document.getElementById('mousecanvas');
+    if (isEnabledMouseEvents()) { 
+        initCanvas(mouseCanvas, canvasOffset);
+        initMouseEvents(mouseCanvas);
+    }
         
-    //log('Initalizate client side HTML components. SUCCESS END!');
+    //DEBUG_LOG('Initalizate client side HTML components. SUCCESS END!');
 }
 
 function initCanvas(canvasElement, canvasOffset) {
     if (canvasElement === null || canvasElement === 'undefined') {
-        log('Not find ' + canvasElement + ' element!');
+        DEBUG_LOG('Not find ' + canvasElement + ' element!');
         return;
     }    
     canvasElement.style.top = canvasOffset.top + 'px';
@@ -75,7 +85,14 @@ function initCanvas(canvasElement, canvasOffset) {
     if (canvasElement.id === 'devcanvas') {
         devcanvasContext = canvasElement.getContext('2d');
         initCanvasContext(devcanvasContext);        
-        canvasElement.style.border = '1px solid darkgray';
+        canvasElement.style.border = '1px solid lightgray';
+    }
+    if (canvasElement.id === 'mousecanvas') {
+        mouseCanvasContext = canvasElement.getContext('2d');
+        initCanvasContext(mouseCanvasContext);
+        if (isDebugMode()) { 
+            canvasElement.style.border = '1px solid lightblue';
+        }        
     }
 }
 
@@ -83,6 +100,10 @@ function initCanvasContext(canvasContext) {
     canvasContext.canvas.width = GAME_DIV_WIDTH;
     canvasContext.canvas.height = GAME_DIV_HEIGHT;
     canvasContext.scale(1, 1);
+}
+
+function initMouseEvents(canvasElement) { 
+    canvasElement.addEventListener("mouseup", mouseClickedEvent, false);	
 }
 
 function main() { 

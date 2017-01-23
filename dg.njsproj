@@ -73,6 +73,7 @@
     <Compile Include="modules\db2.js" />
     <Compile Include="modules\socket2.js" />
     <Compile Include="public\javascripts\c_draw.js" />
+    <Compile Include="public\javascripts\c_events.js" />
     <Compile Include="public\javascripts\c_util.js" />
     <Compile Include="public\javascripts\c_init.js" />
     <Compile Include="public\javascripts\c_socket.js" />
