@@ -18,8 +18,8 @@ class PathCell {
 
     private _cellY: number;
     private _cellX: number;
-    private _g: number;    
-    private _h: number;
+    private _g: number;             //távolság a kezdettől    
+    private _h: number;             //heuristic, távolság a céltól 
 
     constructor(cellY: number, cellX: number) {
         this._cellY = cellY;
@@ -55,10 +55,11 @@ class PathCell {
     }
 
     set h(h: number) {
-        this._h = h;
+        this._h = h;    
     }
 
-    get gh(): number {
+    //f is the last node on the path (f = g + h)
+    get f(): number {        
         return this._g + this._h;
     }
 }
@@ -71,6 +72,8 @@ export class Pathfinder {
     private startCellX: number;
     private targetCellY: number;
     private targetCellX: number;
+    private openCellList = [];
+    private closeCellList = [];
     private resultPath = [];
 
     constructor(gameMap: any, startCellY: number, startCellX: number, targetCellY: number, targetCellX: number) {
@@ -79,13 +82,16 @@ export class Pathfinder {
         this.startCellX = startCellX;
         this.targetCellY = targetCellY;
         this.targetCellX = targetCellX;
+        this.openCellList = new Array<PathCell>();
+        this.closeCellList = new Array<PathCell>();
+        //csak tesztre, majd töröld ki
         this.resultPath = new Array<number>();
-        this.resultPath.push(startCellY);
-        this.resultPath.push(startCellX);
+        this.resultPath.push(startCellY);        
+        this.resultPath.push(startCellX);        
     }
 
     public searchPath(): any {
-        console.log('@pathFinder server start...startCellY: ' + this.startCellY + ' startCellX: ' + this.startCellX);
+        
         
         return this.resultPath;
     }
