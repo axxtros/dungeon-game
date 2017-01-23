@@ -5,6 +5,7 @@
 'use strict';
 
 import * as dungeonGeneratorModule from '../modules/dungeonGenerator';
+import * as pathFinderModule from '../modules/pathFinder';
 
 /*
 import express = require('express');
@@ -57,12 +58,17 @@ export class SocketClass {
                 console.log('@websocket Welcome message from client: ' + data);
             });
 
-            socket.on('map_generator', function (mapWidth, mapHeight, roomNumber, doorsPerRoom) {
-                //console.log('@websocket dungeon width: ' + dungeonWidth + ' dungeon height:' + dungeonHeight);
+            socket.on('map_generator', function (mapWidth, mapHeight, roomNumber, doorsPerRoom) {                
                 var dungeonGenerator = new dungeonGeneratorModule.DungeonGenerator();                
                 var map = dungeonGenerator.generator(mapWidth, mapHeight, roomNumber, doorsPerRoom);
                 socket.emit('map_data_from_server', 'Map generated is done! Please look at in the server console.', map);
-            });            
+            });
+
+            socket.on('path_finder', function (map, startCellY, startCellX, targetCellY, targetCellX) {
+                var pathFinder = new pathFinderModule.Pathfinder(map, startCellY, startCellX, targetCellY, targetCellX);
+                var path = pathFinder.searchPath();
+                socket.emit('path_data_from_server', 'Unit path is generated! :)');
+            });
 
         });
 

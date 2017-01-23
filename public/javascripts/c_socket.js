@@ -4,9 +4,8 @@
 //<script src="http://localhost:3000/socket.io/socket.io.js"></script>  
 
 var host = window.location.hostname;
-var socket = new io.connect("ws://" + host + ":3000");
-
-var map;
+var webSocketPort = 3000;
+var socket = new io.connect("ws://" + host + ":" + webSocketPort);
 
 function sendWelcomMsg() {
     console.log('Welcome message sending!');
@@ -21,7 +20,16 @@ function generateNewDungeon() {
 
 socket.on('map_data_from_server', function (testMsg, map) {
     console.log('Test message from server: ' + testMsg);
+    addNewGameMap(map);
     drawMap(map);
 })
 
-//generateNewDungeon();
+function searchUnitPath(startCellY, startCellX, targetCellY, targetCellX) { 
+    socket.emit('path_finder', gameMap, startCellY, startCellX, targetCellY, targetCellX);
+}
+
+socket.on('path_data_from_server', function (testMsg) {
+    console.log('Test message from path finder server: ' + testMsg);    
+})
+
+generateNewDungeon();

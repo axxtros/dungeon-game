@@ -38,6 +38,7 @@
     <TypeScriptCompile Include="modules\application.ts" />
     <TypeScriptCompile Include="modules\db.ts" />
     <TypeScriptCompile Include="modules\dungeonGenerator.ts" />
+    <TypeScriptCompile Include="modules\pathFinder.ts" />
     <TypeScriptCompile Include="modules\socket.ts" />
     <TypeScriptCompile Include="modules\storage.ts" />
     <TypeScriptCompile Include="modules\util.ts" />
@@ -74,6 +75,7 @@
     <Compile Include="modules\socket2.js" />
     <Compile Include="public\javascripts\c_draw.js" />
     <Compile Include="public\javascripts\c_events.js" />
+    <Compile Include="public\javascripts\c_storage.js" />
     <Compile Include="public\javascripts\c_util.js" />
     <Compile Include="public\javascripts\c_init.js" />
     <Compile Include="public\javascripts\c_socket.js" />
