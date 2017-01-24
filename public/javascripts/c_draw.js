@@ -11,13 +11,14 @@ var TEST_POSS_DOOR = 5;                 //lehetséges ajtók (teszt miatt)
 var OKCELL = 6;                         //cella bejárva (teszt miatt)
 
 var MAZE_COLOR = 'white';
-var WALL_COLOR = 'grey';
-var MAP_BORDER_COLOR = 'darkgrey';
-var ROOM_COLOR = 'darkred';
-var DOOR_COLOR = 'orange';
-var POSSIBLE_DOOR_COLOR = 'yellow';
-var OKCELL_COLOR = 'lightblue';
-var PATH_COLOR = 'lightgreen';
+var WALL_COLOR = '#A4A4A4';
+var MAP_BORDER_COLOR = '#848484';
+var ROOM_COLOR = '#6E6E6E';
+var DOOR_COLOR = '#FAAC58';
+var POSSIBLE_DOOR_COLOR = '#F4FA58';
+var OKCELL_COLOR = '#81BEF7';
+var PATH_COLOR = '#81F781';
+var TEST_TARGET_CELL_COLOR = '#FF001F';
 
 function drawMap(map) {
     var mapElementX = 0;
@@ -61,4 +62,11 @@ function drawPath(path) {
         mapCanvasContext.fillStyle = PATH_COLOR;
         mapCanvasContext.fill();
     }
+}
+
+function drawCell(cellY, cellX) {    
+    mapCanvasContext.beginPath();
+    mapCanvasContext.rect(cellY * MAP_ELEMENT_SIZE, cellX * MAP_ELEMENT_SIZE, MAP_ELEMENT_SIZE, MAP_ELEMENT_SIZE);
+    mapCanvasContext.fillStyle = TEST_TARGET_CELL_COLOR;
+    mapCanvasContext.fill();  
 }

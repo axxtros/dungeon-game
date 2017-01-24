@@ -65,7 +65,8 @@ export class SocketClass {
             });
 
             socket.on('path_finder', function (map, startCellY, startCellX, targetCellY, targetCellX) {
-                var pathFinder = new pathFinderModule.Pathfinder(map, startCellY, startCellX, targetCellY, targetCellX);
+                var pathFinder = new pathFinderModule.Pathfinder(map, 10, 10, 40, 40);
+                //var pathFinder = new pathFinderModule.Pathfinder(map, startCellY, startCellX, targetCellY, targetCellX);
                 var path = pathFinder.searchPath();
                 socket.emit('path_data_from_server', path);
             });
