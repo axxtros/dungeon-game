@@ -27,43 +27,6 @@ import * as utilModul from "../modules/util";
     Szobák méreteinek jobb beállítása. Csak olyan szobák kerüljenek ki, amelyek vagy nxn-esek, vagy nx(n-1) vagy nx(n+1) méretűek a lehetséges méretek közül.
 */
 
-/**
- * Egy adott térképcellát reprezentáló osztály.
- */
-class MapCell {
-
-    private _cellY: number;
-    private _cellX: number;
-    private _type: number;
-
-    constructor() {
-    }    
-
-    get cellY(): number {
-        return this._cellY;
-    }
-
-    set cellY(cellY: number) {
-        this._cellY = cellY;
-    }
-
-    get cellX(): number {
-        return this._cellX;
-    }
-
-    set cellX(cellX: number) {
-        this._cellX = cellX;
-    }
-
-    get type(): number {
-        return this._type;
-    }
-
-    set type(type: number) {
-        this._type = type;
-    }
-}
-
 const enum RoomType {
     HOMOGENEOUS_ROOM = 1,    
     RANDOM_ROOM = 2
@@ -71,9 +34,7 @@ const enum RoomType {
 
 export class DungeonGenerator extends baseClassesModul.MapBase {    
 
-    private util = new utilModul.Util();
-
-    private DEBUG_CONSOLE_PRINT: boolean = false;
+    private util = new utilModul.Util();    
 
     //a dungeon generálás egyes fázisainak engedélyezése/tiltása
     private ROOM_GENERATOR_ENABLED: boolean = true;
@@ -751,35 +712,7 @@ export class DungeonGenerator extends baseClassesModul.MapBase {
                 }
             }
         }
-    }
-
-    /**
-     * True, ha az adott cella a térképen a játékos egység által bejárható.
-     * @param map
-     * @param cellY
-     * @param cellX
-     */
-    private isPassableUnitCell(map: any, cellY: number, cellX: number): boolean {
-        for (var i = 0; i != this.PASSABLE_UNIT_CELLS_TYPE.length; i++) {
-            if (map[cellY][cellX] == this.PASSABLE_UNIT_CELLS_TYPE[i])
-                return true;
-        }
-        return false;
-    }
-
-    /**
-     * True, ha az adott cella a térképen a játékos által nem bejárható.
-     * @param map
-     * @param cellY
-     * @param cellX
-     */
-    private isNotPassableUnitCell(map: any, cellY: number, cellX: number): boolean {
-        for (var i = 0; i != this.NOT_PASSABLE_UNIT_CELLS_TYPE.length; i++) {
-            if (map[cellY][cellX] == this.NOT_PASSABLE_UNIT_CELLS_TYPE[i])
-                return true;
-        }
-        return false;
-    }
+    }    
 
     private writeMapToServerConsole(map: any): void {
         console.log('\r\n');
@@ -803,12 +736,6 @@ export class DungeonGenerator extends baseClassesModul.MapBase {
             console.log(line);                          //összefüzve egy sorba, mert a node szerver log egy cmd, és ott minden egyes log automatikusan egy-egy új sor :)            
         }
         console.log('\r\n');
-    }
-
-    private _DEBUG_LOG(msg: string): void {
-        if (this.DEBUG_CONSOLE_PRINT) {
-            console.log('@dungeonGenerator.js :' + msg);
-        }
-    }
+    }    
     
 }
