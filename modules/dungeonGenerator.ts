@@ -15,7 +15,9 @@
 'use strict';
 
 //var async = require('async');
+import * as baseClassesModul from "../modules/baseClasses";
 import * as utilModul from "../modules/util";
+
 
 /*
     FELADATOK:
@@ -67,7 +69,7 @@ const enum RoomType {
     RANDOM_ROOM = 2
 };
 
-export class DungeonGenerator {    
+export class DungeonGenerator extends baseClassesModul.MapBase {    
 
     private util = new utilModul.Util();
 
@@ -82,22 +84,10 @@ export class DungeonGenerator {
     private REMOVE_DEAD_CELLS_ENABLED: boolean = true;
     private POST_PROCESSES_ENABLED: boolean = true;
     private TEST_ENTRANCE_MAP_ENABLED: boolean = false;
-    private WRITE_MAP_TO_CONSOLE_ENABLED: boolean = false;
-
-    //cella típusok
-    private MAZE: number = 0;                           //folyosó (egységek által járható cellák)
-    private WALL: number = 1;                           //fal (egységek által nem járható cellák)
-    private MBRD: number = 2;                           //térkép határ (MBRD = map border) (nem járható, és ide semmilyen más specifikus cella nem generálható)
-    private ROOM: number = 3;                           //szoba (egységek által járható cellák)    
-    private DOOR: number = 4;                           //ajtó
-    private TEST_POSS_DOOR: number = 5;                 //lehetséges ajtók (teszt miatt)
-    private OKCELL: number = 6;                         //cella bejárva (teszt miatt)
-
-    private PASSABLE_UNIT_CELLS_TYPE = [this.MAZE, this.DOOR, this.ROOM];                   //egység által bejárható cella típusok
-    private NOT_PASSABLE_UNIT_CELLS_TYPE = [this.WALL, this.MBRD, this.OKCELL];             //egység által nem bejárható cella típusok            
+    private WRITE_MAP_TO_CONSOLE_ENABLED: boolean = false;           
 
     constructor() {
-
+        super();
     }
 
     public generator(mapWidth: number, mapHeight: number, roomNumber: number, doorsPerRoom: number): any {        

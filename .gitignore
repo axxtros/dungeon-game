@@ -263,3 +263,4 @@ modules/socket.js
 modules/dungeonGenerator.js
 modules/util.js
 modules/pathFinder.js
+modules/baseClasses.js

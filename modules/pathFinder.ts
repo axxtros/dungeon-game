@@ -12,6 +12,7 @@
 
 'use strict';
 
+import * as baseClassesModul from "../modules/baseClasses";
 import * as utilModul from "../modules/util";
 
 class PathCell {
@@ -64,7 +65,7 @@ class PathCell {
     }
 }
 
-export class Pathfinder {
+export class Pathfinder extends baseClassesModul.MapBase {
 
     private util = new utilModul.Util();
     private map: any;
@@ -77,6 +78,7 @@ export class Pathfinder {
     private resultPath = [];
 
     constructor(gameMap: any, startCellY: number, startCellX: number, targetCellY: number, targetCellX: number) {
+        super();
         this.map = gameMap;
         this.startCellY = startCellY;
         this.startCellX = startCellX;
@@ -84,7 +86,7 @@ export class Pathfinder {
         this.targetCellX = targetCellX;
         this.openCellList = new Array<PathCell>();
         this.closeCellList = new Array<PathCell>();
-        //csak tesztre, majd töröld ki
+        //csak tesztre, majd töröld ki!!!
         this.resultPath = new Array<number>();
         this.resultPath.push(startCellY);        
         this.resultPath.push(startCellX);        
