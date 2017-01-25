@@ -23,6 +23,7 @@ export class MapCell {
     private _type: number;              //cella típusa
     private _g: number;                 //távolság a kezdettől    
     private _h: number;                 //heuristic, távolság a céltól
+    private _f: number;                 //g + h
     private _perviousCellId: number;    //útvonalban az elöző cella id-ja
     private _pathCellType: CellPathType;
 
@@ -80,10 +81,13 @@ export class MapCell {
     set h(h: number) {
         this._h = h;
     }
-
-    //f is the last node on the path (f = g + h)
+    
     get f(): number {
-        return this._g + this._h;
+        return this._f;
+    }
+
+    set f(f: number) {
+        this._f = f;
     }
 
     get pathCellType(): CellPathType {

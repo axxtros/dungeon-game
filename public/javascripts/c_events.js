@@ -12,7 +12,7 @@ function mouseClickedEvent(event) {
         
     if (event.button === 0) {   //bal egérgomb
         DEBUG_LOG('@mousedown click left mouse button');        
-        searchUnitPath(cellY, cellX, 40, 40);               
+        searchUnitPath(cellY, cellX, 10, 10);               
     }
     if (event.button === 1) {   //középső egérgomb
         DEBUG_LOG('@mousedown click middle mouse button');

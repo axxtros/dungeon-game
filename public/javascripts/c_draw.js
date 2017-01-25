@@ -50,6 +50,7 @@ function drawMap(map) {
             mapElementX = 0;
             mapElementY += MAP_ELEMENT_SIZE;
         }
+        drawCell(10, 10);
     } else { 
         log('Map is null or undefined!');
     }
