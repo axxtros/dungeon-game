@@ -84,8 +84,8 @@ export class DungeonGenerator extends baseClassesModul.MapBase {
 
     private initMap(mapWidth: number, mapHeight: number): any {
         var map = [];
-        mapWidth += (mapWidth % 2 == 0 ? 1 : 0);                                            //hogy mindig biztosan páratlan legyen a térkép szélessége és
-        mapHeight += (mapHeight % 2 == 0 ? 1 : 0);                                          //magassága
+        mapWidth += (mapWidth % 2 == 0 ? 1 : 0);                                            //hogy mindig biztosan páratlan legyen a térkép szélessége,
+        mapHeight += (mapHeight % 2 == 0 ? 1 : 0);                                          //és magassága
         for (var cellY = 0; cellY < mapHeight; cellY++) {
             map[cellY] = [];
             for (var cellX = 0; cellX < mapWidth; cellX++) {                

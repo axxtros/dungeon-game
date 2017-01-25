@@ -64,89 +64,89 @@ export class Pathfinder extends baseClassesModul.MapBase {
 
     /**
      * Adott cell körüli szomszédos cellák keresése, és h, g és f számítása a megtalált cellára.
-     * @param tile Az aktuális cella.
+     * @param currentCell Az aktuális cella.
      */
     private searchNeighborCells(currentCell: MapCell) {
         var neighborCell: MapCell;
         //bal-felső cella
-        neighborCell = new baseClassesModul.MapCell(currentCell.cellY - 1, currentCell.cellX - 1, baseClassesModul.CellPathType.NA);
+        neighborCell = new baseClassesModul.MapCell(currentCell.cellY - 1, currentCell.cellX - 1, baseClassesModul.CellPathType.NA, currentCell);
         if (this.isTargetCell(neighborCell)) {
             this.endPathFinding = true;
             return;
         }
         if (this.isPassableUnitCell(this.map, neighborCell.cellY, neighborCell.cellX) && !this.isStartCell(neighborCell)) {
             this.calcCellPathValues(neighborCell, CellPathCostType.DIAGONAL);
-            this.openCellList.push(neighborCell);
+            this.addCellToOpenCellList(neighborCell);            
         }
         //felső cella
-        neighborCell = new baseClassesModul.MapCell(currentCell.cellY - 1, currentCell.cellX, baseClassesModul.CellPathType.NA);
+        neighborCell = new baseClassesModul.MapCell(currentCell.cellY - 1, currentCell.cellX, baseClassesModul.CellPathType.NA, currentCell);
         if (this.isTargetCell(neighborCell)) {
             this.endPathFinding = true;
             return;
         }
         if (this.isPassableUnitCell(this.map, neighborCell.cellY, neighborCell.cellX) && !this.isStartCell(neighborCell)) {
             this.calcCellPathValues(neighborCell, CellPathCostType.NEXT);
-            this.openCellList.push(neighborCell);
+            this.addCellToOpenCellList(neighborCell);
         }
         //jobb-felső cella
-        neighborCell = new baseClassesModul.MapCell(currentCell.cellY - 1, currentCell.cellX + 1, baseClassesModul.CellPathType.NA);
+        neighborCell = new baseClassesModul.MapCell(currentCell.cellY - 1, currentCell.cellX + 1, baseClassesModul.CellPathType.NA, currentCell);
         if (this.isTargetCell(neighborCell)) {
             this.endPathFinding = true;
             return;
         }
         if (this.isPassableUnitCell(this.map, neighborCell.cellY, neighborCell.cellX) && !this.isStartCell(neighborCell)) {
             this.calcCellPathValues(neighborCell, CellPathCostType.DIAGONAL);
-            this.openCellList.push(neighborCell);
+            this.addCellToOpenCellList(neighborCell);
         }
         //jobb cella
-        neighborCell = new baseClassesModul.MapCell(currentCell.cellY, currentCell.cellX + 1, baseClassesModul.CellPathType.NA);
+        neighborCell = new baseClassesModul.MapCell(currentCell.cellY, currentCell.cellX + 1, baseClassesModul.CellPathType.NA, currentCell);
         if (this.isTargetCell(neighborCell)) {
             this.endPathFinding = true;
             return;
         }
         if (this.isPassableUnitCell(this.map, neighborCell.cellY, neighborCell.cellX) && !this.isStartCell(neighborCell)) {
             this.calcCellPathValues(neighborCell, CellPathCostType.NEXT);
-            this.openCellList.push(neighborCell);
+            this.addCellToOpenCellList(neighborCell);
         }
         //jobb-alsó cella
-        neighborCell = new baseClassesModul.MapCell(currentCell.cellY + 1, currentCell.cellX + 1, baseClassesModul.CellPathType.NA);
+        neighborCell = new baseClassesModul.MapCell(currentCell.cellY + 1, currentCell.cellX + 1, baseClassesModul.CellPathType.NA, currentCell);
         if (this.isTargetCell(neighborCell)) {
             this.endPathFinding = true;
             return;
         }
         if (this.isPassableUnitCell(this.map, neighborCell.cellY, neighborCell.cellX) && !this.isStartCell(neighborCell)) {
             this.calcCellPathValues(neighborCell, CellPathCostType.DIAGONAL);
-            this.openCellList.push(neighborCell);
+            this.addCellToOpenCellList(neighborCell);
         }
         //alsó cella
-        neighborCell = new baseClassesModul.MapCell(currentCell.cellY + 1, currentCell.cellX, baseClassesModul.CellPathType.NA);
+        neighborCell = new baseClassesModul.MapCell(currentCell.cellY + 1, currentCell.cellX, baseClassesModul.CellPathType.NA, currentCell);
         if (this.isTargetCell(neighborCell)) {
             this.endPathFinding = true;
             return;
         }
         if (this.isPassableUnitCell(this.map, neighborCell.cellY, neighborCell.cellX) && !this.isStartCell(neighborCell)) {
             this.calcCellPathValues(neighborCell, CellPathCostType.NEXT);
-            this.openCellList.push(neighborCell);
+            this.addCellToOpenCellList(neighborCell);
         }
         //bal-alsó cella
-        neighborCell = new baseClassesModul.MapCell(currentCell.cellY - 1, currentCell.cellX - 1, baseClassesModul.CellPathType.NA);
+        neighborCell = new baseClassesModul.MapCell(currentCell.cellY - 1, currentCell.cellX - 1, baseClassesModul.CellPathType.NA, currentCell);
         if (this.isTargetCell(neighborCell)) {
             this.endPathFinding = true;
             return;
         }
         if (this.isPassableUnitCell(this.map, neighborCell.cellY, neighborCell.cellX) && !this.isStartCell(neighborCell)) {
             this.calcCellPathValues(neighborCell, CellPathCostType.DIAGONAL);
-            this.openCellList.push(neighborCell);
+            this.addCellToOpenCellList(neighborCell);
         }
         //bal cella
-        neighborCell = new baseClassesModul.MapCell(currentCell.cellY, currentCell.cellX - 1, baseClassesModul.CellPathType.NA);
+        neighborCell = new baseClassesModul.MapCell(currentCell.cellY, currentCell.cellX - 1, baseClassesModul.CellPathType.NA, currentCell);
         if (this.isTargetCell(neighborCell)) {
             this.endPathFinding = true;
             return;
         }
         if (this.isPassableUnitCell(this.map, neighborCell.cellY, neighborCell.cellX) && !this.isStartCell(neighborCell)) {
             this.calcCellPathValues(neighborCell, CellPathCostType.NEXT);
-            this.openCellList.push(neighborCell);
+            this.addCellToOpenCellList(neighborCell);
         }
         this.selectNextCell(currentCell);
     }
@@ -185,6 +185,21 @@ export class Pathfinder extends baseClassesModul.MapBase {
         //f
         cell.f = cell.g + cell.h;
         return cell;
+    }
+
+    private addCellToOpenCellList(cell: MapCell): void {
+        var isExists = false;
+        for (var i = 0; i != this.openCellList.length; i++) {
+            var listCell: MapCell = this.openCellList[i];
+            if (listCell.id == cell.id) {
+                listCell.g = cell.g;
+                listCell.perviousCellId = cell.perviousCellId;                
+                isExists = true;
+            }
+        }
+        if (!isExists) {
+            this.openCellList.push(cell);
+        }
     }
 
     private selectNextCell(cell: MapCell): void {

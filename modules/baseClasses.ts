@@ -24,14 +24,19 @@ export class MapCell {
     private _g: number;                 //távolság a kezdettől    
     private _h: number;                 //heuristic, távolság a céltól
     private _f: number;                 //g + h
-    private _perviousCellId: number;    //útvonalban az elöző cella id-ja
+    private _perviousCell: MapCell;   //útvonalban az elöző cellája
     private _pathCellType: CellPathType;
 
-    constructor(cellY: number, cellX: number, pathCellType: CellPathType) {
+    constructor(cellY: number, cellX: number, pathCellType?: CellPathType, perviousCell?: MapCell) {
         this._cellY = cellY;
         this._cellX = cellX;
         this._id = this._cellY + '' + this._cellX;
-        this._pathCellType = pathCellType;
+        if (pathCellType) {
+            this._pathCellType = pathCellType;
+        }        
+        if (perviousCell) {
+            this._perviousCell = perviousCell;
+        }
     }
 
     get id(): string {
@@ -83,7 +88,7 @@ export class MapCell {
     }
     
     get f(): number {
-        return this._f;
+        return this._g + this._h;
     }
 
     set f(f: number) {
@@ -98,12 +103,12 @@ export class MapCell {
         this._pathCellType = pathCellType;
     }
 
-    get perviousCellId(): number {
+    get perviousCellId(): MapCell {
         return this.perviousCellId;
     }
 
-    set perviousCellId(perviousCellId: number) {
-        this._perviousCellId = perviousCellId;
+    set perviousCellId(perviousCellId: MapCell) {
+        this._perviousCell = perviousCellId;
     }
 }
 
