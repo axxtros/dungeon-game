@@ -24,8 +24,8 @@ socket.on('map_data_from_server', function (msg, map) {
     drawMap(map);
 })
 
-function searchUnitPath(startCellY, startCellX, targetCellY, targetCellX) {    
-    socket.emit('path_finder', st_gameMap, startCellY, startCellX, targetCellY, targetCellX);
+function searchUnitPath(startCellY, startCellX, targetCellY, targetCellX, a) {    
+    socket.emit('path_finder', st_gameMap, startCellY, startCellX, targetCellY, targetCellX, a);
 }
 
 socket.on('path_data_from_server', function (path) {

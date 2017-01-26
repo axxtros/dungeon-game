@@ -37,235 +37,165 @@ export class Pathfinder extends baseClassesModul.MapBase {
     private closeCellList = [];
     private endPathFinding: boolean;                        //ha true, akkor megvan a cél cella    
 
-    constructor(gameMap: any, startCellY: number, startCellX: number, targetCellY: number, targetCellX: number) {
-        super();
-        console.log('@pf startCellY: ' + startCellY + ' startCellX: ' + startCellX + ' targetCellY: ' + targetCellY + ' targetCellX: ' + targetCellX);
+    constructor(gameMap: any, startCellY: number, startCellX: number, targetCellY: number, targetCellX: number, a: boolean) {
+        super();       
         this.map = gameMap;
-        this.startCell = new baseClassesModul.MapCell(startCellY, startCellX, baseClassesModul.CellPathType.STARTING_CELL);
-        this.targetCell = new baseClassesModul.MapCell(targetCellY, targetCellX, baseClassesModul.CellPathType.TARGET_CELL);
+        if (a) {
+            this.startCell = new baseClassesModul.MapCell(startCellY, startCellX, null, baseClassesModul.CellPathType.STARTING_CELL);
+            this.targetCell = new baseClassesModul.MapCell(targetCellY, targetCellX, null, baseClassesModul.CellPathType.TARGET_CELL);
+        } else {
+            this.startCell = new baseClassesModul.MapCell(targetCellY, targetCellX, null, baseClassesModul.CellPathType.TARGET_CELL);
+            this.targetCell = new baseClassesModul.MapCell(startCellY, startCellX, null, baseClassesModul.CellPathType.STARTING_CELL);
+        }                
         this.openCellList = new Array<MapCell>();
         this.closeCellList = new Array<MapCell>();        
         this.endPathFinding = false;        
     }
 
     public searchPath(): any {
-        var currentCell: MapCell = this.startCell;
-        this.closeCellList.push(currentCell);
-        
-        var idx = 10;
-        while (!this.endPathFinding /*idx != 0*/) {
-            idx--;
-            currentCell = this.closeCellList[this.closeCellList.length - 1];
-            this.searchNeighborCells(currentCell);
-        }
-        console.log('@pf end pathfind');
-        return this.unboxPathCellCoords();
-    }    
+        //csak akkor kezdjük el az útvonal keresést, ha a kezdő cella, és a cél cella is egység által járható cella
+        if ((this.isPassableUnitCell(this.map, this.startCell.cellY, this.startCell.cellX)) &&
+            (this.isPassableUnitCell(this.map, this.targetCell.cellY, this.targetCell.cellX))) {
+            
+            this.closeCellList.push(this.startCell);
+                    
+            var idx = 3;
+            while (!this.endPathFinding) {
+                idx--;
+                if (idx == 0) {
+                    //break;
+                }
 
-    /**
-     * Adott cell körüli szomszédos cellák keresése, és h, g és f számítása a megtalált cellára.
-     * @param currentCell Az aktuális cella.
-     */
-    private searchNeighborCells(currentCell: MapCell) {
-        var neighborCell: MapCell;
-        //bal-felső cella
-        neighborCell = new baseClassesModul.MapCell(currentCell.cellY - 1, currentCell.cellX - 1, baseClassesModul.CellPathType.NA, currentCell);
-        if (this.isTargetCell(neighborCell)) {
-            this.endPathFinding = true;
-            return;
-        }
-        if (this.isPassableUnitCell(this.map, neighborCell.cellY, neighborCell.cellX) && !this.isStartCell(neighborCell)) {
-            this.calcCellPathValues(neighborCell, CellPathCostType.DIAGONAL);
-            this.addCellToOpenCellList(neighborCell);            
-        }
-        //felső cella
-        neighborCell = new baseClassesModul.MapCell(currentCell.cellY - 1, currentCell.cellX, baseClassesModul.CellPathType.NA, currentCell);
-        if (this.isTargetCell(neighborCell)) {
-            this.endPathFinding = true;
-            return;
-        }
-        if (this.isPassableUnitCell(this.map, neighborCell.cellY, neighborCell.cellX) && !this.isStartCell(neighborCell)) {
-            this.calcCellPathValues(neighborCell, CellPathCostType.NEXT);
-            this.addCellToOpenCellList(neighborCell);
-        }
-        //jobb-felső cella
-        neighborCell = new baseClassesModul.MapCell(currentCell.cellY - 1, currentCell.cellX + 1, baseClassesModul.CellPathType.NA, currentCell);
-        if (this.isTargetCell(neighborCell)) {
-            this.endPathFinding = true;
-            return;
-        }
-        if (this.isPassableUnitCell(this.map, neighborCell.cellY, neighborCell.cellX) && !this.isStartCell(neighborCell)) {
-            this.calcCellPathValues(neighborCell, CellPathCostType.DIAGONAL);
-            this.addCellToOpenCellList(neighborCell);
-        }
-        //jobb cella
-        neighborCell = new baseClassesModul.MapCell(currentCell.cellY, currentCell.cellX + 1, baseClassesModul.CellPathType.NA, currentCell);
-        if (this.isTargetCell(neighborCell)) {
-            this.endPathFinding = true;
-            return;
-        }
-        if (this.isPassableUnitCell(this.map, neighborCell.cellY, neighborCell.cellX) && !this.isStartCell(neighborCell)) {
-            this.calcCellPathValues(neighborCell, CellPathCostType.NEXT);
-            this.addCellToOpenCellList(neighborCell);
-        }
-        //jobb-alsó cella
-        neighborCell = new baseClassesModul.MapCell(currentCell.cellY + 1, currentCell.cellX + 1, baseClassesModul.CellPathType.NA, currentCell);
-        if (this.isTargetCell(neighborCell)) {
-            this.endPathFinding = true;
-            return;
-        }
-        if (this.isPassableUnitCell(this.map, neighborCell.cellY, neighborCell.cellX) && !this.isStartCell(neighborCell)) {
-            this.calcCellPathValues(neighborCell, CellPathCostType.DIAGONAL);
-            this.addCellToOpenCellList(neighborCell);
-        }
-        //alsó cella
-        neighborCell = new baseClassesModul.MapCell(currentCell.cellY + 1, currentCell.cellX, baseClassesModul.CellPathType.NA, currentCell);
-        if (this.isTargetCell(neighborCell)) {
-            this.endPathFinding = true;
-            return;
-        }
-        if (this.isPassableUnitCell(this.map, neighborCell.cellY, neighborCell.cellX) && !this.isStartCell(neighborCell)) {
-            this.calcCellPathValues(neighborCell, CellPathCostType.NEXT);
-            this.addCellToOpenCellList(neighborCell);
-        }
-        //bal-alsó cella
-        neighborCell = new baseClassesModul.MapCell(currentCell.cellY - 1, currentCell.cellX - 1, baseClassesModul.CellPathType.NA, currentCell);
-        if (this.isTargetCell(neighborCell)) {
-            this.endPathFinding = true;
-            return;
-        }
-        if (this.isPassableUnitCell(this.map, neighborCell.cellY, neighborCell.cellX) && !this.isStartCell(neighborCell)) {
-            this.calcCellPathValues(neighborCell, CellPathCostType.DIAGONAL);
-            this.addCellToOpenCellList(neighborCell);
-        }
-        //bal cella
-        neighborCell = new baseClassesModul.MapCell(currentCell.cellY, currentCell.cellX - 1, baseClassesModul.CellPathType.NA, currentCell);
-        if (this.isTargetCell(neighborCell)) {
-            this.endPathFinding = true;
-            return;
-        }
-        if (this.isPassableUnitCell(this.map, neighborCell.cellY, neighborCell.cellX) && !this.isStartCell(neighborCell)) {
-            this.calcCellPathValues(neighborCell, CellPathCostType.NEXT);
-            this.addCellToOpenCellList(neighborCell);
-        }
-        this.selectNextCell(currentCell);
-    }
+                var parentCell: MapCell = this.closeCellList[this.closeCellList.length - 1];
+                this.searchNeighbourCell(parentCell);
+                var nextCell: MapCell = this.selectMinCell();
+                //this.addToCloseList(nextCell);
+                this.closeCellList.push(nextCell);
+                //this.closeCellList.sort(this.cellArrayCompare);
+            }
 
-    /**
-     * True, ha a paraméterben megadott cella a kezdőcella, amiből el kell indulni.
-     * @param cell
-     */
-    private isStartCell(cell: MapCell): boolean {
-        return ((cell.cellY == this.startCell.cellY) && (cell.cellX == this.startCell.cellX));
-    }
-
-    /**
-     * True, ha a paraméterben megadott cella a célcella, amit el kell érni.
-     * @param cell
-     */
-    private isTargetCell(cell: MapCell): boolean {
-        return ((cell.cellY == this.targetCell.cellY) && (cell.cellX == this.targetCell.cellX));
-    }
-
-    /**
-     * Kiszámolja a paraméterben megkapott cella h, g és f értékeit.
-     * @param cell
-     */
-    private calcCellPathValues(cell: MapCell, cellPathCostType: CellPathCostType): MapCell {
-        //h	
-        var disy = Math.abs(this.targetCell.cellY - cell.cellY) * this.MANHATTAN_MULTIPLE_COST;
-        var disx = Math.abs(this.targetCell.cellX - cell.cellX) * this.MANHATTAN_MULTIPLE_COST;
-        cell.h = (disy + disx);
-        //g	
-        if (cellPathCostType == CellPathCostType.DIAGONAL) {
-            cell.g = this.DIAGONAL_COST;
+            var resultPathCells = [];
+            for (var i = this.closeCellList.length - 1; i != 0; i--) {
+                var pathCell: MapCell = this.closeCellList[i].parentCell;
+                resultPathCells.push(pathCell.cellY);
+                resultPathCells.push(pathCell.cellX);
+            }
+            return resultPathCells;
         } else {
-            cell.g = this.NEXT_COST;
+            return null;
         }
-        //f
-        cell.f = cell.g + cell.h;
-        return cell;
     }
 
-    private addCellToOpenCellList(cell: MapCell): void {
-        var isExists = false;
-        for (var i = 0; i != this.openCellList.length; i++) {
-            var listCell: MapCell = this.openCellList[i];
-            if (listCell.id == cell.id) {
-                listCell.g = cell.g;
-                listCell.perviousCellId = cell.perviousCellId;                
-                isExists = true;
+    /**
+     * Megkeressük a paraméterben átadott cella lehetséges szomszédjait, amerre lehetne menni.
+     * @param parentCell
+     */
+    private searchNeighbourCell(parentCell: MapCell): void {
+        var neighbourCell: MapCell = null;
+        if (parentCell) {
+            //fent
+            neighbourCell = new baseClassesModul.MapCell(parentCell.cellY - 1, parentCell.cellX, parentCell);
+            this.checkAndAddCell(neighbourCell);
+            //jobb
+            neighbourCell = new baseClassesModul.MapCell(parentCell.cellY, parentCell.cellX + 1, parentCell);
+            this.checkAndAddCell(neighbourCell);
+            //alul
+            neighbourCell = new baseClassesModul.MapCell(parentCell.cellY + 1, parentCell.cellX, parentCell);
+            this.checkAndAddCell(neighbourCell);
+            //bal
+            neighbourCell = new baseClassesModul.MapCell(parentCell.cellY, parentCell.cellX - 1, parentCell);
+            this.checkAndAddCell(neighbourCell);
+
+            this.removeCellFromOpenList(parentCell);
+        } else {
+            console.log('@pf parent cell error');
+        }        
+    }
+
+    private checkAndAddCell(cell: MapCell): void {
+        if (cell.cellY == this.targetCell.cellY && cell.cellX == this.targetCell.cellX) {
+            this.endPathFinding = true;
+            return;
+        }
+        if (this.isPassableUnitCell(this.map, cell.cellY, cell.cellX) && !this.isContainCloseList(cell)) {
+            this.calcCellPathValues(cell);
+            this.addToOpenList(cell);
+        }
+    }
+
+    /**
+     * True, ha a paraméterben megadott cellát tartalmazza a closeList.
+     * @param cell
+     */
+    private isContainCloseList(cell: MapCell): boolean {
+        for (var i = 0; i != this.closeCellList.length; i++) {
+            if (this.closeCellList[i].id == cell.id) {
+                return true;
             }
         }
-        if (!isExists) {
+        return false;
+    }
+
+    /**
+     * A paraméterben átadott cell h,g,f értékeinek számítása.
+     * @param cell
+     */
+    private calcCellPathValues(cell: MapCell): void {
+        //h
+        var disy: number = Math.abs(this.targetCell.cellY - cell.cellY) * this.MANHATTAN_MULTIPLE_COST;
+        var disx: number = Math.abs(this.targetCell.cellX - cell.cellX) * this.MANHATTAN_MULTIPLE_COST;
+        cell.h = (disy + disx);
+        //g
+        cell.g = this.NEXT_COST;
+        //f
+        cell.f = (cell.g + cell.h);
+    }
+
+    private addToOpenList(cell: MapCell): void {
+        var isContain = false;
+        for (var idx = 0; idx != this.openCellList.length; idx++) {
+            if (this.openCellList[idx].id == cell.id) {
+                //this.openCellList[idx].parentCell = cell.parentCell;
+                isContain = true;
+                break;
+            }
+        }
+        if (!isContain) {
             this.openCellList.push(cell);
         }
     }
 
-    private selectNextCell(cell: MapCell): void {
-        if (this.openCellList.length > 0) {
-            var minCellIndex: number = 0;
-            var selectedCell: MapCell = this.openCellList[minCellIndex];
-            console.log('@pf selectedCell.f: ' + selectedCell.f + ' selectedCell.h: ' + selectedCell.h);
-            for (var idx = (minCellIndex + 1); idx != this.openCellList.length; idx++) {
-                console.log('@pf this.openCellList[idx].f: ' + this.openCellList[idx].f + ' this.openCellList[idx].h: ' + this.openCellList[idx].h);
-                if ((this.openCellList[idx].f < selectedCell.f) || ((this.openCellList[idx].f == selectedCell.f) && (this.openCellList[idx].h < selectedCell.h))) {
-                    selectedCell = this.openCellList[idx];
-                    minCellIndex = idx;
-                    console.log('@pf selected openCellList[idx].f: ' + this.openCellList[idx].f + ' openCellList[idx].h: ' + this.openCellList[idx].h);
-                }
+    private addToCloseList(cell: MapCell): void {
+        for (var i = 0; i != this.closeCellList.length; i++) {            
+                                        
+        }
+        this.closeCellList.push(cell);
+        this.closeCellList.sort(this.cellArrayCompare);        
+    }
+
+    private removeCellFromOpenList(cell: MapCell): void {
+        for (var i = 0; i != this.openCellList.length; i++) {
+            if (this.openCellList[i].id == cell.id) {
+                this.openCellList.splice(i, 1);
+                return;
             }
-            this.closeCellList.push(selectedCell);
-            this.openCellList.splice(minCellIndex, 1);
-        } else {
-            this.endPathFinding = true;
-        }      
-
-        //for (var i = 0; i != this.openCellList.length; i++) {
-        //    if (cell.id == this.openCellList[i].id) {
-        //        this.openCellList.splice(i, 1);
-        //        break;
-        //    }            
-        //}
-        //if (this.openCellList.length > 1) {            
-        //    this.sortCellList(this.openCellList);
-        //    var selectedElement: MapCell = this.openCellList[0];
-        //    this.closeCellList.push(selectedElement);
-            
-        //} else {
-        //    this.endPathFinding = true;            
-        //}
+        }
     }
 
-    private sortCellList(list: any): void {
-        //this.openCellList.sort(list);
-        this.openCellList.sort(this.mapCellCompare);
+    private selectMinCell(): MapCell {
+        this.openCellList.sort(this.cellArrayCompare);
+        var resultIdx: number = 0;        
+        var result: MapCell = this.openCellList[resultIdx];
+        this.openCellList.splice(resultIdx, 1);        
+        return result;
     }
 
-    private mapCellCompare(first: MapCell, second: MapCell) {
+    private cellArrayCompare(first: MapCell, second: MapCell): number {
         if (first.f < second.f || first.h < second.h)
             return -1;
         if (first.f > second.f || first.h > second.h)
             return 1;
         return 0;
-    }
-
-    /**
-     * Az útvonal cellák Y, X koordinátáinak visszaadása.
-     */
-    private unboxPathCellCoords(): Array<number> {
-        var resultPath = [];
-        for (var i = 0; i != this.closeCellList.length; i++) {
-            var pathCell: baseClassesModul.MapCell = this.closeCellList[i];
-            resultPath.push(pathCell.cellY);
-            resultPath.push(pathCell.cellX);
-        }
-        return resultPath;
-    }
-
-    private cellArraySort(cell1: MapCell, cell2: MapCell): number {
-        //http://stackoverflow.com/questions/13211709/javascript-sort-array-by-multiple-number-fields
-        return Math.abs(cell1.f - cell2.f); //|| Math.abs(cell1.h - cell2.h);  //több attributum szerinti rendezés
     }
 
 }

@@ -20,6 +20,9 @@ var OKCELL_COLOR = '#81BEF7';
 var PATH_COLOR = '#81F781';
 var TEST_TARGET_CELL_COLOR = '#FF001F';
 
+var testTargetY = 10;
+var testTargetX = 10;
+
 function drawMap(map) {
     var mapElementX = 0;
     var mapElementY = 0;
@@ -50,18 +53,20 @@ function drawMap(map) {
             mapElementX = 0;
             mapElementY += MAP_ELEMENT_SIZE;
         }
-        drawCell(10, 10);
+        drawCell(testTargetY, testTargetX);        
     } else { 
         log('Map is null or undefined!');
     }
 }
 
 function drawPath(path) {
-    for (var i = 0; i != path.length; i += 2) { 
-        mapCanvasContext.beginPath();
-        mapCanvasContext.rect(path[i + 1] * MAP_ELEMENT_SIZE, path[i] * MAP_ELEMENT_SIZE, MAP_ELEMENT_SIZE, MAP_ELEMENT_SIZE);
-        mapCanvasContext.fillStyle = PATH_COLOR;
-        mapCanvasContext.fill();
+    if (path !== null) { 
+        for (var i = 0; i != path.length; i += 2) {
+            mapCanvasContext.beginPath();
+            mapCanvasContext.rect(path[i + 1] * MAP_ELEMENT_SIZE, path[i] * MAP_ELEMENT_SIZE, MAP_ELEMENT_SIZE, MAP_ELEMENT_SIZE);
+            mapCanvasContext.fillStyle = PATH_COLOR;
+            mapCanvasContext.fill();
+        }
     }
 }
 

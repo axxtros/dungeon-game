@@ -64,8 +64,8 @@ export class SocketClass {
                 socket.emit('map_data_from_server', 'Map generated is done! Please look at in the server console.', map);
             });
 
-            socket.on('path_finder', function (map, startCellY, startCellX, targetCellY, targetCellX) {                
-                var pathFinder = new pathFinderModule.Pathfinder(map, startCellY, startCellX, targetCellY, targetCellX);
+            socket.on('path_finder', function (map, startCellY, startCellX, targetCellY, targetCellX, a) {                
+                var pathFinder = new pathFinderModule.Pathfinder(map, startCellY, startCellX, targetCellY, targetCellX, a);
                 var path = pathFinder.searchPath();
                 socket.emit('path_data_from_server', path);
             });
