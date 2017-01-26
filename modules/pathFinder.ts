@@ -48,8 +48,8 @@ export class Pathfinder extends baseClassesModul.MapBase {
             this.targetCell = new baseClassesModul.MapCell(startCellY, startCellX, null, baseClassesModul.CellPathType.STARTING_CELL);
         }                
         this.openCellList = new Array<MapCell>();
-        this.closeCellList = new Array<MapCell>();        
-        this.endPathFinding = false;        
+        this.closeCellList = new Array<MapCell>();
+        this.endPathFinding = false;
     }
 
     public searchPath(): any {
@@ -59,28 +59,19 @@ export class Pathfinder extends baseClassesModul.MapBase {
             
             this.closeCellList.push(this.startCell);
                     
-            var idx = 3;
+            var idx = 10;
             while (!this.endPathFinding) {
                 idx--;
                 if (idx == 0) {
-                    //break;
+                    break;
                 }
 
-                var parentCell: MapCell = this.closeCellList[this.closeCellList.length - 1];
-                this.searchNeighbourCell(parentCell);
-                var nextCell: MapCell = this.selectMinCell();
-                //this.addToCloseList(nextCell);
-                this.closeCellList.push(nextCell);
-                //this.closeCellList.sort(this.cellArrayCompare);
+                var selectedCell: MapCell = this.closeCellList[this.closeCellList.length - 1];
+                this.searchNeighbourCell(selectedCell);
+                this.selectNextCell();
+                            
             }
-
-            var resultPathCells = [];
-            for (var i = this.closeCellList.length - 1; i != 0; i--) {
-                var pathCell: MapCell = this.closeCellList[i].parentCell;
-                resultPathCells.push(pathCell.cellY);
-                resultPathCells.push(pathCell.cellX);
-            }
-            return resultPathCells;
+            return this.getPath();
         } else {
             return null;
         }
@@ -95,46 +86,31 @@ export class Pathfinder extends baseClassesModul.MapBase {
         if (parentCell) {
             //fent
             neighbourCell = new baseClassesModul.MapCell(parentCell.cellY - 1, parentCell.cellX, parentCell);
-            this.checkAndAddCell(neighbourCell);
+            this.checkCell(neighbourCell);
             //jobb
             neighbourCell = new baseClassesModul.MapCell(parentCell.cellY, parentCell.cellX + 1, parentCell);
-            this.checkAndAddCell(neighbourCell);
+            this.checkCell(neighbourCell);
             //alul
             neighbourCell = new baseClassesModul.MapCell(parentCell.cellY + 1, parentCell.cellX, parentCell);
-            this.checkAndAddCell(neighbourCell);
+            this.checkCell(neighbourCell);
             //bal
             neighbourCell = new baseClassesModul.MapCell(parentCell.cellY, parentCell.cellX - 1, parentCell);
-            this.checkAndAddCell(neighbourCell);
-
-            this.removeCellFromOpenList(parentCell);
+            this.checkCell(neighbourCell);            
         } else {
             console.log('@pf parent cell error');
         }        
     }
 
-    private checkAndAddCell(cell: MapCell): void {
-        if (cell.cellY == this.targetCell.cellY && cell.cellX == this.targetCell.cellX) {
+    private checkCell(cell: MapCell): void {
+        if (this.isCellIsTargetCell(cell)) {            
             this.endPathFinding = true;
             return;
         }
         if (this.isPassableUnitCell(this.map, cell.cellY, cell.cellX) && !this.isContainCloseList(cell)) {
             this.calcCellPathValues(cell);
-            this.addToOpenList(cell);
+            this.addCellToCloseList(cell);
         }
-    }
-
-    /**
-     * True, ha a paraméterben megadott cellát tartalmazza a closeList.
-     * @param cell
-     */
-    private isContainCloseList(cell: MapCell): boolean {
-        for (var i = 0; i != this.closeCellList.length; i++) {
-            if (this.closeCellList[i].id == cell.id) {
-                return true;
-            }
-        }
-        return false;
-    }
+    }    
 
     /**
      * A paraméterben átadott cell h,g,f értékeinek számítása.
@@ -149,30 +125,79 @@ export class Pathfinder extends baseClassesModul.MapBase {
         cell.g = this.NEXT_COST;
         //f
         cell.f = (cell.g + cell.h);
-    }
+    }    
 
-    private addToOpenList(cell: MapCell): void {
-        var isContain = false;
-        for (var idx = 0; idx != this.openCellList.length; idx++) {
-            if (this.openCellList[idx].id == cell.id) {
-                //this.openCellList[idx].parentCell = cell.parentCell;
-                isContain = true;
-                break;
+    private selectNextCell(): void {
+        var selectedCellIndex: number = 0;
+        var selectedCell: MapCell = this.openCellList[selectedCellIndex];
+        for (var i = 0; i != this.openCellList.length; i++) {
+            var openCell: MapCell = this.openCellList[i];
+            if (openCell.f != 0 && openCell.f < selectedCell.f) {
+                selectedCell = openCell;
+                selectedCellIndex = i;
             }
         }
-        if (!isContain) {
-            this.openCellList.push(cell);
-        }
+        this.addCellToCloseList(selectedCell);
+        this.removeCellFromOpenList(selectedCell);        
     }
 
-    private addToCloseList(cell: MapCell): void {
-        for (var i = 0; i != this.closeCellList.length; i++) {            
-                                        
+    private getPath(): Array<number> {
+        var result: Array<number>;
+        for (var i = this.closeCellList.length; i != 0; i--) {
+            var nextPathCell: MapCell = this.closeCellList[i];
+            var nextPathParentCell: MapCell = this.getCellFromCloseList(nextPathCell.id);
+            result.push(nextPathParentCell.cellY);
+            result.push(nextPathParentCell.cellX);
+        }
+        return result;
+    }
+
+    /**
+     * A paraméterben megadott cellát hozzáadja a várakozási cellák listájához, ha abban még - id alapján - nincs benne.
+     * @param cell
+     */
+    private addCellToOpenList(cell: MapCell): void {        
+        for (var i = 0; i != this.openCellList.length; i++) {
+            var openCell: MapCell = this.openCellList[i];
+            if (openCell.id == cell.id) {
+                return;
+            }
+        }
+        this.openCellList.push(cell);        
+    }
+
+    /**
+     * A paraméterben megadott cellát hozzáadja a már korábban megvizsgált cellák listájához, ha abban még - id alapján - nincs benne.
+     * @param cell
+     */
+    private addCellToCloseList(cell: MapCell): void {
+        for (var i = 0; i != this.closeCellList.length; i++) {
+            var closeCell: MapCell = this.closeCellList[i];
+            if (closeCell.id == cell.id) {
+                return;
+            }
         }
         this.closeCellList.push(cell);
-        this.closeCellList.sort(this.cellArrayCompare);        
     }
 
+    /**
+     * Visszaadja a paraméterben megadott id-jú cellát a megvizsgált cellák listájából.
+     * @param cellId
+     */
+    private getCellFromCloseList(cellId: string): MapCell {        
+        for (var i = 0; i != this.closeCellList.length; i++) {
+            var closeCell: MapCell = this.closeCellList[i];
+            if (closeCell.id == cellId) {
+                return closeCell;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * A paraméterben megadott cellát eltávolítja - id alapján - az openList-ből.
+     * @param cell
+     */
     private removeCellFromOpenList(cell: MapCell): void {
         for (var i = 0; i != this.openCellList.length; i++) {
             if (this.openCellList[i].id == cell.id) {
@@ -182,18 +207,65 @@ export class Pathfinder extends baseClassesModul.MapBase {
         }
     }
 
-    private selectMinCell(): MapCell {
-        this.openCellList.sort(this.cellArrayCompare);
-        var resultIdx: number = 0;        
-        var result: MapCell = this.openCellList[resultIdx];
-        this.openCellList.splice(resultIdx, 1);        
-        return result;
+    /**
+     * A paraméterben megadott cellát eltávolítja - id alapján - a closeList-ből.
+     * @param cell
+     */
+    private removeCellFromCloseList(cell: MapCell): void {
+        for (var i = 0; i != this.closeCellList.length; i++) {
+            if (this.closeCellList[i].id == cell.id) {
+                this.closeCellList.splice(i, 1);
+                return;
+            }
+        }
     }
 
-    private cellArrayCompare(first: MapCell, second: MapCell): number {
-        if (first.f < second.f || first.h < second.h)
+    /**
+     * True, ha a paraméterben megadott cella az útvonal kiinduló cellája.
+     * @param cell
+     */
+    private isCellIsStartCell(cell: MapCell): boolean {
+        if (cell.cellY == this.startCell.cellY && cell.cellX == this.startCell.cellX)
+            return true;
+        return false;
+    }
+
+    /**
+     * True, ha a paraméterben megadott cella az útvonal célcellája.
+     * @param cell
+     */
+    private isCellIsTargetCell(cell: MapCell): boolean {
+        if (cell.cellY == this.targetCell.cellY && cell.cellX == this.targetCell.cellX)
+            return true;
+        return false;
+    }
+
+    /**
+     * True, a paraméterben megadott cellát tartalmazza az openList.
+     * @param cell
+     */
+    private isContaintOpenList(cell: MapCell): boolean {
+        for (var i = 0; i != this.openCellList.length; i++)
+            if (this.openCellList[i].id == cell.id)
+                return true;
+        return false;
+    }
+
+    /**
+     * True, ha a paraméterben megadott cellát tartalmazza a closeList.
+     * @param cell
+     */
+    private isContainCloseList(cell: MapCell): boolean {
+        for (var i = 0; i != this.closeCellList.length; i++)
+            if (this.closeCellList[i].id == cell.id)
+                return true;
+        return false;
+    }
+
+    private cellCompare(first: MapCell, second: MapCell): number {
+        if (first.f < second.f)
             return -1;
-        if (first.f > second.f || first.h > second.h)
+        if (first.f > second.f)
             return 1;
         return 0;
     }

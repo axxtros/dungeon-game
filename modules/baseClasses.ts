@@ -16,10 +16,10 @@ export const enum CellPathType {
  * Egy adott térképcellát reprezentáló osztály, minden olyan attributummal, amely szükséges lehet vagy a dungeon generátornak, vagy az útvonal keresőnek.
  */
 export class MapCell {
-
-    private _id: string;
+    
     private _cellY: number;
     private _cellX: number;
+    private _id: string;
     private _type: number;              //cella típusa
     private _g: number;                 //távolság a kezdettől    
     private _h: number;                 //heuristic, távolság a céltól
@@ -30,14 +30,16 @@ export class MapCell {
     constructor(cellY: number, cellX: number, parentCell?: MapCell, pathCellType?: CellPathType) {
         this._cellY = cellY;
         this._cellX = cellX;
-        this._id = this._cellY + '' + this._cellX;        
+        this._id = this._cellY + '' + this._cellX;
+        this._g = 0;
+        this._h = 0;
+        this._f = 0;
         if (parentCell) {
             this._parentCell = parentCell;
         }
         if (pathCellType) {
             this._pathCellType = pathCellType;
-        }
-        this._f = null;
+        }        
     }
 
     get id(): string {
