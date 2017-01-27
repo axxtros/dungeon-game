@@ -20,8 +20,8 @@ var OKCELL_COLOR = '#81BEF7';
 var PATH_COLOR = '#81F781';
 var TEST_TARGET_CELL_COLOR = '#FF001F';
 
-var testTargetY = 30;
-var testTargetX = 20;
+var testTargetY = 50;
+var testTargetX = 50;
 
 function drawMap(map) {
     var mapElementX = 0;
@@ -72,7 +72,7 @@ function drawPath(path) {
 
 function drawCell(cellY, cellX) {    
     mapCanvasContext.beginPath();
-    mapCanvasContext.rect(cellY * MAP_ELEMENT_SIZE, cellX * MAP_ELEMENT_SIZE, MAP_ELEMENT_SIZE, MAP_ELEMENT_SIZE);
+    mapCanvasContext.rect(cellX * MAP_ELEMENT_SIZE, cellY * MAP_ELEMENT_SIZE, MAP_ELEMENT_SIZE, MAP_ELEMENT_SIZE);
     mapCanvasContext.fillStyle = TEST_TARGET_CELL_COLOR;
     mapCanvasContext.fill();  
 }

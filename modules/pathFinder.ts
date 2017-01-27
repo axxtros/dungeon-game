@@ -39,8 +39,7 @@ export class Pathfinder extends baseClassesModul.MapBase {
     private reversedPathSearch: boolean;   
 
     constructor(gameMap: any, startCellY: number, startCellX: number, targetCellY: number, targetCellX: number, reversedPathSearch: boolean) {
-        super();       
-        console.log('@pf startCellY: ' + startCellY + ' startCellX: ' + startCellX + ' targetCellY: ' + targetCellY + ' targetCellX: ' + targetCellX);
+        super();        
         this.map = gameMap;
         this.reversedPathSearch = reversedPathSearch;
         if (!this.reversedPathSearch) {     //normál útvonal keresés, start-tól a target-ig
