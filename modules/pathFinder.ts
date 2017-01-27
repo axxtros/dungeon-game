@@ -30,13 +30,13 @@ export class Pathfinder extends baseClassesModul.MapBase {
     private NEXT_COST: number = 1;                          //egyenes - szomszédos - cellába történő mozgatás ára
 
     private util = new utilModul.Util();
-    private map: any;
-    private startCell: MapCell;
-    private targetCell: MapCell;
-    private openCellList = [];
-    private closeCellList = [];
-    private endPathFinding: boolean;                        //ha true, akkor megvan a cél cella 
-    private reversedPathSearch: boolean;   
+    private map: any;                                       //az adott térkép, amin az útvonalat keresni kell
+    private startCell: MapCell;                             //kiinduláis cella, ahonnét indulunk
+    private targetCell: MapCell;                            //célcella, ahová el akarunk jutni
+    private openCellList = [];                              //a már megvizsgált de onnan még továbbléphető cellák gyűjtője
+    private closeCellList = [];                             //az útvonalba elhelyezett (véglegesített) cellák gyűjtőhelye
+    private endPathFinding: boolean;                        //ha true, akkor megvan a cél cella, vége az útkeresésnek
+    private reversedPathSearch: boolean;                    //ha true, akkor a célcellából keresünk a kiinduló cella felé útvonalat (megj: általában mindig hosszabb útvonal jön ki, mint normális keresés alatt)
 
     constructor(gameMap: any, startCellY: number, startCellX: number, targetCellY: number, targetCellX: number, reversedPathSearch: boolean) {
         super();        
@@ -95,7 +95,8 @@ export class Pathfinder extends baseClassesModul.MapBase {
             neighbourCell = new baseClassesModul.MapCell(parentCell.cellY, parentCell.cellX - 1, parentCell);
             this.checkCell(neighbourCell);            
         } else {
-            console.log('@pf parent cell error');
+            this._DEBUG_LOG('ERROR: @pathFinder searchNeighbourCell parent is undefinded!');
+            console.log('ERROR: @pathFinder searchNeighbourCell parent is undefinded!');
         }        
     }
 
@@ -123,7 +124,7 @@ export class Pathfinder extends baseClassesModul.MapBase {
         cell.g = this.NEXT_COST;
         //f
         cell.f = (cell.g + cell.h);
-    }    
+    }
 
     private selectNextCell(): void {
         if (this.openCellList.length > 0) {
@@ -136,35 +137,36 @@ export class Pathfinder extends baseClassesModul.MapBase {
                     selectedCellIndex = i;
                 }
             }
-            console.log('selectedCell Y:' + selectedCell.cellY + ' X: ' + selectedCell.cellX);
+            //console.log('selectNextCell Y:' + selectedCell.cellY + ' X: ' + selectedCell.cellX);
             this.addCellToCloseList(selectedCell);
             this.removeCellFromOpenList(selectedCell);        
         }        
     }
 
     private getPath(): Array<number> {
-        var result: Array<number> = new Array<number>();
-        //utlsó cellaként hozzáadjuk az utvonalhoz a cél/vagy kezdeti cella koordinátáit        
-        var pathCell: MapCell = this.closeCellList[this.closeCellList.length - 1];  
+        var result: Array<number> = new Array<number>();        
+        var pathCell: MapCell = this.closeCellList[0];
         try {
             for (var i = this.closeCellList.length - 1; i != 0; i--) {
                 if (pathCell != null) {
-                    //console.log(i + '. path cell id: ' + pathCell.id + ' f: ' + pathCell.f + ' h: ' + pathCell.h + ' g: ' + pathCell.g + ' parentcell id: ' + pathCell.parentCell.id);
-                    result.push(pathCell.cellY);
-                    result.push(pathCell.cellX);
+                    //http://stackoverflow.com/questions/8073673/how-can-i-add-new-array-elements-at-the-beginning-of-an-array-in-javascript
+                    result.unshift(pathCell.cellX);             //shift < - array -> pop
+                    result.unshift(pathCell.cellY);             //unshift -> array <- push                                                                                    
                 }
                 pathCell = this.getCellFromCloseList(pathCell.parentCell.id);
             }
         } catch (err) {     //az utolsó - start cellának - nincs id-ja, ezért hibát dob, de azt elnyeljük, mert már az az utolsó            
-            //console.log(err.message);            
+            this._DEBUG_LOG(err.message);
         } finally {
-            
-        }        
-        //if (!this.reversedPathSearch) {            
-        //    console.log('normal path length: ' + (result.length - 1));
-        //} else {
-        //    console.log('reserved path length: ' + (result.length - 1));
-        //}
+            //NOP
+        }
+        //a path elejére betesszük a start mezőt        
+        result.unshift(this.startCell.cellX);
+        result.unshift(this.startCell.cellY);                
+        //utolsó cellaként hozzáadjuk az utvonalhoz a cél cellát (itt a push miatt először Y-ont, majd X-et!!!)
+        result.push(this.targetCell.cellY);
+        result.push(this.targetCell.cellX);        
+        this.writeConsoleFinalPath(result);
         return result;
     }    
 
@@ -284,6 +286,16 @@ export class Pathfinder extends baseClassesModul.MapBase {
         if (first.f > second.f)
             return 1;
         return 0;
+    }
+
+    private writeConsoleFinalPath(path: Array<number>): void {
+        console.log('start Y: ' + this.startCell.cellY + ' X: ' + this.startCell.cellX + ' target Y: ' + this.targetCell.cellY + ' X: ' + this.targetCell.cellX);
+        var line: string = "";        
+        for (var i = 0; i != path.length;) {
+            line += ' Y:' + path[i] + ' X:' + path[i + 1] + ' |';
+            i += 2;
+        }
+        console.log(line);
     }
 
 }

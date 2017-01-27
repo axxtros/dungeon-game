@@ -1,6 +1,6 @@
 ﻿//game draws functions and controls 13/01/2017
 
-var MAP_ELEMENT_SIZE = 4;
+var MAP_ELEMENT_SIZE = 10;
 
 var MAZE = 0;                           //folyosó (egységek által járható cellák)
 var WALL = 1;                           //fal (egységek által nem járható cellák)

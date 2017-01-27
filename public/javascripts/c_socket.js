@@ -6,6 +6,11 @@
 var host = window.location.hostname;
 var websocketPort = 3000;
 var socket = new io.connect("ws://" + host + ":" + websocketPort);
+//var socket = new WebSocket("ws://" + host + ":" + websocketPort);
+
+socket.open(function (e) {
+    console.log("Connection open..." + e.message);
+});
 
 function sendWelcomMsg() {
     console.log('Welcome message sending!');
@@ -15,7 +20,7 @@ function sendWelcomMsg() {
 function generateNewDungeon() {
     //kb. 10mp a max legenerálása 401x401, 100 szoba
     //ideális: 95x95, 50 szoba
-    socket.emit('map_generator', 201, 201, 50, 2);
+    socket.emit('map_generator', 51, 51, 50, 2);
 }
 
 socket.on('map_data_from_server', function (msg, map) {
