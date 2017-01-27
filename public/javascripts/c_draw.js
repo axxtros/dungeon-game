@@ -1,6 +1,6 @@
 ﻿//game draws functions and controls 13/01/2017
 
-var MAP_ELEMENT_SIZE = 10;
+var MAP_ELEMENT_SIZE = 4;
 
 var MAZE = 0;                           //folyosó (egységek által járható cellák)
 var WALL = 1;                           //fal (egységek által nem járható cellák)
@@ -20,8 +20,8 @@ var OKCELL_COLOR = '#81BEF7';
 var PATH_COLOR = '#81F781';
 var TEST_TARGET_CELL_COLOR = '#FF001F';
 
-var testTargetY = 50;
-var testTargetX = 50;
+var testStartY = 20;
+var testStartX = 20;
 
 function drawMap(map) {
     var mapElementX = 0;
@@ -53,7 +53,7 @@ function drawMap(map) {
             mapElementX = 0;
             mapElementY += MAP_ELEMENT_SIZE;
         }
-        drawCell(testTargetY, testTargetX);        
+        drawCell(testStartY, testStartX);        
     } else { 
         log('Map is null or undefined!');
     }

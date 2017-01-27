@@ -58,22 +58,17 @@ export class Pathfinder extends baseClassesModul.MapBase {
         //csak akkor kezdjük el az útvonal keresést, ha a kezdő cella, és a cél cella is egység által járható cella
         if ((this.isPassableUnitCell(this.map, this.startCell.cellY, this.startCell.cellX)) &&
             (this.isPassableUnitCell(this.map, this.targetCell.cellY, this.targetCell.cellX))) {
-            
-            this.closeCellList.push(this.startCell);
-                    
-            var idx = 10;
-            while (!this.endPathFinding) {
-                idx--;
-                if (idx == 0) {
-                    //break;
-                }
 
+            this.closeCellList.push(this.startCell);            
+                                
+            while (!this.endPathFinding) {            
                 var selectedCell: MapCell = this.closeCellList[this.closeCellList.length - 1];
                 this.searchNeighbourCell(selectedCell);
                 if (!this.endPathFinding) {
                     this.selectNextCell();
                 }                            
             }
+
             return this.getPath();
         } else {
             return null;
@@ -131,34 +126,40 @@ export class Pathfinder extends baseClassesModul.MapBase {
     }    
 
     private selectNextCell(): void {
-        var selectedCellIndex: number = 0;
-        var selectedCell: MapCell = this.openCellList[selectedCellIndex];
-        for (var i = 0; i != this.openCellList.length; i++) {
-            var openCell: MapCell = this.openCellList[i];
-            if (openCell.f != 0 && openCell.f < selectedCell.f) {
-                selectedCell = openCell;
-                selectedCellIndex = i;
+        if (this.openCellList.length > 0) {
+            var selectedCellIndex: number = 0;
+            var selectedCell: MapCell = this.openCellList[selectedCellIndex];
+            for (var i = 0; i != this.openCellList.length; i++) {
+                var openCell: MapCell = this.openCellList[i];
+                if (openCell.f != 0 && openCell.f < selectedCell.f) {
+                    selectedCell = openCell;
+                    selectedCellIndex = i;
+                }
             }
-        }
-        this.addCellToCloseList(selectedCell);
-        this.removeCellFromOpenList(selectedCell);        
+            console.log('selectedCell Y:' + selectedCell.cellY + ' X: ' + selectedCell.cellX);
+            this.addCellToCloseList(selectedCell);
+            this.removeCellFromOpenList(selectedCell);        
+        }        
     }
 
     private getPath(): Array<number> {
         var result: Array<number> = new Array<number>();
+        //utlsó cellaként hozzáadjuk az utvonalhoz a cél/vagy kezdeti cella koordinátáit        
         var pathCell: MapCell = this.closeCellList[this.closeCellList.length - 1];  
         try {
             for (var i = this.closeCellList.length - 1; i != 0; i--) {
                 if (pathCell != null) {
-                    console.log(i + '. path cell id: ' + pathCell.id + ' f: ' + pathCell.f + ' h: ' + pathCell.h + ' g: ' + pathCell.g + ' parentcell id: ' + pathCell.parentCell.id);
+                    //console.log(i + '. path cell id: ' + pathCell.id + ' f: ' + pathCell.f + ' h: ' + pathCell.h + ' g: ' + pathCell.g + ' parentcell id: ' + pathCell.parentCell.id);
                     result.push(pathCell.cellY);
                     result.push(pathCell.cellX);
                 }
                 pathCell = this.getCellFromCloseList(pathCell.parentCell.id);
             }
         } catch (err) {     //az utolsó - start cellának - nincs id-ja, ezért hibát dob, de azt elnyeljük, mert már az az utolsó            
-            //console.log(err.message);
-        }
+            //console.log(err.message);            
+        } finally {
+            
+        }        
         //if (!this.reversedPathSearch) {            
         //    console.log('normal path length: ' + (result.length - 1));
         //} else {

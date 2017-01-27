@@ -12,13 +12,13 @@ function mouseClickedEvent(event) {
 
     if (event.button === 0) {   //bal egérgomb
         DEBUG_LOG('@mousedown click left mouse button');        
-        searchUnitPath(cellY, cellX, testTargetY, testTargetX, false);               
+        searchUnitPath(testStartY, testStartX, cellY, cellX, false);
     }
     if (event.button === 1) {   //középső egérgomb
         DEBUG_LOG('@mousedown click middle mouse button');        
     }
     if (event.button === 2) {   //jobb egérgomb
         DEBUG_LOG('@mousedown click right mouse button');
-        searchUnitPath(cellY, cellX, testTargetY, testTargetX, true);
+        searchUnitPath(testStartY, testStartX, cellY, cellX, true);
     }
 }
