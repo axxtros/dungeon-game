@@ -144,28 +144,27 @@ export class Pathfinder extends baseClassesModul.MapBase {
     }
 
     private getPath(): Array<number> {
-        var result: Array<number> = new Array<number>();        
-        var pathCell: MapCell = this.closeCellList[0];
-        try {
-            for (var i = this.closeCellList.length - 1; i != 0; i--) {
-                if (pathCell != null) {
-                    //http://stackoverflow.com/questions/8073673/how-can-i-add-new-array-elements-at-the-beginning-of-an-array-in-javascript
-                    result.unshift(pathCell.cellX);             //shift < - array -> pop
-                    result.unshift(pathCell.cellY);             //unshift -> array <- push                                                                                    
-                }
-                pathCell = this.getCellFromCloseList(pathCell.parentCell.id);
+        var result: Array<number> = new Array<number>();
+        var pathCell: MapCell = this.closeCellList[this.closeCellList.length - 1];        
+        for (var i = this.closeCellList.length - 1; i != 0; i--) {
+            if (pathCell != null) {
+                //http://stackoverflow.com/questions/8073673/how-can-i-add-new-array-elements-at-the-beginning-of-an-array-in-javascript
+                result.unshift(pathCell.cellX);             //shift < - array -> pop
+                result.unshift(pathCell.cellY);             //unshift -> array <- push                                                                                    
             }
-        } catch (err) {     //az utolsó - start cellának - nincs id-ja, ezért hibát dob, de azt elnyeljük, mert már az az utolsó            
-            this._DEBUG_LOG(err.message);
-        } finally {
-            //NOP
+            try {
+                pathCell = this.getCellFromCloseList(pathCell.parentCell.id);
+            } catch (err) {     //az utolsó - start cellának - nincs id-ja, ezért hibát dob, de azt elnyeljük, mert már az az utolsó            
+                this._DEBUG_LOG(err.message);
+            }
         }
-        //a path elejére betesszük a start mezőt        
-        result.unshift(this.startCell.cellX);
-        result.unshift(this.startCell.cellY);                
         //utolsó cellaként hozzáadjuk az utvonalhoz a cél cellát (itt a push miatt először Y-ont, majd X-et!!!)
         result.push(this.targetCell.cellY);
-        result.push(this.targetCell.cellX);        
+        result.push(this.targetCell.cellX);
+        if (result[0] == this.startCell.cellY && result[1] == this.startCell.cellX) {
+            result.splice(0, 1);
+            result.splice(0, 1);
+        }
         this.writeConsoleFinalPath(result);
         return result;
     }    
