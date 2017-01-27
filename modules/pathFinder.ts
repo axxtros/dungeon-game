@@ -35,18 +35,21 @@ export class Pathfinder extends baseClassesModul.MapBase {
     private targetCell: MapCell;
     private openCellList = [];
     private closeCellList = [];
-    private endPathFinding: boolean;                        //ha true, akkor megvan a cél cella    
+    private endPathFinding: boolean;                        //ha true, akkor megvan a cél cella 
+    private reversedPathSearch: boolean;   
 
-    constructor(gameMap: any, startCellY: number, startCellX: number, targetCellY: number, targetCellX: number, a: boolean) {
+    constructor(gameMap: any, startCellY: number, startCellX: number, targetCellY: number, targetCellX: number, reversedPathSearch: boolean) {
         super();       
+        console.log('@pf startCellY: ' + startCellY + ' startCellX: ' + startCellX + ' targetCellY: ' + targetCellY + ' targetCellX: ' + targetCellX);
         this.map = gameMap;
-        if (a) {
+        this.reversedPathSearch = reversedPathSearch;
+        if (!this.reversedPathSearch) {     //normál útvonal keresés, start-tól a target-ig
             this.startCell = new baseClassesModul.MapCell(startCellY, startCellX, null, baseClassesModul.CellPathType.STARTING_CELL);
             this.targetCell = new baseClassesModul.MapCell(targetCellY, targetCellX, null, baseClassesModul.CellPathType.TARGET_CELL);
-        } else {
+        } else {                            //fordított útvonalkeresés, a target-től a start-ig
             this.startCell = new baseClassesModul.MapCell(targetCellY, targetCellX, null, baseClassesModul.CellPathType.TARGET_CELL);
             this.targetCell = new baseClassesModul.MapCell(startCellY, startCellX, null, baseClassesModul.CellPathType.STARTING_CELL);
-        }                
+        }        
         this.openCellList = new Array<MapCell>();
         this.closeCellList = new Array<MapCell>();
         this.endPathFinding = false;
@@ -63,13 +66,14 @@ export class Pathfinder extends baseClassesModul.MapBase {
             while (!this.endPathFinding) {
                 idx--;
                 if (idx == 0) {
-                    break;
+                    //break;
                 }
 
                 var selectedCell: MapCell = this.closeCellList[this.closeCellList.length - 1];
                 this.searchNeighbourCell(selectedCell);
-                this.selectNextCell();
-                            
+                if (!this.endPathFinding) {
+                    this.selectNextCell();
+                }                            
             }
             return this.getPath();
         } else {
@@ -108,7 +112,7 @@ export class Pathfinder extends baseClassesModul.MapBase {
         }
         if (this.isPassableUnitCell(this.map, cell.cellY, cell.cellX) && !this.isContainCloseList(cell)) {
             this.calcCellPathValues(cell);
-            this.addCellToCloseList(cell);
+            this.addCellToOpenList(cell);
         }
     }    
 
@@ -142,15 +146,27 @@ export class Pathfinder extends baseClassesModul.MapBase {
     }
 
     private getPath(): Array<number> {
-        var result: Array<number>;
-        for (var i = this.closeCellList.length; i != 0; i--) {
-            var nextPathCell: MapCell = this.closeCellList[i];
-            var nextPathParentCell: MapCell = this.getCellFromCloseList(nextPathCell.id);
-            result.push(nextPathParentCell.cellY);
-            result.push(nextPathParentCell.cellX);
+        var result: Array<number> = new Array<number>();
+        var pathCell: MapCell = this.closeCellList[this.closeCellList.length - 1];  
+        try {
+            for (var i = this.closeCellList.length - 1; i != 0; i--) {
+                if (pathCell != null) {
+                    console.log(i + '. path cell id: ' + pathCell.id + ' f: ' + pathCell.f + ' h: ' + pathCell.h + ' g: ' + pathCell.g + ' parentcell id: ' + pathCell.parentCell.id);
+                    result.push(pathCell.cellY);
+                    result.push(pathCell.cellX);
+                }
+                pathCell = this.getCellFromCloseList(pathCell.parentCell.id);
+            }
+        } catch (err) {     //az utolsó - start cellának - nincs id-ja, ezért hibát dob, de azt elnyeljük, mert már az az utolsó            
+            //console.log(err.message);
         }
+        //if (!this.reversedPathSearch) {            
+        //    console.log('normal path length: ' + (result.length - 1));
+        //} else {
+        //    console.log('reserved path length: ' + (result.length - 1));
+        //}
         return result;
-    }
+    }    
 
     /**
      * A paraméterben megadott cellát hozzáadja a várakozási cellák listájához, ha abban még - id alapján - nincs benne.

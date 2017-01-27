@@ -36,6 +36,8 @@ export class MapCell {
         this._f = 0;
         if (parentCell) {
             this._parentCell = parentCell;
+        } else {
+            this._parentCell = null;
         }
         if (pathCellType) {
             this._pathCellType = pathCellType;
