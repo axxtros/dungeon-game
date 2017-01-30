@@ -123,9 +123,15 @@ function initMouseEvents(canvasElement) {
     canvasElement.addEventListener("mouseup", mouseClickedEvent, false);	
 }
 
+function tasks() {
+    //generateNewDungeon();
+    wglCanvasInit();
+}
+
 function main() {
     init2DCanvasComponents();
     init3DCanvasComponents();
+    tasks();        
 }
 
 window.onscroll = function (event) { 

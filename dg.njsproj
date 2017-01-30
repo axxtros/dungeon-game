@@ -74,7 +74,8 @@
     <Compile Include="modules\application_test.js" />
     <Compile Include="modules\db2.js" />
     <Compile Include="modules\socket2.js" />
-    <Compile Include="public\javascripts\c_draw.js" />
+    <Compile Include="public\javascripts\c_drawmap.js" />
+    <Compile Include="public\javascripts\c_drawtutorialwgl.js" />
     <Compile Include="public\javascripts\c_events.js" />
     <Compile Include="public\javascripts\c_storage.js" />
     <Compile Include="public\javascripts\c_util.js" />
