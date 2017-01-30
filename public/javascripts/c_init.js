@@ -10,22 +10,24 @@ var unitCanvas;
 var missileCanvas;
 var devCanvas;
 var mouseCanvas;
+var webGLTutorialCanvas;
 
 var mapCanvasContext;
 var unitcanvasContext;
 var missilecanvasContext;
 var devcanvasContext;
 var mouseCanvasContext;
+var gl;                     //webGL canvas context
 
 var canvasOffset;           //ebben van eltárolva, hogy mennyivel vannak eltolva az egyes canvas-ek. ez főleg az egér kurzor lekérdezésénél fontos (c_events.js)
 
-function initCanvasComponents() {    
+function init2DCanvasComponents() {    
     //DEBUG_LOG('Initalizate client side HTML components. START!');
     
     //gameDiv
     var gamediv = document.getElementById('gamediv');
     if (gamediv === null || gamediv === 'undefined') {
-        DEBUG_LOG('Nof find gamediv element!');
+        DEBUG_LOG('Not find gamediv element!');
         return;
     }
     gamediv.style.width = GAME_DIV_WIDTH + 'px';
@@ -52,13 +54,18 @@ function initCanvasComponents() {
         devCanvas.style.display = 'none';
     }
     
+    //mouseCanvas
     mouseCanvas = document.getElementById('mousecanvas');
     if (isEnabledMouseEvents()) { 
         initCanvas(mouseCanvas, canvasOffset);
         initMouseEvents(mouseCanvas);
-    }
-        
+    }        
     //DEBUG_LOG('Initalizate client side HTML components. SUCCESS END!');
+}
+
+function init3DCanvasComponents() {    
+    webGLTutorialCanvas = document.getElementById('webgltutorialcanvas');
+    initCanvas(webGLTutorialCanvas, canvasOffset);
 }
 
 function initCanvas(canvasElement, canvasOffset) {
@@ -72,11 +79,11 @@ function initCanvas(canvasElement, canvasOffset) {
     canvasElement.style.height = canvasOffset.height + 'px';
     if (canvasElement.id === 'mapcanvas') {
         mapCanvasContext = canvasElement.getContext('2d');
-        initCanvasContext(mapCanvasContext);        
+        initCanvasContext(mapCanvasContext, true);        
     }
     if (canvasElement.id === 'unitcanvas') {
         unitcanvasContext = canvasElement.getContext('2d');
-        initCanvasContext(unitcanvasContext);
+        initCanvasContext(unitcanvasContext, true);
     }
     if (canvasElement.id === 'missilecanvas') {
         missilecanvasContext = canvasElement.getContext('2d');
@@ -84,30 +91,41 @@ function initCanvas(canvasElement, canvasOffset) {
     }
     if (canvasElement.id === 'devcanvas') {
         devcanvasContext = canvasElement.getContext('2d');
-        initCanvasContext(devcanvasContext);        
+        initCanvasContext(devcanvasContext, true);        
         canvasElement.style.border = '1px solid lightgray';
     }
     if (canvasElement.id === 'mousecanvas') {
         mouseCanvasContext = canvasElement.getContext('2d');
-        initCanvasContext(mouseCanvasContext);
+        initCanvasContext(mouseCanvasContext, true);
         if (isDebugMode()) { 
             canvasElement.style.border = '1px solid lightblue';
         }        
     }
+    if (canvasElement.id === 'webgltutorialcanvas') {
+        gl = webGLTutorialCanvas.getContext("webgl", true) || webGLTutorialCanvas.getContext("experimental-webgl", true);
+        if (!gl) {
+            console.log('ERROR: Failed init the webGL canvas context!');
+            return;
+        }
+        initCanvasContext(gl, false);
+    }
 }
 
-function initCanvasContext(canvasContext) { 
+function initCanvasContext(canvasContext, isCanvas2D) { 
     canvasContext.canvas.width = GAME_DIV_WIDTH;
     canvasContext.canvas.height = GAME_DIV_HEIGHT;
-    canvasContext.scale(1, 1);
+    if (isCanvas2D) {                       
+        canvasContext.scale(1, 1);                              //mert máretet csak 2D-s canvas-eknél lehet beállítani
+    }    
 }
 
 function initMouseEvents(canvasElement) { 
     canvasElement.addEventListener("mouseup", mouseClickedEvent, false);	
 }
 
-function main() { 
-    initCanvasComponents();    
+function main() {
+    init2DCanvasComponents();
+    init3DCanvasComponents();
 }
 
 window.onscroll = function (event) { 

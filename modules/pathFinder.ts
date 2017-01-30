@@ -148,7 +148,7 @@ export class Pathfinder extends baseClassesModul.MapBase {
         var pathCell: MapCell = this.closeCellList[this.closeCellList.length - 1];
         var isExistParent: boolean = true;
         for (var i = this.closeCellList.length - 1; i != 0; i--) {
-            if (pathCell != null && isExistParent) {        //csak akkor, ha létezik szülő cella
+            if (pathCell != null && isExistParent) {                                                        //csak akkor, ha létezik szülő cella
                 if (!(pathCell.cellY == this.startCell.cellY && pathCell.cellX == this.startCell.cellX)) {  //hogy a cél cella ne kerüljön be a path-be
                     //http://stackoverflow.com/questions/8073673/how-can-i-add-new-array-elements-at-the-beginning-of-an-array-in-javascript
                     result.unshift(pathCell.cellX);             //shift < - array -> pop

@@ -38,4 +38,4 @@ socket.on('path_data_from_server', function (path) {
     drawPath(path);       
 })
 
-generateNewDungeon();
+//generateNewDungeon();
