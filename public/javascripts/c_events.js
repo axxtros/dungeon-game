@@ -17,7 +17,7 @@ function mouseClickedEvent(event) {
         //searchUnitPath(testStartY, testStartX, cellY, cellX, false);       
         
         var coords3D = c_util_convertMouseClickedCoordTo3DCoord(event, webGLTutorialCanvas);
-        wglDraw2(coords3D.x, coords3D.y, 0.0);
+        wgl2_Draw(coords3D.x, coords3D.y, 0.0);
     }
     if (event.button === 1) {   //középső egérgomb
         DEBUG_LOG('@mousedown click middle mouse button');        

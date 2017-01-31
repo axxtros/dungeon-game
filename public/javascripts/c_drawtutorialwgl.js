@@ -23,15 +23,16 @@ var FSHADER_SOURCE =
      '}\n';
 
 function wglCanvasInit() {
-    initShaders();
+    initShaders(VSHADER_SOURCE, FSHADER_SOURCE);
     //https://webglfundamentals.org/webgl/lessons/webgl-resizing-the-canvas.html
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT);    
 }
 
+//-----------------------------------------------------------------------------
 //egy pont középen a shaderek paraméterezve
-function wglDraw1() {
+function wgl1_Draw() {
     var a_Position = gl.getAttribLocation(glProgram, 'a_Position');
     gl.vertexAttrib3f(a_Position, 0.0, 0.0, 0.0);
     var a_PointSize = gl.getAttribLocation(glProgram, 'a_PointSize');
@@ -41,8 +42,9 @@ function wglDraw1() {
     gl.drawArrays(gl.POINTS, 0, 1);
 }
 
+//-----------------------------------------------------------------------------
 //egérrel egy pont a shader-eket felparaméterezi
-function wglDraw2(vertexX, vertexY, vertexZ) {
+function wgl2_Draw(vertexX, vertexY, vertexZ) {
     wglCanvasInit();
     var a_Position = gl.getAttribLocation(glProgram, 'a_Position');
     gl.vertexAttrib3f(a_Position, vertexX, vertexY, vertexZ);
@@ -53,9 +55,10 @@ function wglDraw2(vertexX, vertexY, vertexZ) {
     gl.drawArrays(gl.POINTS, 0, 1);
 }
 
+//-----------------------------------------------------------------------------
 //buffer object használata (több vertex egyidejű átadása)
-function wglDraw3() {
-    var n = wgl3InitVertexBuffers(gl);
+function wgl3_Draw() {
+    var n = wgl3_InitVertexBuffers(gl);
     
     var a_PointSize = gl.getAttribLocation(glProgram, 'a_PointSize');
     gl.vertexAttrib1f(a_PointSize, 5.0);
@@ -65,7 +68,7 @@ function wglDraw3() {
     gl.drawArrays(gl.POINTS, 0, n);
 }
 
-function wgl3InitVertexBuffers() {
+function wgl3_InitVertexBuffers() {
     var vertices = new Float32Array([
         0.0, 0.5,   
        -0.5, 0.0, 
@@ -84,9 +87,9 @@ function wgl3InitVertexBuffers() {
 }
 
 //shader initializations ------------------------------------------------------
-function initShaders() {
-    vertexShader = cmpShader(VSHADER_SOURCE, gl.VERTEX_SHADER);
-    fragmentShader = cmpShader(FSHADER_SOURCE, gl.FRAGMENT_SHADER);
+function initShaders(v_shader_source, f_shader_source) {
+    vertexShader = cmpShader(v_shader_source, gl.VERTEX_SHADER);
+    fragmentShader = cmpShader(f_shader_source, gl.FRAGMENT_SHADER);
     
     glProgram = gl.createProgram();
     gl.attachShader(glProgram, vertexShader);
