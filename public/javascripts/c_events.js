@@ -8,11 +8,16 @@ function mouseClickedEvent(event) {
 
     var cellY = Math.floor(clickedY / MAP_ELEMENT_SIZE);
     var cellX = Math.floor(clickedX / MAP_ELEMENT_SIZE);
-    DEBUG_LOG('@mousedown click cellY: ' + cellY + ' cellX:' + cellX + ' map cell type: ' + st_gameMap[cellY][cellX]);        
+    if (st_gameMap !== null) { 
+        DEBUG_LOG('@mousedown click cellY: ' + cellY + ' cellX:' + cellX + ' map cell type: ' + st_gameMap[cellY][cellX]);        
+    }    
 
     if (event.button === 0) {   //bal egérgomb
         DEBUG_LOG('@mousedown click left mouse button');        
-        searchUnitPath(testStartY, testStartX, cellY, cellX, false);
+        //searchUnitPath(testStartY, testStartX, cellY, cellX, false);       
+        
+        var coords3D = c_util_convertMouseClickedCoordTo3DCoord(event, webGLTutorialCanvas);
+        wglDraw2(coords3D.x, coords3D.y, 0.0);
     }
     if (event.button === 1) {   //középső egérgomb
         DEBUG_LOG('@mousedown click middle mouse button');        

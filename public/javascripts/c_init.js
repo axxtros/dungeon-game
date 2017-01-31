@@ -76,7 +76,7 @@ function initCanvas(canvasElement, canvasOffset) {
     canvasElement.style.top = canvasOffset.top + 'px';
     canvasElement.style.left = canvasOffset.left + 'px';
     canvasElement.style.width = canvasOffset.width + 'px';
-    canvasElement.style.height = canvasOffset.height + 'px';
+    canvasElement.style.height = canvasOffset.height + 'px';        
     if (canvasElement.id === 'mapcanvas') {
         mapCanvasContext = canvasElement.getContext('2d');
         initCanvasContext(mapCanvasContext, true);        
