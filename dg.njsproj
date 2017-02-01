@@ -76,6 +76,7 @@
     <Compile Include="modules\socket2.js" />
     <Compile Include="public\javascripts\c_drawmap.js" />
     <Compile Include="public\javascripts\c_drawtutorialwgl_1.js" />
+    <Compile Include="public\javascripts\c_drawtutorialwgl_2.js" />
     <Compile Include="public\javascripts\c_events.js" />
     <Compile Include="public\javascripts\c_shaders.js" />
     <Compile Include="public\javascripts\c_storage.js" />

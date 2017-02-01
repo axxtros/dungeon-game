@@ -1,4 +1,5 @@
 ﻿//turtorial webgl draw funtcions 30/01/2017
+//webGL tutorial #1
 
 //tutorials:
 //https://webglfundamentals.org

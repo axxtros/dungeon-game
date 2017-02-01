@@ -19,9 +19,26 @@ var FSHADER_SOURCE_1 =
      '  gl_FragColor = u_FragColor;\n' + 
      '}\n';
 
+var VSHADER_SOURCE_2 =
+ 'attribute vec4 a_Position;\n' +
+    'attribute float a_PointSize;\n' +
+    'void main() {\n' +
+    '   gl_Position = a_Position; //vec4(0.0, 0.0, 0.0, 1.0);\n' +    
+    '   gl_PointSize = a_PointSize; //10.0;\n' +                       
+    '}\n';
+
+//Fragment shader program
+var FSHADER_SOURCE_2 =
+ 'precision mediump float;\n' +
+     'uniform vec4 u_FragColor;\n' + 
+     'void main() {\n' +
+     '  gl_FragColor = u_FragColor;\n' + 
+     '}\n';
+
 function wglCanvasInit(shaderNumber) {
     switch (shaderNumber) {
         case 1: c_shaders_initShaders(VSHADER_SOURCE_1, FSHADER_SOURCE_1); break;
+        case 2: c_shaders_initShaders(VSHADER_SOURCE_2, FSHADER_SOURCE_2); break;
     }
     //https://webglfundamentals.org/webgl/lessons/webgl-resizing-the-canvas.html
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
