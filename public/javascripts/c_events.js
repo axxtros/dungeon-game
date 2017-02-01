@@ -14,10 +14,10 @@ function mouseClickedEvent(event) {
 
     if (event.button === 0) {   //bal egérgomb
         DEBUG_LOG('@mousedown click left mouse button');        
-        //searchUnitPath(testStartY, testStartX, cellY, cellX, false);       
+        searchUnitPath(testStartY, testStartX, cellY, cellX, false);       
         
-        var coords3D = c_util_convertMouseClickedCoordTo3DCoord(event, webGLTutorialCanvas);
-        wgl2_Draw(coords3D.x, coords3D.y, 0.0);
+        //var coords3D = c_util_convertMouseClickedCoordTo3DCoord(event, webGLTutorialCanvas);
+        //wgl2_Draw(coords3D.x, coords3D.y, 0.0);
     }
     if (event.button === 1) {   //középső egérgomb
         DEBUG_LOG('@mousedown click middle mouse button');        

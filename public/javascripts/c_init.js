@@ -114,9 +114,9 @@ function initCanvas(canvasElement, canvasOffset) {
 function initCanvasContext(canvasContext, isCanvas2D) { 
     canvasContext.canvas.width = GAME_DIV_WIDTH;
     canvasContext.canvas.height = GAME_DIV_HEIGHT;
-    if (isCanvas2D) {                       
-        canvasContext.scale(1, 1);                              //mert máretet csak 2D-s canvas-eknél lehet beállítani
-    }    
+    if (isCanvas2D) {
+        canvasContext.scale(1, 1);                              //mert méretet csak 2D-s canvas-eknél lehet beállítani
+    }
 }
 
 function initMouseEvents(canvasElement) { 
@@ -125,7 +125,7 @@ function initMouseEvents(canvasElement) {
 
 function tasks() {
     //generateNewDungeon();
-    wglCanvasInit();
+    wglCanvasInit(1);
     //wgl1_Draw();
     wgl3_Draw();
 }
