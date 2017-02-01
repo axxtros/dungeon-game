@@ -1,6 +1,6 @@
 ﻿//cleints side javascript
 
-var GAME_DIV_WIDTH = 1000;						//default: 1000
+var GAME_DIV_WIDTH = 800;						//default: 1000
 var GAME_DIV_HEIGHT = 800;						//default: 800
 
 var gamediv;
@@ -130,6 +130,7 @@ function tasks() {
     //wgl3_Draw();
     wglCanvasInit(2);
     wgl4_Draw();
+    wgl4_Loop();
 }
 
 function main() {

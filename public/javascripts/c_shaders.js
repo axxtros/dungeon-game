@@ -19,11 +19,15 @@ var FSHADER_SOURCE_1 =
      '  gl_FragColor = u_FragColor;\n' + 
      '}\n';
 
+//-----------------------------------------------------------------------------
+
 var VSHADER_SOURCE_2 =
  'attribute vec4 a_Position;\n' +
     'attribute float a_PointSize;\n' +
+    'uniform vec4 u_Translation;\n' +
+    'uniform mat4 u_ModelMatrix;\n' +
     'void main() {\n' +
-    '   gl_Position = a_Position; //vec4(0.0, 0.0, 0.0, 1.0);\n' +    
+    '   gl_Position = u_ModelMatrix * a_Position;// + u_Translation;\n' +    
     '   gl_PointSize = a_PointSize; //10.0;\n' +                       
     '}\n';
 
