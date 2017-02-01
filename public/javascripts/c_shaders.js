@@ -49,7 +49,7 @@ var VSHADER_SOURCE_3 =
     'uniform vec4 u_Translation;\n' +
     'uniform mat4 u_ModelMatrix;\n' +
     'void main() {\n' +
-    '   gl_Position = u_ModelMatrix * a_Position;// + u_Translation;\n' +    
+    '   gl_Position = a_Position;// + u_Translation;\n' +    
     '   gl_PointSize = a_PointSize; //10.0;\n' +                       
     '}\n';
 
