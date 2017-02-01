@@ -2,6 +2,8 @@
 
 var glProgram = null;           //a shadereket tartalmazó program
 
+//-----------------------------------------------------------------------------
+//start...
 //Vertex shader program
 var VSHADER_SOURCE_1 =
  'attribute vec4 a_Position;\n' +
@@ -20,7 +22,7 @@ var FSHADER_SOURCE_1 =
      '}\n';
 
 //-----------------------------------------------------------------------------
-
+//matrix, animation
 var VSHADER_SOURCE_2 =
  'attribute vec4 a_Position;\n' +
     'attribute float a_PointSize;\n' +
@@ -39,10 +41,31 @@ var FSHADER_SOURCE_2 =
      '  gl_FragColor = u_FragColor;\n' + 
      '}\n';
 
+//-----------------------------------------------------------------------------
+//colors and textures
+var VSHADER_SOURCE_3 =
+ 'attribute vec4 a_Position;\n' +
+    'attribute float a_PointSize;\n' +
+    'uniform vec4 u_Translation;\n' +
+    'uniform mat4 u_ModelMatrix;\n' +
+    'void main() {\n' +
+    '   gl_Position = u_ModelMatrix * a_Position;// + u_Translation;\n' +    
+    '   gl_PointSize = a_PointSize; //10.0;\n' +                       
+    '}\n';
+
+//Fragment shader program
+var FSHADER_SOURCE_3 =
+ 'precision mediump float;\n' +
+     'uniform vec4 u_FragColor;\n' + 
+     'void main() {\n' +
+     '  gl_FragColor = u_FragColor;\n' + 
+     '}\n';
+
 function wglCanvasInit(shaderNumber) {
     switch (shaderNumber) {
         case 1: c_shaders_initShaders(VSHADER_SOURCE_1, FSHADER_SOURCE_1); break;
         case 2: c_shaders_initShaders(VSHADER_SOURCE_2, FSHADER_SOURCE_2); break;
+        case 3: c_shaders_initShaders(VSHADER_SOURCE_3, FSHADER_SOURCE_3); break;
     }
     //https://webglfundamentals.org/webgl/lessons/webgl-resizing-the-canvas.html
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);

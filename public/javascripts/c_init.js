@@ -125,12 +125,17 @@ function initMouseEvents(canvasElement) {
 
 function tasks() {
     //generateNewDungeon();
+    
     //wglCanvasInit(1);
     //wgl1_Draw();
     //wgl3_Draw();
-    wglCanvasInit(2);
-    wgl4_Draw();
-    wgl4_Loop();
+    
+    //wglCanvasInit(2);
+    //wgl4_Draw();
+    //wgl4_Loop();
+    
+    wglCanvasInit(3);
+    wgl5_Draw();
 }
 
 function main() {
