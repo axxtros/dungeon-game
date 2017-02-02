@@ -22,6 +22,7 @@ var gl;                     //webGL canvas context
 var canvasOffset;           //ebben van eltárolva, hogy mennyivel vannak eltolva az egyes canvas-ek. ez főleg az egér kurzor lekérdezésénél fontos (c_events.js)
 
 var testTextureImage = new Image();
+var textureImages = [];
 
 function init2DCanvasComponents() {    
     //DEBUG_LOG('Initalizate client side HTML components. START!');
@@ -125,6 +126,32 @@ function initMouseEvents(canvasElement) {
     canvasElement.addEventListener("mouseup", mouseClickedEvent, false);	
 }
 
+//https://webglfundamentals.org/webgl/lessons/webgl-2-textures.html
+function loadImage(url, callback) {    
+    var image = new Image();
+    image.src = url;
+    image.onload = callback;
+    return image;
+}
+
+function loadImages(urls, callback) {
+    var images = [];
+    var imagesToLoad = urls.length;
+
+    var onImageLoad = function () {
+        --imagesToLoad;
+        if (imagesToLoad === 0) {
+            textureImages = images;
+            callback(images);
+        }
+    }
+
+    for(var i = 0; i != imagesToLoad; i++) {
+        var image = loadImage(urls[i], onImageLoad);
+        images.push(image);
+    }
+}
+
 function tasks() {
     //generateNewDungeon();
     
@@ -144,8 +171,14 @@ function tasks() {
 }
 
 function main() {
+    
+    //loadImages([
+    //    "/images/sky.jpg",
+    //    "/images/sky2.jpg"
+    //], tasks);
+
     init2DCanvasComponents();
-    init3DCanvasComponents();
+    init3DCanvasComponents();    
     tasks();        
 }
 

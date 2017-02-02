@@ -2,6 +2,10 @@
 
 //texture
 function wgl6_Draw() {
+    //http://stackoverflow.com/questions/41020683/max-number-of-textures-in-webgl
+    var maxTextures = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);                          //így kérdezhetjük le, hogy mennyi texture unit áll rendelkezésre
+    console.log('maxTextures: ' + maxTextures);
+    
     var n = wgl6_InitVertexBuffers(gl);
     wgl6_InitTexture();
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, n);
