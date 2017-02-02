@@ -75,8 +75,8 @@ var VSHADER_SOURCE_4 =
     'attribute vec4 a_Color;\n' +
     'varying vec4 v_Color;\n' +
     'void main() {\n' +
-    '   gl_Position = a_Position;// + u_Translation;\n' +    
-    '   gl_PointSize = a_PointSize; //10.0;\n' +
+    '   gl_Position = a_Position;\n' +    
+    '   gl_PointSize = 10.0;\n' +
     '   v_Color = a_Color;\n' +                       
     '}\n';
 
@@ -86,7 +86,7 @@ var FSHADER_SOURCE_4 =
      'uniform vec4 u_FragColor;\n' +
      'varying vec4 v_Color;\n' + 
      'void main() {\n' +
-     '  gl_FragColor = v_Color;//u_FragColor;\n' + 
+     '  gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n' + 
      '}\n';
 
 
