@@ -21,6 +21,8 @@ var gl;                     //webGL canvas context
 
 var canvasOffset;           //ebben van eltárolva, hogy mennyivel vannak eltolva az egyes canvas-ek. ez főleg az egér kurzor lekérdezésénél fontos (c_events.js)
 
+var testTextureImage = new Image();
+
 function init2DCanvasComponents() {    
     //DEBUG_LOG('Initalizate client side HTML components. START!');
     
@@ -155,7 +157,11 @@ window.onresize = function(event) {
     main();
 };
 
-window.onload = function (event) {
+window.onload = function (event) {    
     main();
 };
 
+testTextureImage.onload = function () { 
+    console.log('testTextureImage load is done...');
+}
+testTextureImage.src = "/images/sky.jpg";
