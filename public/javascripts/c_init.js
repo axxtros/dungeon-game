@@ -134,8 +134,11 @@ function tasks() {
     //wgl4_Draw();
     //wgl4_Loop();
     
-    wglCanvasInit(3);
-    wgl5_Draw();
+    //wglCanvasInit(3);
+    //wgl5_Draw();
+
+    wglCanvasInit(4);
+    wgl6_Draw();
 }
 
 function main() {

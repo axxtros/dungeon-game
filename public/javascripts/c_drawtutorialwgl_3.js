@@ -1,14 +1,15 @@
 ﻿//webGL tutorial #3 01/02/2017
 
-//colors and textures
+//colors and buffer array
 function wgl5_Draw() {
     //var n = wgl5_InitVertexBuffers(gl);
     var n = wgl5_InitVertexBuffers_2(gl);
     
     //var a_PointSize = gl.getAttribLocation(glProgram, 'a_PointSize');
     //gl.vertexAttrib1f(a_PointSize, 5.0);
-    var u_FragColor = gl.getUniformLocation(glProgram, 'u_FragColor');
-    gl.uniform4f(u_FragColor, 0.165, 0.165, 0.165, 1.0);
+
+    //var u_FragColor = gl.getUniformLocation(glProgram, 'u_FragColor');
+    //gl.uniform4f(u_FragColor, 0.165, 0.165, 0.165, 1.0);
     
     var u_Translation = gl.getUniformLocation(glProgram, 'u_Translation');
     gl.uniform4f(u_Translation, 0.3, 0.0, 0.0, 0.0);
@@ -61,12 +62,12 @@ function wgl5_InitVertexBuffers() {
 //közös bufferben a vertices és a sizes
 function wgl5_InitVertexBuffers_2() {
     var verticesSize = new Float32Array([
-        -0.1,  0.1,   10.0,  
-         0.1,  0.1,   20.0,
-        -0.1, -0.1,   30.0,
-         0.1, -0.1,   40.0
+        -0.1,  0.1,   10.0,   0.255, 0.0,   0.0,  
+         0.1,  0.1,   20.0,   0.0,   0.255, 0.0,  
+        -0.1, -0.1,   30.0,   0.0,   0.0,   0.255,  
+         0.1, -0.1,   40.0,   0.165, 0.165, 0.165
     ]);    
-    var vertexDefNumber = verticesSize.length / 3;
+    var vertexDefNumber = verticesSize.length / 6;
 
     var vertexSizeBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexSizeBuffer);
@@ -75,12 +76,16 @@ function wgl5_InitVertexBuffers_2() {
     var FSIZE = verticesSize.BYTES_PER_ELEMENT;
     //vertices
     var a_Position = gl.getAttribLocation(glProgram, 'a_Position');
-    gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, FSIZE * 3, 0);
+    gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, FSIZE * 6, 0);
     gl.enableVertexAttribArray(a_Position);
     //vertex sizes
     var a_PointSize = gl.getAttribLocation(glProgram, 'a_PointSize');
-    gl.vertexAttribPointer(a_PointSize, 1, gl.FLOAT, false, FSIZE * 3, FSIZE * 2);
+    gl.vertexAttribPointer(a_PointSize, 1, gl.FLOAT, false, FSIZE * 6, FSIZE * 2);
     gl.enableVertexAttribArray(a_PointSize);
+    //colors
+    var a_Color = gl.getAttribLocation(glProgram, 'a_Color');
+    gl.vertexAttribPointer(a_Color, 3, gl.FLOAT, false, FSIZE * 6, FSIZE * 3);
+    gl.enableVertexAttribArray(a_Color);
 
     return vertexDefNumber;
 }

@@ -42,30 +42,60 @@ var FSHADER_SOURCE_2 =
      '}\n';
 
 //-----------------------------------------------------------------------------
-//colors and textures
+//colors and buffer array
 var VSHADER_SOURCE_3 =
  'attribute vec4 a_Position;\n' +
     'attribute float a_PointSize;\n' +
     'uniform vec4 u_Translation;\n' +
     'uniform mat4 u_ModelMatrix;\n' +
+    'attribute vec4 a_Color;\n' +
+    'varying vec4 v_Color;\n' +
     'void main() {\n' +
     '   gl_Position = a_Position;// + u_Translation;\n' +    
-    '   gl_PointSize = a_PointSize; //10.0;\n' +                       
+    '   gl_PointSize = a_PointSize; //10.0;\n' +
+    '   v_Color = a_Color;\n' +                       
     '}\n';
 
 //Fragment shader program
 var FSHADER_SOURCE_3 =
  'precision mediump float;\n' +
-     'uniform vec4 u_FragColor;\n' + 
+     'uniform vec4 u_FragColor;\n' +
+     'varying vec4 v_Color;\n' + 
      'void main() {\n' +
-     '  gl_FragColor = u_FragColor;\n' + 
+     '  gl_FragColor = v_Color;//u_FragColor;\n' + 
      '}\n';
+
+//-----------------------------------------------------------------------------
+//texture
+var VSHADER_SOURCE_4 =
+ 'attribute vec4 a_Position;\n' +
+    'attribute float a_PointSize;\n' +
+    'uniform vec4 u_Translation;\n' +
+    'uniform mat4 u_ModelMatrix;\n' +
+    'attribute vec4 a_Color;\n' +
+    'varying vec4 v_Color;\n' +
+    'void main() {\n' +
+    '   gl_Position = a_Position;// + u_Translation;\n' +    
+    '   gl_PointSize = a_PointSize; //10.0;\n' +
+    '   v_Color = a_Color;\n' +                       
+    '}\n';
+
+//Fragment shader program
+var FSHADER_SOURCE_4 =
+ 'precision mediump float;\n' +
+     'uniform vec4 u_FragColor;\n' +
+     'varying vec4 v_Color;\n' + 
+     'void main() {\n' +
+     '  gl_FragColor = v_Color;//u_FragColor;\n' + 
+     '}\n';
+
 
 function wglCanvasInit(shaderNumber) {
     switch (shaderNumber) {
         case 1: c_shaders_initShaders(VSHADER_SOURCE_1, FSHADER_SOURCE_1); break;
         case 2: c_shaders_initShaders(VSHADER_SOURCE_2, FSHADER_SOURCE_2); break;
         case 3: c_shaders_initShaders(VSHADER_SOURCE_3, FSHADER_SOURCE_3); break;
+        case 4: c_shaders_initShaders(VSHADER_SOURCE_4, FSHADER_SOURCE_4); break;
     }
     //https://webglfundamentals.org/webgl/lessons/webgl-resizing-the-canvas.html
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
