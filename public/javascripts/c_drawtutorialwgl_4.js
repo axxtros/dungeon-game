@@ -34,13 +34,16 @@ function wgl6_InitVertexBuffers() {
 }
 
 function wgl6_InitTexture() {
-    var texture = gl.createTexture();
-    var u_Sampler = gl.getUniformLocation(glProgram, 'u_Sampler');
+    var texture = gl.createTexture();                                                       //új textúra objektum létrehozása a webGL rendszerben (törlés: gl.deleteTexture(texture))
+        
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);                                              //textúra megfordítása y tengely mentén, hogy helyesen legyen felfeszíve a felületre
+
+    gl.activeTexture(gl.TEXTURE0);                                                          //texture unit aktiválása, a webGL-ben ebből alapértelmezetten 0..7 van
+    gl.bindTexture(gl.TEXTURE_2D, texture);                                                 //a textúra objektum hozzákötése a textúra unit-hoz + textúra típus megadása (2D) [a textura unit-on belüli aktív slot-hoz]
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);                      //a textúra paramétereinek megadása
+                                                                                            //175.old az egyes paraméterek pontos definíciója    
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, testTextureImage);    //a textúra kép összerendelése a textúra objektummal
     
-    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
-    gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture(gl.TEXTURE_2D, texture);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, testTextureImage);
-    gl.uniform1i(u_Sampler, 0);        
+    var u_Sampler = gl.getUniformLocation(glProgram, 'u_Sampler');      
+    gl.uniform1i(u_Sampler, 0);                                                             //a fenti textúra objektum átadása a webGL rendszernek (a második paramétere a kiválasztott texture unit number)
 }
