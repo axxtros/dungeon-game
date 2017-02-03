@@ -5,9 +5,15 @@
 function wgl7_Draw() {
             
     var n = wgl7_InitVertexBuffers(gl);
+    
+    var modelMatrix = new Matrix4();
+    modelMatrix.setRotate(0, 0, 0, 1);
+
+    var u_ModelMatrix = gl.getUniformLocation(glProgram, 'u_ModelMatrix');
+    gl.uniformMatrix4fv(u_ModelMatrix, false, modelMatrix.elements);
         
-    var viewMatrix = new Matrix4();
-    viewMatrix.setLookAt(0.20, 0.25, 0.25, 0, 0, 0, 0, 1, 0);
+    var viewMatrix = new Matrix4();    
+    viewMatrix.setLookAt(0.20, 0.25, 0.25, 0, 0, 0, 0, 1, 0);    
     
     var u_ViewMatrix = gl.getUniformLocation(glProgram, 'u_ViewMatrix');
     gl.uniformMatrix4fv(u_ViewMatrix, false, viewMatrix.elements);    

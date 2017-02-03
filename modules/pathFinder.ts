@@ -109,7 +109,7 @@ export class Pathfinder extends baseClassesModul.MapBase {
             this.calcCellPathValues(cell);
             this.addCellToOpenList(cell);
         }
-    }    
+    }
 
     /**
      * A paraméterben átadott cell h,g,f értékeinek számítása.
