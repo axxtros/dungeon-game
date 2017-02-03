@@ -21,7 +21,7 @@ var gl;                     //webGL canvas context
 
 var canvasOffset;           //ebben van eltárolva, hogy mennyivel vannak eltolva az egyes canvas-ek. ez főleg az egér kurzor lekérdezésénél fontos (c_events.js)
 
-var testTextureImage = new Image();
+//var testTextureImage = new Image();
 var textureImages = [];
 
 function init2DCanvasComponents() {    
@@ -127,20 +127,13 @@ function initMouseEvents(canvasElement) {
 }
 
 //https://webglfundamentals.org/webgl/lessons/webgl-2-textures.html
-function loadImage(url, callback) {    
-    var image = new Image();
-    image.src = url;
-    image.onload = callback;
-    return image;
-}
-
 function loadImages(urls, callback) {
     var images = [];
     var imagesToLoad = urls.length;
 
     var onImageLoad = function () {
         --imagesToLoad;
-        if (imagesToLoad === 0) {
+        if (imagesToLoad == 0) {
             textureImages = images;
             callback(images);
         }
@@ -150,6 +143,26 @@ function loadImages(urls, callback) {
         var image = loadImage(urls[i], onImageLoad);
         images.push(image);
     }
+}
+
+function loadImage(url, callback) {
+    var image = new Image();
+    image.src = url;
+    image.onload = callback;
+    return image;
+}
+
+function main() {                       //így kell betölteni képeket asszinkron módon sima js-ben, hogy a végrehajtás várjon mindaddig, amíg az összes kép nincs betöltve
+    loadImages([
+        "/images/sky.jpg",
+        "/images/sky2.jpg"
+    ], initClientSideComponents);    
+}
+
+function initClientSideComponents(images) {
+    init2DCanvasComponents();
+    init3DCanvasComponents();
+    tasks();        
 }
 
 function tasks() {
@@ -165,36 +178,26 @@ function tasks() {
     
     //wglCanvasInit(3);
     //wgl5_Draw();
-
+    
     wglCanvasInit(4);
     wgl6_Draw();
 }
 
-function main() {
-    
-    //loadImages([
-    //    "/images/sky.jpg",
-    //    "/images/sky2.jpg"
-    //], tasks);
-
-    init2DCanvasComponents();
-    init3DCanvasComponents();    
-    tasks();        
-}
-
 window.onscroll = function (event) { 
-    main();
+    //main();
+    initClientSideComponents(null);
 }
 
 window.onresize = function(event) {
-    main();
+    //main();    
+    initClientSideComponents(null);
 };
 
 window.onload = function (event) {    
     main();
 };
 
-testTextureImage.onload = function () { 
-    console.log('testTextureImage load is done...');
-}
-testTextureImage.src = "/images/sky.jpg";
+//testTextureImage.onload = function () { 
+//    console.log('testTextureImage load is done...');
+//}
+//testTextureImage.src = "/images/sky.jpg";

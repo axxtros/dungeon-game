@@ -46,7 +46,7 @@ function wgl6_InitTexture() {
     gl.bindTexture(gl.TEXTURE_2D, texture);                                                 //a textúra objektum hozzákötése a textúra unit-hoz + textúra típus megadása (2D) [a textura unit-on belüli aktív slot-hoz]
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);                      //a textúra paramétereinek megadása
                                                                                             //175.old az egyes paraméterek pontos definíciója    
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, testTextureImage);    //a textúra kép összerendelése a textúra objektummal
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, textureImages[0]);    //a textúra kép összerendelése a textúra objektummal (a képek már előre a c_init-ben vannak betöltve a textureImages array-ba)
     
     var u_Sampler = gl.getUniformLocation(glProgram, 'u_Sampler');      
     gl.uniform1i(u_Sampler, 0);                                                             //a fenti textúra objektum átadása a webGL rendszernek (a második paramétere a kiválasztott texture unit number)
