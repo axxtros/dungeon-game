@@ -93,11 +93,13 @@ var VSHADER_SOURCE_5 =
     'attribute float a_PointSize;\n' +
     'uniform vec4 u_Translation;\n' +
     'uniform mat4 u_ModelMatrix;\n' +
+    'uniform mat4 u_ViewMatrix;\n' +
     'attribute vec4 a_Color;\n' +
     'varying vec4 v_Color;\n' +
     'void main() {\n' +
-    '   gl_Position = a_Position;\n' +    
+    '   gl_Position = u_ViewMatrix * a_Position;\n' +
     '   gl_PointSize = 10.0;\n' +    
+    '   v_Color = a_Color;\n' + 
     '}\n';
 
 //Fragment shader program
@@ -106,7 +108,7 @@ var FSHADER_SOURCE_5 =
      'uniform vec4 u_FragColor;\n' +
      'varying vec4 v_Color;\n' + 
      'void main() {\n' +
-     '  gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n' + 
+     '  gl_FragColor = v_Color;\n' + 
      '}\n';
 
 
