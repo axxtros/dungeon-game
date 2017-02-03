@@ -86,6 +86,29 @@ var FSHADER_SOURCE_4 =
      '  gl_FragColor = texture2D(u_Sampler, v_TexCoord);\n' + 
      '}\n';
 
+//-----------------------------------------------------------------------------
+//user's view, control view, clipping, foreground/background control
+var VSHADER_SOURCE_5 =
+ 'attribute vec4 a_Position;\n' +
+    'attribute float a_PointSize;\n' +
+    'uniform vec4 u_Translation;\n' +
+    'uniform mat4 u_ModelMatrix;\n' +
+    'attribute vec4 a_Color;\n' +
+    'varying vec4 v_Color;\n' +
+    'void main() {\n' +
+    '   gl_Position = a_Position;\n' +    
+    '   gl_PointSize = 10.0;\n' +    
+    '}\n';
+
+//Fragment shader program
+var FSHADER_SOURCE_5 =
+ 'precision mediump float;\n' +
+     'uniform vec4 u_FragColor;\n' +
+     'varying vec4 v_Color;\n' + 
+     'void main() {\n' +
+     '  gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n' + 
+     '}\n';
+
 
 function wglCanvasInit(shaderNumber) {
     switch (shaderNumber) {
@@ -93,6 +116,7 @@ function wglCanvasInit(shaderNumber) {
         case 2: c_shaders_initShaders(VSHADER_SOURCE_2, FSHADER_SOURCE_2); break;
         case 3: c_shaders_initShaders(VSHADER_SOURCE_3, FSHADER_SOURCE_3); break;
         case 4: c_shaders_initShaders(VSHADER_SOURCE_4, FSHADER_SOURCE_4); break;
+        case 5: c_shaders_initShaders(VSHADER_SOURCE_5, FSHADER_SOURCE_5); break;
     }
     //https://webglfundamentals.org/webgl/lessons/webgl-resizing-the-canvas.html
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);

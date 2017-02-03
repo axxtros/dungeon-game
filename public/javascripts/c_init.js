@@ -179,8 +179,11 @@ function tasks() {
     //wglCanvasInit(3);
     //wgl5_Draw();
     
-    wglCanvasInit(4);
-    wgl6_Draw();
+    //wglCanvasInit(4);
+    //wgl6_Draw();
+
+    wglCanvasInit(5);
+    wgl7_Draw();
 }
 
 window.onscroll = function (event) { 
