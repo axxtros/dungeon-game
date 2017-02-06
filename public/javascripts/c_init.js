@@ -66,9 +66,11 @@ function init2DCanvasComponents() {
     //DEBUG_LOG('Initalizate client side HTML components. SUCCESS END!');
 }
 
-function init3DCanvasComponents() {    
-    webGLTutorialCanvas = document.getElementById('webgltutorialcanvas');
-    initCanvas(webGLTutorialCanvas, canvasOffset);
+function init3DCanvasComponents() {
+    if (isEnabled3DTutorialCanvas()) { 
+        webGLTutorialCanvas = document.getElementById('webgltutorialcanvas');
+        initCanvas(webGLTutorialCanvas, canvasOffset);
+    }    
 }
 
 function initCanvas(canvasElement, canvasOffset) {
@@ -168,22 +170,24 @@ function initClientSideComponents(images) {
 function tasks() {
     //generateNewDungeon();
     
-    //wglCanvasInit(1);
-    //wgl1_Draw();
-    //wgl3_Draw();
-    
-    //wglCanvasInit(2);
-    //wgl4_Draw();
-    //wgl4_Loop();
-    
-    //wglCanvasInit(3);
-    //wgl5_Draw();
-    
-    //wglCanvasInit(4);
-    //wgl6_Draw();
-
-    wglCanvasInit(5);
-    wgl7_Draw();
+    if (isEnabled3DTutorialCanvas()) { 
+        //wglCanvasInit(1);
+        //wgl1_Draw();
+        //wgl3_Draw();
+        
+        //wglCanvasInit(2);
+        //wgl4_Draw();
+        //wgl4_Loop();
+        
+        //wglCanvasInit(3);
+        //wgl5_Draw();
+        
+        //wglCanvasInit(4);
+        //wgl6_Draw();
+        
+        wglCanvasInit(5);
+        wgl7_Draw();
+    }    
 }
 
 window.onscroll = function (event) { 

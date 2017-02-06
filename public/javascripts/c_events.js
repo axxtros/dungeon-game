@@ -16,10 +16,11 @@ function mouseClickedEvent(event) {
         DEBUG_LOG('@mousedown click left mouse button');        
         //searchUnitPath(testStartY, testStartX, cellY, cellX, false);       
         
-        //var coords3D = c_util_convertMouseClickedCoordTo3DCoord(event, webGLTutorialCanvas);
-        //wgl2_Draw(coords3D.x, coords3D.y, 0.0);
-
-        wgl7_Draw();
+        if (isEnabled3DTutorialCanvas()) { 
+            //var coords3D = c_util_convertMouseClickedCoordTo3DCoord(event, webGLTutorialCanvas);
+            //wgl2_Draw(coords3D.x, coords3D.y, 0.0);            
+            wgl7_Draw();
+        }        
     }
     if (event.button === 1) {   //középső egérgomb
         DEBUG_LOG('@mousedown click middle mouse button');        

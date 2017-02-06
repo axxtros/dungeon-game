@@ -26,7 +26,7 @@ const enum CellPathCostType {
 export class Pathfinder extends baseClassesModul.MapBase {
 
     private MANHATTAN_MULTIPLE_COST: number = 1;            //manhattem távolság ára
-    private DIAGONAL_COST: number = 2;                      //átlós távolság ára
+    private DIAGONAL_COST: number = 2;                      //átlós távolság ára (a dungeon-ban alapértelmezetten nem lehet átlósan lépni, ezért itt nincs használva)
     private NEXT_COST: number = 1;                          //egyenes - szomszédos - cellába történő mozgatás ára
 
     private util = new utilModul.Util();
@@ -55,28 +55,40 @@ export class Pathfinder extends baseClassesModul.MapBase {
     }
 
     public searchPath(): any {
+        if (this.map == null) {
+            return null;
+        }
+        //a kezdő cellának is, és a cél cellának is a térképen kell elhelyezkednie, ha azon nincs rajta akkor nincs útvonalkeresés
+        if (!(this.startCell.cellY > 0 && this.startCell.cellY < this.map.length &&
+            this.startCell.cellX > 0 && this.startCell.cellX < this.map[0].length &&
+            this.targetCell.cellY > 0 && this.targetCell.cellY < this.map.length &&
+            this.targetCell.cellX > 0 && this.targetCell.cellX < this.map[0].length)) {
+            return null;
+        }
         //csak akkor kezdjük el az útvonal keresést, ha a kezdő cella, és a cél cella is egység által járható cella
         if ((this.isPassableUnitCell(this.map, this.startCell.cellY, this.startCell.cellX)) &&
-            (this.isPassableUnitCell(this.map, this.targetCell.cellY, this.targetCell.cellX))) {
-
-            this.closeCellList.push(this.startCell);            
-                                
-            while (!this.endPathFinding) {            
-                var selectedCell: MapCell = this.closeCellList[this.closeCellList.length - 1];
-                this.searchNeighbourCell(selectedCell);
-                if (!this.endPathFinding) {
-                    this.selectNextCell();
-                }                            
-            }
-
-            return this.getPath();
+            (this.isPassableUnitCell(this.map, this.targetCell.cellY, this.targetCell.cellX))) {            
+            this.generatePath();            
+            return this.getFinalPath();
         } else {
             return null;
         }
     }
 
+    private generatePath(): void {
+        this.closeCellList.push(this.startCell);
+        while (!this.endPathFinding) {
+            var selectedCell: MapCell = this.closeCellList[this.closeCellList.length - 1];
+            this.searchNeighbourCell(selectedCell);
+            if (!this.endPathFinding) {
+                this.selectNextCell();
+            }
+        }
+    }
+
     /**
      * Megkeressük a paraméterben átadott cella lehetséges szomszédjait, amerre lehetne menni.
+     * (Átlós cellák a dungeon sajátosságai miatt itt nem jöhetnek szóba, ezért azokban nem is keresünk.)
      * @param parentCell
      */
     private searchNeighbourCell(parentCell: MapCell): void {
@@ -143,7 +155,7 @@ export class Pathfinder extends baseClassesModul.MapBase {
         }        
     }
 
-    private getPath(): Array<number> {
+    private getFinalPath(): Array<number> {
         var result: Array<number> = new Array<number>();
         var pathCell: MapCell = this.closeCellList[this.closeCellList.length - 1];
         var isExistParent: boolean = true;
@@ -166,7 +178,9 @@ export class Pathfinder extends baseClassesModul.MapBase {
         //utolsó cellaként hozzáadjuk az utvonalhoz a cél cellát (itt a push miatt először Y-ont, majd X-et!!!)
         result.push(this.targetCell.cellY);
         result.push(this.targetCell.cellX);        
-        this.writeConsoleFinalPath(result);
+        if (this.isDebugMode()) {
+            this.writeConsoleFinalPath(result);
+        }
         return result;
     }    
 

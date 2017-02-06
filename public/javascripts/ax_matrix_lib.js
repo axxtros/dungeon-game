@@ -23,7 +23,6 @@ var Matrix4 = function(opt_src) {
   } else {
     this.elements = new Float32Array([1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1]);
     }
-    console.log('matrix created...');
 };
 
 /**

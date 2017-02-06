@@ -122,7 +122,7 @@ export class MapCell {
  */
 export abstract class MapBase {
 
-    private DEBUG_CONSOLE_PRINT: boolean = false;
+    private DEBUG_MODE: boolean = false;
 
     //térkép cella típusok
     private _MAZE: number = 0;                           //folyosó (egységek által járható cellák)
@@ -168,8 +168,12 @@ export abstract class MapBase {
         return false;
     }
 
+    public isDebugMode(): boolean {
+        return this.DEBUG_MODE;           
+    }
+
     public _DEBUG_LOG(msg: string): void {
-        if (this.DEBUG_CONSOLE_PRINT) {
+        if (this.DEBUG_MODE) {
             console.log('@map log: ' + msg);
         }
     }

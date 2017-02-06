@@ -3,6 +3,7 @@
 var DEV_MODE = true;
 var DEBUG_MODE = false;
 var ENABLED_MOUSE_EVENT = true;
+var ENABLED_3D_TUTORIAL_CANVAS = true;
 
 var coord3D = {
     x : 0,
@@ -19,6 +20,10 @@ function isDevMode() {
 
 function isEnabledMouseEvents() { 
     return ENABLED_MOUSE_EVENT;
+}
+
+function isEnabled3DTutorialCanvas() { 
+    return ENABLED_3D_TUTORIAL_CANVAS;
 }
 
 function DEBUG_LOG(msg) {
