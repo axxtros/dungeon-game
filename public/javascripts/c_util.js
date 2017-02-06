@@ -3,6 +3,7 @@
 var DEV_MODE = true;
 var DEBUG_MODE = false;
 var ENABLED_MOUSE_EVENT = true;
+var ENABLED_KEY_EVENT = true;
 var ENABLED_3D_TUTORIAL_CANVAS = true;
 
 var coord3D = {
@@ -16,6 +17,10 @@ function isDebugMode() {
 
 function isDevMode() {
     return DEV_MODE;
+}
+
+function isEnabledKeyEvents() { 
+    return ENABLED_KEY_EVENT;
 }
 
 function isEnabledMouseEvents() { 

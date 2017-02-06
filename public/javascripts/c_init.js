@@ -161,7 +161,7 @@ function main() {                       //így kell betölteni képeket asszinkr
     ], initClientSideComponents);    
 }
 
-function initClientSideComponents(images) {
+function initClientSideComponents(images) {    
     init2DCanvasComponents();
     init3DCanvasComponents();
     tasks();        
@@ -182,11 +182,14 @@ function tasks() {
         //wglCanvasInit(3);
         //wgl5_Draw();
         
+        //texture
         //wglCanvasInit(4);
         //wgl6_Draw();
         
+        //view, projection
         wglCanvasInit(5);
         wgl7_Draw();
+        document.addEventListener("keydown", wgl7_KeyDownHandler, true);    
     }    
 }
 

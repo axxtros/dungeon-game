@@ -89,15 +89,16 @@ var FSHADER_SOURCE_4 =
 //-----------------------------------------------------------------------------
 //user's view, control view, clipping, foreground/background control
 var VSHADER_SOURCE_5 =
- 'attribute vec4 a_Position;\n' +
-    'attribute float a_PointSize;\n' +
+ 'attribute vec4 a_Position;\n' +    
     'uniform vec4 u_Translation;\n' +
-    'uniform mat4 u_ModelMatrix;\n' +
+    'uniform mat4 u_ProjMatrix;\n' +
     'uniform mat4 u_ViewMatrix;\n' +
+    'uniform mat4 u_ModelMatrix;\n' +    
+    'attribute float a_PointSize;\n' +
     'attribute vec4 a_Color;\n' +
     'varying vec4 v_Color;\n' +
     'void main() {\n' +
-    '   gl_Position = u_ViewMatrix * u_ModelMatrix * a_Position;\n' +
+    '   gl_Position = u_ProjMatrix * u_ViewMatrix * u_ModelMatrix * a_Position;\n' +
     '   gl_PointSize = 10.0;\n' +    
     '   v_Color = a_Color;\n' + 
     '}\n';
@@ -122,6 +123,10 @@ function wglCanvasInit(shaderNumber) {
     }
     //https://webglfundamentals.org/webgl/lessons/webgl-resizing-the-canvas.html
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+    wglCanvasClear();
+}
+
+function wglCanvasClear() {
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT);
 }
