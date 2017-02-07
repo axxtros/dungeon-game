@@ -12,6 +12,9 @@ var translateY = 0.0;
 var translateZ = 0.0;
 
 var step = 0.1;
+var px = 0.0;
+var py = 0.0;
+var pz = 0.0;
 
 function wgl7_KeyDownHandler(event) {
     console.log('key code: ' + event.keyCode);
@@ -69,10 +72,12 @@ function wgl7_Draw() {
     var n = null;
     if (DRAW_2D_SHAPE) {                    //háromszögek
         n = wgl7_InitVertexBuffers(gl);
+        gl.drawArrays(gl.TRIANGLES, 0, n);
     } else {                                //kocka
         n = wgl7_InitVertexBuffers_3D_Cube();
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, n);
     }
-    gl.drawArrays(gl.TRIANGLES, 0, n);
+    
 }
 
 function wgl7_InitVertexBuffers() {
@@ -116,6 +121,30 @@ function wgl7_InitVertexBuffers() {
     return vertexDefNumber;
 }
 
-function wgl7_InitVertexBuffers_3D_Cube() { 
+function wgl7_InitVertexBuffers_3D_Cube() {
+    var verticesTexCoords = new Float32Array([
+        /*alsó*/
+        /*felső*/        
+        /*elülső*/        
+        /*hátsó*/
+        /*bal*/
+        /*jobb*/
+    ]);
+    var vertexDefNumber = verticesTexCoords.length / 7;
+
+    var vertexTexCoordBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertexTexCoordBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, verticesTexCoords, gl.STATIC_DRAW);
     
+    var FSIZE = verticesTexCoords.BYTES_PER_ELEMENT;
+    //vertices
+    var a_Position = gl.getAttribLocation(glProgram, 'a_Position');
+    gl.vertexAttribPointer(a_Position, 4, gl.FLOAT, false, FSIZE * 7, 0);
+    gl.enableVertexAttribArray(a_Position);
+    //colors
+    var a_Color = gl.getAttribLocation(glProgram, 'a_Color');
+    gl.vertexAttribPointer(a_Color, 3, gl.FLOAT, false, FSIZE * 7, FSIZE * 4);
+    gl.enableVertexAttribArray(a_Color);
+    
+    return vertexDefNumber;
 }
