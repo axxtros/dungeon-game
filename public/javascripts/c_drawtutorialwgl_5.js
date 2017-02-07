@@ -2,11 +2,16 @@
 
 //user's view, control view, clipping, foreground/background control
 
+var DRAW_2D_SHAPE = true;
+
 var eyeX = 0.0;
 var eyeY = 0.0;
-var eyeZ = 0.1;
-var step = 0.05;
-var angle = 0.0;
+var eyeZ = 1.0;
+var translateX = 0.0;
+var translateY = 0.0;
+var translateZ = 0.0;
+
+var step = 0.1;
 
 function wgl7_KeyDownHandler(event) {
     console.log('key code: ' + event.keyCode);
@@ -28,21 +33,21 @@ function wgl7_KeyDownHandler(event) {
     if (event.keyCode == 83) {	//s
         eyeZ = eyeZ + step;
     }
-    if (event.keyCode == 82) {	//r
-        angle += 2;
+    if (event.keyCode == 81) {	//q
+        translateX -= step;
     }
-    if (event.keyCode == 84) {	//t
-        angle -= 2;
+    if (event.keyCode == 69) {	//e
+        translateX += step;
     }
-    wgl7_Draw();   
+    
+    wgl7_Draw();
 }
 
-function wgl7_Draw() {
-            
-    var n = wgl7_InitVertexBuffers(gl);       
+function wgl7_Draw() {               
     
     var projMatrix = new Matrix4();
-    projMatrix.setOrtho(-1.0, 1.0, -1.0, 1.0, 0.0, 2.0);
+    //projMatrix.setOrtho(-2.0, 2.0, -2.0, 2.0, 10.0, -10.0);
+    projMatrix.setPerspective(120, webGLTutorialCanvas.width / webGLTutorialCanvas.height, 1, 100);
     var u_ProjMatrix = gl.getUniformLocation(glProgram, 'u_ProjMatrix');
     gl.uniformMatrix4fv(u_ProjMatrix, false, projMatrix.elements);
 
@@ -53,27 +58,44 @@ function wgl7_Draw() {
     gl.uniformMatrix4fv(u_ViewMatrix, false, viewMatrix.elements);    
     
     var modelMatrix = new Matrix4();
-    modelMatrix.setRotate(angle, 0, 0, 1);
+    modelMatrix.setTranslate(translateX, translateY, translateZ);
+    //modelMatrix.setRotate(angle, 0, 0, 1);
     var u_ModelMatrix = gl.getUniformLocation(glProgram, 'u_ModelMatrix');
     gl.uniformMatrix4fv(u_ModelMatrix, false, modelMatrix.elements);
-
+        
+    gl.enable(gl.DEPTH_TEST);    
     wglCanvasClear();
+    //gl.enable(gl.POLYGON_OFFSET_FILL);
+    var n = null;
+    if (DRAW_2D_SHAPE) {                    //háromszögek
+        n = wgl7_InitVertexBuffers(gl);
+    } else {                                //kocka
+        n = wgl7_InitVertexBuffers_3D_Cube();
+    }
     gl.drawArrays(gl.TRIANGLES, 0, n);
 }
 
 function wgl7_InitVertexBuffers() {
     var verticesTexCoords = new Float32Array([
-        -0.2, 0.0, -0.2,  1.0, 0.0, 0.0,
-         0.2, 0.0, -0.2,  1.0, 0.0, 0.0,
-         0.0, 0.4, -0.2,  1.0, 0.0, 0.0,
+       -0.2, 0.0, 0.0,   0.0, 0.0, 1.0,
+        0.2, 0.0, 0.0,   0.0, 0.0, 1.0,
+        0.0, 0.4, 0.0,   0.0, 0.0, 1.0,
+        
+       -0.2, 0.0, -0.2,  0.0, 1.0, 0.0,
+        0.2, 0.0, -0.2,  0.0, 1.0, 0.0,
+        0.0, 0.4, -0.2,  0.0, 1.0, 0.0,
 
-        -0.2, 0.0, -0.1,  0.0, 1.0, 0.0,
-         0.2, 0.0, -0.1,  0.0, 1.0, 0.0,
-         0.0, 0.4, -0.1,  0.0, 1.0, 0.0,
+       -0.2, 0.0, -0.4,  1.0, 0.0, 0.0,
+        0.2, 0.0, -0.4,  1.0, 0.0, 0.0,
+        0.0, 0.4, -0.4,  1.0, 0.0, 0.0,
 
-       - 0.2, 0.0,  0.0,  0.0, 0.0, 1.0,
-         0.2, 0.0,  0.0,  0.0, 0.0, 1.0,
-         0.0, 0.4,  0.0,  0.0, 0.0, 1.0
+        0.2, 0.0, 0.0,   1.0, 0.0, 0.0,
+       -0.2, 0.0, 0.0,   1.0, 0.0, 0.0,
+        0.0, 0.0, 1.0,   1.0, 0.0, 0.0,
+
+        0.2, 0.0, -0.4,  0.0, 0.0, 1.0,
+       -0.2, 0.0, -0.4,  0.0, 0.0, 1.0,                        
+        0.0, 0.0, -0.6,  0.0, 0.0, 1.0
     ]);
     var vertexDefNumber = verticesTexCoords.length / 6;
     
@@ -92,4 +114,8 @@ function wgl7_InitVertexBuffers() {
     gl.enableVertexAttribArray(a_Color);
 
     return vertexDefNumber;
+}
+
+function wgl7_InitVertexBuffers_3D_Cube() { 
+    
 }
