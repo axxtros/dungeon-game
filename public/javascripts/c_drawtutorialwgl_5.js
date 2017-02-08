@@ -123,28 +123,10 @@ function wgl7_InitVertexBuffers() {
 
 function wgl7_InitVertexBuffers_3D_Cube() {
     var verticesTexCoords = new Float32Array([
-        /*alsó*/
-        /*felső*/        
-        /*elülső*/        
-        /*hátsó*/
-        /*bal*/
-        /*jobb*/
+        
     ]);
-    var vertexDefNumber = verticesTexCoords.length / 7;
-
-    var vertexTexCoordBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, vertexTexCoordBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, verticesTexCoords, gl.STATIC_DRAW);
     
-    var FSIZE = verticesTexCoords.BYTES_PER_ELEMENT;
-    //vertices
-    var a_Position = gl.getAttribLocation(glProgram, 'a_Position');
-    gl.vertexAttribPointer(a_Position, 4, gl.FLOAT, false, FSIZE * 7, 0);
-    gl.enableVertexAttribArray(a_Position);
-    //colors
-    var a_Color = gl.getAttribLocation(glProgram, 'a_Color');
-    gl.vertexAttribPointer(a_Color, 3, gl.FLOAT, false, FSIZE * 7, FSIZE * 4);
-    gl.enableVertexAttribArray(a_Color);
+
     
     return vertexDefNumber;
 }
