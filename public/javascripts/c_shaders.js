@@ -112,6 +112,38 @@ var FSHADER_SOURCE_5 =
      '  gl_FragColor = v_Color;\n' + 
      '}\n';
 
+//-----------------------------------------------------------------------------
+//light
+var VSHADER_SOURCE_6 =
+    'attribute vec4 a_Position;\n' +    
+    'attribute vec4 a_Normal;\n' +    
+    'uniform vec4 u_Translation;\n' +
+    'uniform mat4 u_ProjMatrix;\n' +
+    'uniform mat4 u_ViewMatrix;\n' +
+    'uniform mat4 u_ModelMatrix;\n' + 
+    'uniform vec3 u_LightColor;\n' +
+    'uniform vec3 u_LightDirection;\n' +
+    'attribute float a_PointSize;\n' +
+    'attribute vec4 a_Color;\n' +
+    'varying vec4 v_Color;\n' +
+    'void main() {\n' +
+    '   vec3 normal = normalize(vec3(a_Normal));\n' +
+    '   float nDotL = max(dot(u_LightDirection, normal), 0.0);\n' +
+    '   vec3 diffuse = u_LightColor * vec3(a_Color) * nDotL;\n' +
+    '   v_Color = vec4(diffuse, a_Color.a);\n' +
+    '   //v_Color = a_Color;\n' +
+    '   gl_Position = u_ProjMatrix * u_ViewMatrix * u_ModelMatrix * a_Position;\n' +
+    '   gl_PointSize = 10.0;\n' +        
+    '}\n';
+
+//Fragment shader program
+var FSHADER_SOURCE_6 =
+ 'precision mediump float;\n' +
+     'uniform vec4 u_FragColor;\n' +
+     'varying vec4 v_Color;\n' + 
+     'void main() {\n' +
+     '  gl_FragColor = v_Color;\n' + 
+     '}\n';
 
 function wglCanvasInit(shaderNumber) {
     switch (shaderNumber) {
@@ -120,6 +152,7 @@ function wglCanvasInit(shaderNumber) {
         case 3: c_shaders_initShaders(VSHADER_SOURCE_3, FSHADER_SOURCE_3); break;
         case 4: c_shaders_initShaders(VSHADER_SOURCE_4, FSHADER_SOURCE_4); break;
         case 5: c_shaders_initShaders(VSHADER_SOURCE_5, FSHADER_SOURCE_5); break;
+        case 6: c_shaders_initShaders(VSHADER_SOURCE_6, FSHADER_SOURCE_6); break;
     }
     //https://webglfundamentals.org/webgl/lessons/webgl-resizing-the-canvas.html
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);

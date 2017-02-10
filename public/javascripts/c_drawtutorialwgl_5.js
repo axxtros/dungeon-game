@@ -61,8 +61,8 @@ function wgl7_KeyDownHandler(event) {
     wgl7_Draw();
 }
 
-function wgl7_Draw() {               
-    
+function wgl7_Draw() {
+
     var projMatrix = new Matrix4();
     //projMatrix.setOrtho(-2.0, 2.0, -2.0, 2.0, 10.0, -10.0);
     projMatrix.setPerspective(120, webGLTutorialCanvas.width / webGLTutorialCanvas.height, 1, 20);
@@ -91,8 +91,7 @@ function wgl7_Draw() {
     } else {                                //kocka
         n = wgl7_InitVertexBuffers_3D_Cube();        
         gl.drawElements(gl.TRIANGLES, n, gl.UNSIGNED_BYTE, 0);          //összefűzésben így kell rajzolni!!!
-    }
-    
+    }   
 }
 
 function wgl7_InitVertexBuffers() {

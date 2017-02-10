@@ -187,9 +187,14 @@ function tasks() {
         //wgl6_Draw();
         
         //view, projection
-        wglCanvasInit(5);
-        wgl7_Draw();
-        document.addEventListener("keydown", wgl7_KeyDownHandler, true);    
+        //wglCanvasInit(5);
+        //wgl7_Draw();
+        //document.addEventListener("keydown", wgl7_KeyDownHandler, true);
+        
+        //light
+        wglCanvasInit(6);
+        wgl8_Draw();
+        document.addEventListener("keydown", wgl8_KeyDownHandler, true);
     }    
 }
 
