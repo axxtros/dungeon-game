@@ -21,40 +21,28 @@ var px = 0.0;
 var py = 0.0;
 var pz = 0.0;
 
-var angle = 0.0;
+var angleX = 0.0;
+var angleY = 0.0;
 var plusAngle = 5.0;
+var rotateDirection = 1;
 
 function wgl8_KeyDownHandler(event) {
-    console.log('key code: ' + event.keyCode);
-    if (event.keyCode == 38) {	//up
-        eyeY = eyeY + step;
-    }
-    if (event.keyCode == 40) {	//down	
-        eyeY = eyeY - step;
-    }
-    if (event.keyCode == 37) {	//left
-        eyeX = eyeX - step;
-    }
-    if (event.keyCode == 39) {	//right
-        eyeX = eyeX + step;
-    }
+    console.log('key code: ' + event.keyCode);    
     if (event.keyCode == 87) {	//w
-        eyeZ = eyeZ - step;
+        angleX -= plusAngle;
+        rotateDirection = 1;
     }
     if (event.keyCode == 83) {	//s
-        eyeZ = eyeZ + step;
-    }
-    if (event.keyCode == 81) {	//q
-        translateX -= step;
-    }
-    if (event.keyCode == 69) {	//e
-        translateX += step;
-    }
+        angleX += plusAngle;
+        rotateDirection = 1;
+    }    
     if (event.keyCode == 65) {	//a
-        angle -= plusAngle;
+        angleY -= plusAngle;
+        rotateDirection = 2;
     }
     if (event.keyCode == 68) {	//d
-        angle += plusAngle;
+        angleY += plusAngle;
+        rotateDirection = 2;
     }
     wgl8_Draw();
 }
@@ -85,7 +73,8 @@ function wgl8_Draw() {
     
     var modelMatrix = new Matrix4();
     modelMatrix.setTranslate(translateX, translateY, translateZ);
-    modelMatrix.setRotate(angle, 0, 1, 0);
+    modelMatrix.setRotate(angleX, 1, 0, 0);
+    modelMatrix.rotate(angleY, 0, 1, 0);    
     var u_ModelMatrix = gl.getUniformLocation(glProgram, 'u_ModelMatrix');
     gl.uniformMatrix4fv(u_ModelMatrix, false, modelMatrix.elements);
     
