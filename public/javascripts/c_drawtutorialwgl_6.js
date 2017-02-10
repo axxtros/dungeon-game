@@ -24,25 +24,28 @@ var pz = 0.0;
 var angleX = 0.0;
 var angleY = 0.0;
 var plusAngle = 5.0;
-var rotateDirection = 1;
+
+var lightX = 0.5;
 
 function wgl8_KeyDownHandler(event) {
     console.log('key code: ' + event.keyCode);    
     if (event.keyCode == 87) {	//w
-        angleX -= plusAngle;
-        rotateDirection = 1;
+        angleX -= plusAngle;        
     }
     if (event.keyCode == 83) {	//s
         angleX += plusAngle;
-        rotateDirection = 1;
     }    
     if (event.keyCode == 65) {	//a
-        angleY -= plusAngle;
-        rotateDirection = 2;
+        angleY -= plusAngle;    
     }
     if (event.keyCode == 68) {	//d
-        angleY += plusAngle;
-        rotateDirection = 2;
+        angleY += plusAngle;    
+    }
+    if (event.keyCode == 37) {	//left
+        lightX -= 0.1;
+    }
+    if (event.keyCode == 39) {	//right
+        lightX += 0.1;
     }
     wgl8_Draw();
 }
@@ -50,11 +53,13 @@ function wgl8_KeyDownHandler(event) {
 function wgl8_Draw() {
     
     //light
-    var u_LightColor = gl.getUniformLocation(glProgram, 'u_LightColor');
-    var u_LightDirection = gl.getUniformLocation(glProgram, 'u_LightDirection');
+    var u_LightColor = gl.getUniformLocation(glProgram, 'u_LightColor');    
     gl.uniform3f(u_LightColor, 1.0, 1.0, 1.0);
-    var lightDirection = new Vector3([0.5, 3.0, 4.0]);
+    
+    //var lightDirection = new Vector3([0.5, 3.0, 4.0]);
+    var lightDirection = new Vector3([lightX, 3.0, 4.0]);
     lightDirection.normalize();
+    var u_LightDirection = gl.getUniformLocation(glProgram, 'u_LightDirection');
     gl.uniform3fv(u_LightDirection, lightDirection.elements);
 
     var projMatrix = new Matrix4();
