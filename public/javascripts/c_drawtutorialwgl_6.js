@@ -11,7 +11,7 @@ var DRAW_2D_SHAPE = false;
 
 var eyeX = 0.0;
 var eyeY = 0.0;
-var eyeZ = 5.0;
+var eyeZ = 10.0;
 var translateX = 0.0;
 var translateY = 0.0;
 var translateZ = 0.0;
@@ -28,7 +28,9 @@ var plusAngle = 5.0;
 var lightX = 0.5;
 
 function wgl8_KeyDownHandler(event) {
-    console.log('key code: ' + event.keyCode);    
+    console.log('key code: ' + event.keyCode);
+
+    //object animation (local coordinates)
     if (event.keyCode == 87) {	//w
         angleX -= plusAngle;        
     }
@@ -41,12 +43,27 @@ function wgl8_KeyDownHandler(event) {
     if (event.keyCode == 68) {	//d
         angleY += plusAngle;    
     }
-    if (event.keyCode == 37) {	//left
-        lightX -= 0.1;
+
+    //look at animation (world coordinates)
+    if (event.keyCode == 220) {	//lookAt X (Ű)
+        eyeX += step;            
     }
-    if (event.keyCode == 39) {	//right
-        lightX += 0.1;
+    if (event.keyCode == 186) {	//lookAt -X (É)
+        eyeX -= step;
     }
+    if (event.keyCode == 219) {	//lookAt Y (Ő)
+        eyeY -= step;
+    }
+    if (event.keyCode == 222) {	//lookAt -Y (Á)
+        eyeY += step;
+    }
+    if (event.keyCode == 80) {	//lookAt Z (P)
+        eyeZ -= step;
+    }
+    if (event.keyCode == 221) {	//lookAt -Z (Ú)
+        eyeZ += step;
+    }
+
     wgl8_Draw();
 }
 
@@ -61,17 +78,23 @@ function wgl8_Draw() {
     lightDirection.normalize();
     var u_LightDirection = gl.getUniformLocation(glProgram, 'u_LightDirection');
     gl.uniform3fv(u_LightDirection, lightDirection.elements);
+    
+    var u_AmbientLight = gl.getUniformLocation(glProgram, 'u_AmbientLight');
+    gl.uniform3f(u_AmbientLight, 0.2, 0.2, 0.2);
+    
+    //var u_LightPosition = gl.getUniformLocation(glProgram, 'u_LightPosition');
+    //gl.uniform3f(u_LightPosition, 0.0, 3.0, 4.0);
 
     var projMatrix = new Matrix4();
     //projMatrix.setOrtho(-2.0, 2.0, -2.0, 2.0, 10.0, -10.0);
     //projMatrix.setPerspective(70, webGLTutorialCanvas.width / webGLTutorialCanvas.height, 1, 100);    
-    projMatrix.setPerspective(60, webGLTutorialCanvas.width / webGLTutorialCanvas.height, 1, 100);    
+    projMatrix.setPerspective(60, webGLTutorialCanvas.width / webGLTutorialCanvas.height, 3, 100);    
     var u_ProjMatrix = gl.getUniformLocation(glProgram, 'u_ProjMatrix');
     gl.uniformMatrix4fv(u_ProjMatrix, false, projMatrix.elements);
     
     var viewMatrix = new Matrix4();
-    viewMatrix.lookAt(3, 3, 7, 0, 0, 0, 0, 1, 0);
-    //viewMatrix.setLookAt(eyeX, eyeY, eyeZ, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+    //viewMatrix.lookAt(3, 3, 7, 0, 0, 0, 0, 1, 0);
+    viewMatrix.setLookAt(eyeX, eyeY, eyeZ, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
     //viewMatrix.setLookAt(0.20, 0.25, 0.25, 0, 0, 0, 0, 1, 0);        
     var u_ViewMatrix = gl.getUniformLocation(glProgram, 'u_ViewMatrix');
     gl.uniformMatrix4fv(u_ViewMatrix, false, viewMatrix.elements);
@@ -83,6 +106,12 @@ function wgl8_Draw() {
     var u_ModelMatrix = gl.getUniformLocation(glProgram, 'u_ModelMatrix');
     gl.uniformMatrix4fv(u_ModelMatrix, false, modelMatrix.elements);
     
+    var normalMatrix = new Matrix4();
+    normalMatrix.setInverseOf(modelMatrix);
+    normalMatrix.transpose();
+    var u_NormalMatrix = gl.getUniformLocation(glProgram, 'u_NormalMatrix');
+    gl.uniformMatrix4fv(u_NormalMatrix, false, normalMatrix.elements);
+
     gl.enable(gl.DEPTH_TEST);
     wglCanvasClear();
     //gl.enable(gl.POLYGON_OFFSET_FILL);
@@ -114,12 +143,12 @@ function wgl8_InitVertexBuffers_3D_Cube() {
     
     
     var normals = new Float32Array([    // Normal
-        0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0,  // v0-v1-v2-v3 front
-        1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0,  // v0-v3-v4-v5 right
-        0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0,  // v0-v5-v6-v1 up
-        -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0,  // v1-v6-v7-v2 left
-        0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0,  // v7-v4-v3-v2 down
-        0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0   // v4-v7-v6-v5 back
+         0.0,  0.0,  1.0,    0.0,  0.0,  1.0,    0.0,  0.0,  1.0,    0.0,  0.0,  1.0,  // v0-v1-v2-v3 front
+         1.0,  0.0,  0.0,    1.0,  0.0,  0.0,    1.0,  0.0,  0.0,    1.0,  0.0,  0.0,  // v0-v3-v4-v5 right
+         0.0,  1.0,  0.0,    0.0,  1.0,  0.0,    0.0,  1.0,  0.0,    0.0,  1.0,  0.0,  // v0-v5-v6-v1 up
+        -1.0,  0.0,  0.0,   -1.0,  0.0,  0.0,   -1.0,  0.0,  0.0,   -1.0,  0.0,  0.0,  // v1-v6-v7-v2 left
+         0.0, -1.0,  0.0,    0.0, -1.0,  0.0,    0.0, -1.0,  0.0,    0.0, -1.0,  0.0,  // v7-v4-v3-v2 down
+         0.0,  0.0, -1.0,    0.0,  0.0, -1.0,    0.0,  0.0, -1.0,    0.0,  0.0, -1.0   // v4-v7-v6-v5 back
     ]);
 
     // Indices of the vertices
