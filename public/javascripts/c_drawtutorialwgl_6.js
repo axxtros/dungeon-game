@@ -69,19 +69,21 @@ function wgl8_KeyDownHandler(event) {
 
 function wgl8_Draw() {
     
-    //light
+    //a fény szine
     var u_LightColor = gl.getUniformLocation(glProgram, 'u_LightColor');    
     gl.uniform3f(u_LightColor, 1.0, 1.0, 1.0);
     
-    //var lightDirection = new Vector3([0.5, 3.0, 4.0]);
+    //diffuse fény visszaverődés beállításai
     var lightDirection = new Vector3([lightX, 3.0, 4.0]);
     lightDirection.normalize();
     var u_LightDirection = gl.getUniformLocation(glProgram, 'u_LightDirection');
     gl.uniform3fv(u_LightDirection, lightDirection.elements);
     
+    //ambient fényvisszaverődés beállításai
     var u_AmbientLight = gl.getUniformLocation(glProgram, 'u_AmbientLight');
     gl.uniform3f(u_AmbientLight, 0.2, 0.2, 0.2);
     
+    //point fény visszaverődés beállításai
     var u_LightPosition = gl.getUniformLocation(glProgram, 'u_LightPosition');
     gl.uniform3f(u_LightPosition, 0.0, 3.0, 4.0);
 
@@ -106,6 +108,7 @@ function wgl8_Draw() {
     var u_ModelMatrix = gl.getUniformLocation(glProgram, 'u_ModelMatrix');
     gl.uniformMatrix4fv(u_ModelMatrix, false, modelMatrix.elements);
     
+    //normál mátrix beállításai
     var normalMatrix = new Matrix4();
     normalMatrix.setInverseOf(modelMatrix);
     normalMatrix.transpose();

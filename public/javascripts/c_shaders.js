@@ -133,28 +133,30 @@ var VSHADER_SOURCE_6 =
     'attribute float a_PointSize;\n' +
     'attribute vec4 a_Color;\n' +
     'varying vec4 v_Color;\n' +
+
     'void main() {\n' +
+    
+        //ha ez van bekapcsolva, akkor diffuse fény visszaverődés lesz
+    '   vec3 normal = normalize(vec3(a_Normal));\n' +
+    '   float nDotL = max(dot(u_LightDirection, normal), 0.0);\n' +
+    '   vec3 diffuse = u_LightColor * vec3(a_Color) * nDotL;\n' +
+    
+        //ha ez van bekapcsolva, akkor point fény visszaverődés lesz
+    '   //vec3 normal = normalize(vec3(u_NormalMatrix * a_Normal));\n' +
+    '   //vec4 vertexPosition = u_ModelMatrix * a_Position;\n' +    
+    '   //vec3 lightDirection = normalize(u_LightPosition - vec3(vertexPosition));\n' +    
+    '   //float nDotL = max(dot( lightDirection, normal), 0.0);\n' +
+    '   //vec3 diffuse = u_LightColor * a_Color.rgb * nDotL;\n' +
 
-    '   //vec3 normal = normalize(vec3(a_Normal));\n' +
-    '   vec3 normal = normalize(vec3(u_NormalMatrix * a_Normal));\n' +
+        //ez az ambient fényt adja, a fentiek mellett
+    '   vec3 ambient = u_AmbientLight * a_Color.rgb;\n' +    
 
-    '   vec4 vertexPosition = u_ModelMatrix * a_Position;\n' +    
-    '   vec3 lightDirection = normalize(u_LightPosition - vec3(vertexPosition));\n' +
+        //számítások módja
+    '   //v_Color = a_Color;\n' +                               //sima objektum szin használata, nincs fény visszaverődés
+    '   //v_Color = vec4(diffuse, a_Color.a);\n' +              //csak diffuse visszaverődés
+    '   //v_Color = vec4(ambient, a_Color.a);\n' +              //csak ambient fény visszaverődés
+    '   v_Color = vec4(diffuse + ambient, a_Color.a);\n' +      //valamelyik fény típus + ambient fény visszaverődés
 
-    '   //float nDotL = max(dot(u_LightDirection, normal), 0.0);\n' +
-    '   float nDotL = max(dot( lightDirection, normal), 0.0);\n' +
-
-    '   //vec3 diffuse = u_LightColor * vec3(a_Color) * nDotL;\n' +
-    '   vec3 diffuse = u_LightColor * a_Color.rgb * nDotL;\n' +
-
-    '   vec3 ambient = u_AmbientLight * a_Color.rgb;\n' +
-
-    '   //v_Color = vec4(diffuse, a_Color.a);\n' +
-    '   //v_Color = vec4(diffuse + ambient, a_Color.a);\n' +
-    '   //v_Color = vec4(ambient, a_Color.a);\n' +
-    '   v_Color = vec4(diffuse + ambient, a_Color.a);\n' +
-
-    '   //v_Color = a_Color;\n' +
     '   gl_Position = u_ProjMatrix * u_ViewMatrix * u_ModelMatrix * a_Position;\n' +
     '   gl_PointSize = 10.0;\n' +        
     '}\n';
