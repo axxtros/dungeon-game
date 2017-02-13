@@ -82,8 +82,8 @@ function wgl8_Draw() {
     var u_AmbientLight = gl.getUniformLocation(glProgram, 'u_AmbientLight');
     gl.uniform3f(u_AmbientLight, 0.2, 0.2, 0.2);
     
-    //var u_LightPosition = gl.getUniformLocation(glProgram, 'u_LightPosition');
-    //gl.uniform3f(u_LightPosition, 0.0, 3.0, 4.0);
+    var u_LightPosition = gl.getUniformLocation(glProgram, 'u_LightPosition');
+    gl.uniform3f(u_LightPosition, 0.0, 3.0, 4.0);
 
     var projMatrix = new Matrix4();
     //projMatrix.setOrtho(-2.0, 2.0, -2.0, 2.0, 10.0, -10.0);
