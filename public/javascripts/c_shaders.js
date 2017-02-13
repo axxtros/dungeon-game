@@ -132,8 +132,8 @@ var VSHADER_SOURCE_6 =
     'void main() {\n' +
 
     '   vec3 normal = normalize(vec3(a_Normal));\n' +
-    '   //float nDotL = max(dot(u_LightDirection, normal), 0.0);\n' +
-    '   //vec3 diffuse = u_LightColor * vec3(a_Color) * nDotL;\n' +
+    '   float nDotL = max(dot(u_LightDirection, normal), 0.0);\n' +
+    '   vec3 diffuse = u_LightColor * vec3(a_Color) * nDotL;\n' +
     '   vec3 ambient = u_AmbientLight * a_Color.rgb;\n' +
     '   //v_Color = vec4(diffuse, a_Color.a);\n' +
     '   //v_Color = vec4(diffuse + ambient, a_Color.a);\n' +
