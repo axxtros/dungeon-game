@@ -110,8 +110,8 @@ function wgl8_Draw() {
     
     //normál mátrix beállításai
     var normalMatrix = new Matrix4();
-    normalMatrix.setInverseOf(modelMatrix);
-    normalMatrix.transpose();
+    normalMatrix.setInverseOf(modelMatrix);             //???
+    normalMatrix.transpose();                           //???
     var u_NormalMatrix = gl.getUniformLocation(glProgram, 'u_NormalMatrix');
     gl.uniformMatrix4fv(u_NormalMatrix, false, normalMatrix.elements);
 

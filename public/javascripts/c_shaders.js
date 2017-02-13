@@ -137,7 +137,8 @@ var VSHADER_SOURCE_6 =
     'void main() {\n' +
     
         //ha ez van bekapcsolva, akkor diffuse fény visszaverődés lesz
-    '   vec3 normal = normalize(vec3(a_Normal));\n' +
+    '   //vec3 normal = normalize(vec3(a_Normal));\n' +                             //így nem változik a fény, mert nincsenek a normálisok újra számolva (bármilyen animációra mindig ugyan az az oldal marad megvilágításban)
+    '   vec3 normal = normalize(vec3(u_NormalMatrix * a_Normal));\n' +              //így már változik az éppen az irányított fénnyel megvilágított oldala
     '   float nDotL = max(dot(u_LightDirection, normal), 0.0);\n' +
     '   vec3 diffuse = u_LightColor * vec3(a_Color) * nDotL;\n' +
     
