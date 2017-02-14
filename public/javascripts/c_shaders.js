@@ -191,6 +191,11 @@ var FSHADER_SOURCE_6 =
     '   gl_FragColor = v_Color;\n' + 
     '}\n';
 
+//-----------------------------------------------------------------------------
+//shadow
+var VSHADER_SOURCE_7 = "";
+var FSHADER_SOURCE_7 = "";
+
 function wglCanvasInit(shaderNumber) {
     switch (shaderNumber) {
         case 1: c_shaders_initShaders(VSHADER_SOURCE_1, FSHADER_SOURCE_1); break;
@@ -199,6 +204,7 @@ function wglCanvasInit(shaderNumber) {
         case 4: c_shaders_initShaders(VSHADER_SOURCE_4, FSHADER_SOURCE_4); break;
         case 5: c_shaders_initShaders(VSHADER_SOURCE_5, FSHADER_SOURCE_5); break;
         case 6: c_shaders_initShaders(VSHADER_SOURCE_6, FSHADER_SOURCE_6); break;
+        case 7: c_shaders_initShaders(VSHADER_SOURCE_7, FSHADER_SOURCE_7); break;
     }
     //https://webglfundamentals.org/webgl/lessons/webgl-resizing-the-canvas.html
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);

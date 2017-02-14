@@ -128,11 +128,18 @@ function initMouseEvents(canvasElement) {
     canvasElement.addEventListener("mouseup", mouseClickedEvent, false);	
 }
 
+function main() {                       //így kell betölteni képeket asszinkron módon sima js-ben, hogy a végrehajtás várjon mindaddig, amíg az összes kép nincs betöltve
+    loadImages([
+        "/images/sky.jpg",
+        "/images/sky2.jpg"
+    ], initClientSideComponents);    
+}
+
 //https://webglfundamentals.org/webgl/lessons/webgl-2-textures.html
 function loadImages(urls, callback) {
     var images = [];
     var imagesToLoad = urls.length;
-
+    
     var onImageLoad = function () {
         --imagesToLoad;
         if (imagesToLoad == 0) {
@@ -140,8 +147,8 @@ function loadImages(urls, callback) {
             callback(images);
         }
     }
-
-    for(var i = 0; i != imagesToLoad; i++) {
+    
+    for (var i = 0; i != imagesToLoad; i++) {
         var image = loadImage(urls[i], onImageLoad);
         images.push(image);
     }
@@ -154,47 +161,49 @@ function loadImage(url, callback) {
     return image;
 }
 
-function main() {                       //így kell betölteni képeket asszinkron módon sima js-ben, hogy a végrehajtás várjon mindaddig, amíg az összes kép nincs betöltve
-    loadImages([
-        "/images/sky.jpg",
-        "/images/sky2.jpg"
-    ], initClientSideComponents);    
-}
-
 function initClientSideComponents(images) {    
     init2DCanvasComponents();
     init3DCanvasComponents();
     tasks();        
 }
 
-function tasks() {
-    //generateNewDungeon();
-    
-    if (isEnabled3DTutorialCanvas()) { 
-        //wglCanvasInit(1);
-        //wgl1_Draw();
-        //wgl3_Draw();
-        
-        //wglCanvasInit(2);
-        //wgl4_Draw();
-        //wgl4_Loop();
-        
-        //wglCanvasInit(3);
-        //wgl5_Draw();
-        
-        //texture
-        //wglCanvasInit(4);
-        //wgl6_Draw();
-        
-        //view, projection
-        //wglCanvasInit(5);
-        //wgl7_Draw();
-        //document.addEventListener("keydown", wgl7_KeyDownHandler, true);
-        
-        //light
-        wglCanvasInit(6);
-        wgl8_Draw();
-        document.addEventListener("keydown", wgl8_KeyDownHandler, true);
+function tasks() {        
+    //generateNewDungeon();    
+    if (isEnabled3DTutorialCanvas()) {
+        var RUN_TASK = 6;                   //melyik task fusson le???
+        switch (RUN_TASK) {
+            case 1:
+                wglCanvasInit(1);
+                wgl1_Draw();
+                wgl3_Draw();
+                break;
+            case 2:
+                wglCanvasInit(2);
+                wgl4_Draw();
+                wgl4_Loop();        
+                break;
+            case 3:
+                wglCanvasInit(3);
+                wgl5_Draw();        
+                break;
+            case 4://texture                
+                wglCanvasInit(4);
+                wgl6_Draw();        
+                break;
+            case 5://view, projection                
+                wglCanvasInit(5);
+                wgl7_Draw();
+                document.addEventListener("keydown", wgl7_KeyDownHandler, true);        
+                break;
+            case 6://light                
+                wglCanvasInit(6);
+                wgl8_Draw();
+                document.addEventListener("keydown", wgl8_KeyDownHandler, true);
+                break;
+            case 7://shadow                
+                document.addEventListener("keydown", wgl9_KeyDownHandler, true);
+                break;
+        }                                
     }    
 }
 
