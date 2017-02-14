@@ -9,6 +9,10 @@
 
 var DRAW_2D_SHAPE = false;
 
+var ENABLE_AMBIENT_LIGHT = true;
+var ENABLE_DIFFUSE_LIGHT = true;
+var ENABLE_POINT_LIGHT = false;
+
 var eyeX = 0.0;
 var eyeY = 0.0;
 var eyeZ = 10.0;
@@ -73,19 +77,31 @@ function wgl8_Draw() {
     var u_LightColor = gl.getUniformLocation(glProgram, 'u_LightColor');    
     gl.uniform3f(u_LightColor, 1.0, 1.0, 1.0);
     
+    //diffuse fény engedélyezése
+    var b_IsDiffuseLight = gl.getUniformLocation(glProgram, 'b_IsDiffuseLight');
+    gl.uniform1i(b_IsDiffuseLight, ENABLE_DIFFUSE_LIGHT);
+
     //diffuse fény visszaverődés beállításai
     var lightDirection = new Vector3([lightX, 3.0, 4.0]);
     lightDirection.normalize();
     var u_LightDirection = gl.getUniformLocation(glProgram, 'u_LightDirection');
     gl.uniform3fv(u_LightDirection, lightDirection.elements);
     
+    //így kell átadni boolean változót a shader-nek -> első saját megoldás :) legyen-e bekapcsolva a környezeti fény, vagy sem
+    var b_IsAmbientLight = gl.getUniformLocation(glProgram, 'b_IsAmbientLight');
+    gl.uniform1i(b_IsAmbientLight, ENABLE_AMBIENT_LIGHT);
+
     //ambient fényvisszaverődés beállításai
     var u_AmbientLight = gl.getUniformLocation(glProgram, 'u_AmbientLight');
     gl.uniform3f(u_AmbientLight, 0.2, 0.2, 0.2);
     
+    //point fény engedélyezése
+    var b_IsPointLight = gl.getUniformLocation(glProgram, 'b_IsPointLight');
+    gl.uniform1i(b_IsPointLight, ENABLE_POINT_LIGHT);
+
     //point fény visszaverődés beállításai
     var u_LightPosition = gl.getUniformLocation(glProgram, 'u_LightPosition');
-    gl.uniform3f(u_LightPosition, 0.0, 3.0, 4.0);
+    gl.uniform3f(u_LightPosition, 2.0, 3.0, 4.0);
 
     var projMatrix = new Matrix4();
     //projMatrix.setOrtho(-2.0, 2.0, -2.0, 2.0, 10.0, -10.0);
@@ -121,7 +137,7 @@ function wgl8_Draw() {
     
     var n = null;
     n = wgl8_InitVertexBuffers_3D_Cube();
-    gl.drawElements(gl.TRIANGLES, n, gl.UNSIGNED_BYTE, 0);          //összefűzésben így kell rajzolni!!!    
+    gl.drawElements(gl.TRIANGLES, n, gl.UNSIGNED_BYTE, 0);          //összefűzésben így kell rajzolni!!!
 }
 
 function wgl8_InitVertexBuffers_3D_Cube() {

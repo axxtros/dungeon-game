@@ -134,23 +134,41 @@ var VSHADER_SOURCE_6 =
     'attribute vec4 a_Color;\n' +
     'varying vec4 v_Color;\n' +
 
+    'uniform bool b_IsAmbientLight;\n' +
+    'uniform bool b_IsDiffuseLight;\n' +
+    'uniform bool b_IsPointLight;\n' +
+
+    'vec3 ambient;\n' +
+    'vec3 normal;\n' +
+    'float nDotL;\n' +
+    'vec3 diffuse;\n' +
+
     'void main() {\n' +
     
         //ha ez van bekapcsolva, akkor diffuse fény visszaverődés lesz
-    '   //vec3 normal = normalize(vec3(a_Normal));\n' +                             //így nem változik a fény, mert nincsenek a normálisok újra számolva (bármilyen animációra mindig ugyan az az oldal marad megvilágításban)
-    '   vec3 normal = normalize(vec3(u_NormalMatrix * a_Normal));\n' +              //így már változik az éppen az irányított fénnyel megvilágított oldala
-    '   float nDotL = max(dot(u_LightDirection, normal), 0.0);\n' +
-    '   vec3 diffuse = u_LightColor * vec3(a_Color) * nDotL;\n' +
-    
-        //ha ez van bekapcsolva, akkor point fény visszaverődés lesz
-    '   //vec3 normal = normalize(vec3(u_NormalMatrix * a_Normal));\n' +
-    '   //vec4 vertexPosition = u_ModelMatrix * a_Position;\n' +    
-    '   //vec3 lightDirection = normalize(u_LightPosition - vec3(vertexPosition));\n' +    
-    '   //float nDotL = max(dot( lightDirection, normal), 0.0);\n' +
-    '   //vec3 diffuse = u_LightColor * a_Color.rgb * nDotL;\n' +
+    '   if(b_IsDiffuseLight) {\n' +
+    '       //normal = normalize(vec3(a_Normal));\n' +                              //így nem változik a fény, mert nincsenek a normálisok újra számolva (bármilyen animációra mindig ugyan az az oldal marad megvilágításban)
+    '       vec3 normal = normalize(vec3(u_NormalMatrix * a_Normal));\n' +          //így már változik az éppen az irányított fénnyel megvilágított oldala
+    '       float nDotL = max(dot(u_LightDirection, normal), 0.0);\n' +
+    '       diffuse = u_LightColor * vec3(a_Color) * nDotL;\n' +
+    '   }\n' +
 
-        //ez az ambient fényt adja, a fentiek mellett
-    '   vec3 ambient = u_AmbientLight * a_Color.rgb;\n' +    
+        //ha ez van bekapcsolva, akkor point fény visszaverődés lesz
+    '   if(b_IsPointLight) {\n' +
+    '       vec3 normal = normalize(vec3(u_NormalMatrix * a_Normal));\n' +
+    '       vec4 vertexPosition = u_ModelMatrix * a_Position;\n' +    
+    '       vec3 lightDirection = normalize(u_LightPosition - vec3(vertexPosition));\n' +    
+    '       float nDotL = max(dot( lightDirection, normal), 0.0);\n' +
+    '       diffuse = u_LightColor * a_Color.rgb * nDotL;\n' +
+    '   }\n' +
+
+        //ez az ambient fényt adja, a fentiek mellett (ha a programból be van kapcsolva :) )
+    '   if(b_IsAmbientLight) {\n' +
+    '       ambient = u_AmbientLight * a_Color.rgb;\n' +    
+    '       //ambient = u_AmbientLight * a_Color.rgb;\n' +  
+    '   } else {\n' +
+    '       ambient = vec3(0.0, 0.0, 0.0);\n' +
+    '   }\n' +
 
         //számítások módja
     '   //v_Color = a_Color;\n' +                               //sima objektum szin használata, nincs fény visszaverődés
@@ -164,12 +182,14 @@ var VSHADER_SOURCE_6 =
 
 //Fragment shader program
 var FSHADER_SOURCE_6 =
- 'precision mediump float;\n' +
-     'uniform vec4 u_FragColor;\n' +
-     'varying vec4 v_Color;\n' + 
-     'void main() {\n' +
-     '  gl_FragColor = v_Color;\n' + 
-     '}\n';
+    '#ifdef GL_ES\n' +
+    '   precision mediump float;\n' +
+    '#endif\n' +
+    'uniform vec4 u_FragColor;\n' +
+    'varying vec4 v_Color;\n' + 
+    'void main() {\n' +
+    '   gl_FragColor = v_Color;\n' + 
+    '}\n';
 
 function wglCanvasInit(shaderNumber) {
     switch (shaderNumber) {
