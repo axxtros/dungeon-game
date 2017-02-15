@@ -170,7 +170,7 @@ function initClientSideComponents(images) {
 function tasks() {        
     //generateNewDungeon();    
     if (isEnabled3DTutorialCanvas()) {
-        var RUN_TASK = 6;                   //melyik task fusson le???
+        var RUN_TASK = 7;                   //melyik task fusson le???
         switch (RUN_TASK) {
             case 1:
                 wglCanvasInit(1);
@@ -200,7 +200,9 @@ function tasks() {
                 wgl8_Draw();
                 document.addEventListener("keydown", wgl8_KeyDownHandler, true);
                 break;
-            case 7://shadow                
+            case 7://shadow 
+                wglCanvasInit(7); 
+                wgl9_Draw();          
                 document.addEventListener("keydown", wgl9_KeyDownHandler, true);
                 break;
         }                                

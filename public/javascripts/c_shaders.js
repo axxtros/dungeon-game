@@ -1,6 +1,7 @@
 ﻿//webGL shaders and shader initialization 01/02/2017
 
 var glProgram = null;           //a shadereket tartalmazó program
+var shadowProgram = null;       //az árnyékot tartalmazó program
 
 //-----------------------------------------------------------------------------
 //start...
@@ -193,22 +194,67 @@ var FSHADER_SOURCE_6 =
 
 //-----------------------------------------------------------------------------
 //shadow
-var VSHADER_SOURCE_7 = "";
-var FSHADER_SOURCE_7 = "";
+var SHADOW_VSHADER_SOURCE = 
+    'attribute vec4 a_Position;\n' +
+    'uniform mat4 u_MvpMatrix;\n' +
+    'void main() {\n' +
+    '   gl_Position = u_MvpMatrix * a_Position;\n' +
+    '}\n';
+var SHADOW_FSHADER_SOURCE = 
+    '#ifdef GL_ES\n' +
+    '   precision mediump float;\n' +
+    '#endif\n' +
+    'void main() {\n' +
+    '   gl_FragColor = vec4(gl_FragCoord.z, 0.0, 0.0, 0.0);\n' + // Write the z-value in R
+    '}\n';
+var VSHADER_SOURCE_7 = 
+    'attribute vec4 a_Position;\n' +
+    'attribute vec4 a_Color;\n' +
+    'uniform mat4 u_MvpMatrix;\n' +
+    'uniform mat4 u_MvpMatrixFromLight;\n' +
+    'varying vec4 v_PositionFromLight;\n' +
+    'varying vec4 v_Color;\n' +
+    'void main() {\n' +
+    '   gl_Position = u_MvpMatrix * a_Position;\n' + 
+    '   v_PositionFromLight = u_MvpMatrixFromLight * a_Position;\n' +
+    '   v_Color = a_Color;\n' +
+    '}\n';
+var FSHADER_SOURCE_7 = 
+    '#ifdef GL_ES\n' +
+    '   precision mediump float;\n' +
+    '#endif\n' +
+    'uniform sampler2D u_ShadowMap;\n' +
+    'varying vec4 v_PositionFromLight;\n' +
+    'varying vec4 v_Color;\n' +
+    'void main() {\n' +
+    '   vec3 shadowCoord = (v_PositionFromLight.xyz/v_PositionFromLight.w)/2.0 + 0.5;\n' +
+    '   vec4 rgbaDepth = texture2D(u_ShadowMap, shadowCoord.xy);\n' +
+    '   float depth = rgbaDepth.r;\n' + // Retrieve the z-value from R
+    '   float visibility = (shadowCoord.z > depth + 0.005) ? 0.7 : 1.0;\n' +
+    '   gl_FragColor = vec4(v_Color.rgb * visibility, v_Color.a);\n' +
+    '}\n';
 
 function wglCanvasInit(shaderNumber) {
-    switch (shaderNumber) {
-        case 1: c_shaders_initShaders(VSHADER_SOURCE_1, FSHADER_SOURCE_1); break;
-        case 2: c_shaders_initShaders(VSHADER_SOURCE_2, FSHADER_SOURCE_2); break;
-        case 3: c_shaders_initShaders(VSHADER_SOURCE_3, FSHADER_SOURCE_3); break;
-        case 4: c_shaders_initShaders(VSHADER_SOURCE_4, FSHADER_SOURCE_4); break;
-        case 5: c_shaders_initShaders(VSHADER_SOURCE_5, FSHADER_SOURCE_5); break;
-        case 6: c_shaders_initShaders(VSHADER_SOURCE_6, FSHADER_SOURCE_6); break;
-        case 7: c_shaders_initShaders(VSHADER_SOURCE_7, FSHADER_SOURCE_7); break;
-    }
+    loadShaders(shaderNumber);        
     //https://webglfundamentals.org/webgl/lessons/webgl-resizing-the-canvas.html
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
     wglCanvasClear();
+}
+
+function loadShaders(shaderNumber) { 
+    switch (shaderNumber) {
+        case 1: c_shaders_initShaders(VSHADER_SOURCE_1, FSHADER_SOURCE_1, true); break;
+        case 2: c_shaders_initShaders(VSHADER_SOURCE_2, FSHADER_SOURCE_2, true); break;
+        case 3: c_shaders_initShaders(VSHADER_SOURCE_3, FSHADER_SOURCE_3, true); break;
+        case 4: c_shaders_initShaders(VSHADER_SOURCE_4, FSHADER_SOURCE_4, true); break;
+        case 5: c_shaders_initShaders(VSHADER_SOURCE_5, FSHADER_SOURCE_5, true); break;
+        case 6: c_shaders_initShaders(VSHADER_SOURCE_6, FSHADER_SOURCE_6, true); break;
+        case 7:
+            c_shaders_initShaders(VSHADER_SOURCE_7, FSHADER_SOURCE_7, true);
+            c_shaders_initShaders(SHADOW_VSHADER_SOURCE, SHADOW_FSHADER_SOURCE, false);
+            gl.enable(gl.DEPTH_TEST);
+            break;
+    }
 }
 
 function wglCanvasClear() {
@@ -217,19 +263,25 @@ function wglCanvasClear() {
 }
 
 //shader initializations ------------------------------------------------------
-function c_shaders_initShaders(v_shader_source, f_shader_source) {
+function c_shaders_initShaders(v_shader_source, f_shader_source, isMainGlProgram) {
     vertexShader = cmpShader(v_shader_source, gl.VERTEX_SHADER);
     fragmentShader = cmpShader(f_shader_source, gl.FRAGMENT_SHADER);
     
-    glProgram = gl.createProgram();
-    gl.attachShader(glProgram, vertexShader);
-    gl.attachShader(glProgram, fragmentShader);
-    gl.linkProgram(glProgram);
+    var shaderProgram = gl.createProgram();
+    gl.attachShader(shaderProgram, vertexShader);
+    gl.attachShader(shaderProgram, fragmentShader);
+    gl.linkProgram(shaderProgram);
     
-    if (!gl.getProgramParameter(glProgram, gl.LINK_STATUS)) {
+    if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
         console.log("Unable to initialize the shader program.");
     }
-    gl.useProgram(glProgram);
+    
+    if (isMainGlProgram) { 
+        glProgram = shaderProgram;
+    } else { 
+        shadowProgram = shaderProgram;
+    }
+    gl.useProgram(shaderProgram);
 }
 
 function cmpShader(src, type) {
