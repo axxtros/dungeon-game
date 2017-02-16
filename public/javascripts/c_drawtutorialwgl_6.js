@@ -13,6 +13,8 @@ var ENABLE_AMBIENT_LIGHT = true;
 var ENABLE_DIFFUSE_LIGHT = true;
 var ENABLE_POINT_LIGHT = false;
 
+var ENABLED_COLOR_CUBE = false;
+
 var eyeX = 0.0;
 var eyeY = 0.0;
 var eyeZ = 10.0;
@@ -150,16 +152,37 @@ function wgl8_InitVertexBuffers_3D_Cube() {
         1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, 1.0, -1.0, 1.0, 1.0, -1.0  // v4-v7-v6-v5 back
     ]);
     
+    //red
+    //var colors = new Float32Array([    // Colors
+    //    1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0,     // v0-v1-v2-v3 front
+    //    1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0,     // v0-v3-v4-v5 right
+    //    1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0,     // v0-v5-v6-v1 up
+    //    1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0,     // v1-v6-v7-v2 left
+    //    1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0,     // v7-v4-v3-v2 down
+    //    1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0　    // v4-v7-v6-v5 back
+    //]);
     
+    var cr = null;
+    var cg = null;
+    var cb = null;    
+    if (ENABLED_COLOR_CUBE) { 
+        cr = 1.0;
+        cg = 0.0;
+        cb = 0.0;
+    } else { 
+        cr = 0.100;
+        cg = 0.100;
+        cb = 0.100;
+    }
+
     var colors = new Float32Array([    // Colors
-        1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0,     // v0-v1-v2-v3 front
-        1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0,     // v0-v3-v4-v5 right
-        1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0,     // v0-v5-v6-v1 up
-        1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0,     // v1-v6-v7-v2 left
-        1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0,     // v7-v4-v3-v2 down
-        1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0　    // v4-v7-v6-v5 back
+        cr, cg, cb, cr, cg, cb, cr, cg, cb, cr, cg, cb,
+        cr, cg, cb, cr, cg, cb, cr, cg, cb, cr, cg, cb,
+        cr, cg, cb, cr, cg, cb, cr, cg, cb, cr, cg, cb,
+        cr, cg, cb, cr, cg, cb, cr, cg, cb, cr, cg, cb,
+        cr, cg, cb, cr, cg, cb, cr, cg, cb, cr, cg, cb,
+        cr, cg, cb, cr, cg, cb, cr, cg, cb, cr, cg, cb
     ]);
-    
     
     var normals = new Float32Array([    // Normal
          0.0,  0.0,  1.0,    0.0,  0.0,  1.0,    0.0,  0.0,  1.0,    0.0,  0.0,  1.0,  // v0-v1-v2-v3 front
@@ -212,7 +235,7 @@ function initArrayBuffer(gl, attribute, data, num, type) {
     // Enable the assignment of the buffer object to the attribute variable
     gl.enableVertexAttribArray(a_attribute);
     
-    gl.bindBuffer(gl.ARRAY_BUFFER, null);
+    //gl.bindBuffer(gl.ARRAY_BUFFER, null);
     
     return true;
 }
