@@ -36,6 +36,19 @@ div.headerDiv {
     height: 20px;
 }
 
+div.mainMenuDiv {
+    background-color: white;
+    width: auto;
+    height: 20px;
+    margin: 5px 0 5px 0;
+}
+
+div.mainMenuDiv a {
+    padding: 0 10px 0 10px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
 div.contentDiv {
     display: block;
     background-color: white;

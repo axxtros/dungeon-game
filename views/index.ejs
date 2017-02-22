@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <title><%= program_name %></title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+    <script src="/javascripts/jquery-3.1.1.min.js"></script>
     <!--<link rel="icon" type="image/x-icon" href="/images/sword.ico">-->
     <link rel="stylesheet" href="/stylesheets/style.css">
 </head>
@@ -12,12 +12,21 @@
     
     <div class="headerDiv">
         <%= program_name %>
+    </div>       
+
+    <div class="mainMenuDiv">
+        <a href="/">Index page</a>
+        <a href="/game">Game page</a>        
     </div>
 
+    <!--
+        <object type="text/html" data="/include/mainmenu.html"> 
+            Your browser doesn’t support the object tag. 
+        </object>
+    -->
+
     <div class="contentDiv">
-
-        <a href="/game">Jump to game page</a>
-
+        Welcome! This is the index page.
     </div>
 
     <div class="footerDiv">
