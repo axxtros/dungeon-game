@@ -51,7 +51,7 @@
     <TypeScriptCompile Include="Scripts\typings\node\node.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\stylus\stylus.d.ts" />
     <Content Include="package.json" />
-    <Content Include="public\include\mainmenu.html" />
+    <Content Include="views\include\mainmenu.ejs" />
     <Content Include="public\stylesheets\style.css" />
     <Content Include="README.md" />
     <Content Include="views\demo.ejs" />
@@ -63,7 +63,7 @@
     <Folder Include="public\" />
     <Folder Include="public\images\" />
     <Folder Include="public\javascripts\" />
-    <Folder Include="public\include\" />
+    <Folder Include="views\include\" />
     <Folder Include="public\resources\" />
     <Folder Include="public\resources\objects3d\" />
     <Folder Include="public\stylesheets\" />

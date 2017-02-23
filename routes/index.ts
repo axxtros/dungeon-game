@@ -1,14 +1,15 @@
 ﻿
 var async = require('async');
 var dbModule = require('../modules/db');
+
 //var db2 = require('../modules/db2');
 import * as appControl from "../modules/application";
 import * as webLabelDAO from "../modules/webPageLabelsDAO";
 
 import * as storage from "../modules/storage";
 
-exports.index = function (req, res) {      
-
+exports.index = function (req, res) {
+        
     var databaseControl = new dbModule.DatabaseControlNameSpace.DBControl();
     //let appCtrl = new appControl.DatabaseControlNameSpace.ApplicationClass();
 

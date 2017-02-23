@@ -14,19 +14,18 @@
         <%= program_name %>
     </div>       
 
-    <div class="mainMenuDiv">
-        <a href="/">Index page</a>
-        <a href="/game">Game page</a>        
-    </div>
-
-    <!--
-        <object type="text/html" data="/include/mainmenu.html"> 
-            Your browser doesn’t support the object tag. 
-        </object>
-    -->
+    <!-- https://scotch.io/tutorials/use-ejs-to-template-your-node-application -->
+    <!-- https://github.com/tj/ejs -->
+    <% include include/mainmenu %>   
 
     <div class="contentDiv">
-        Welcome! This is the index page.
+        Welcome! This is the index page.<br/>
+
+        <form id="uploadForm" enctype="multipart/form-data" action="/uploadfile" method="post">
+            <input type="file" name="fileUpload" />
+            <input type="submit" value="Upload Image" name="submit" />
+        </form>
+
     </div>
 
     <div class="footerDiv">

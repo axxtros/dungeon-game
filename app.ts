@@ -10,6 +10,9 @@ import express = require('express');
 import http = require('http');
 import path = require('path');
 import stylus = require('stylus');
+var formidable = require('formidable');
+var util = require('util');
+
 var app = express();
 var websocketPort = 3000;               //ezen a port-on fut a websocket, ha ez változik, akkor írd át a c_socket.js-ben is kliens oldalon (websocketPort)
 var server = http.createServer(app);
@@ -56,6 +59,19 @@ socketCtrl.socketEventHandler(io);
 //routes init
 app.get('/', routes.index);
 app.get('/game', gamepage.game);
+
+app.post('/uploadfile', function (req, res) {
+
+    var form = new formidable.IncomingForm();
+    form.parse(req);
+
+    form.on('fileBegin', function (name, file) {        
+        console.log('file: ' + file.name);
+    });    
+    
+    console.log('uploading end...');    
+    res.redirect('/');
+});
 
 //start server
 http.createServer(app).listen(app.get('port'), function () {
