@@ -207,32 +207,26 @@ var SHADOW_FSHADER_SOURCE =
     'void main() {\n' +
     '   gl_FragColor = vec4(gl_FragCoord.z, 0.0, 0.0, 0.0);\n' + // Write the z-value in R
     '}\n';
-var VSHADER_SOURCE_7 = 
+
+var VSHADER_SOURCE_7 =
     'attribute vec4 a_Position;\n' +
+    'attribute float a_PointSize;\n' +
     'attribute vec4 a_Color;\n' +
-    'uniform mat4 u_MvpMatrix;\n' +
-    'uniform mat4 u_MvpMatrixFromLight;\n' +
-    'varying vec4 v_PositionFromLight;\n' +
     'varying vec4 v_Color;\n' +
     'void main() {\n' +
-    '   gl_Position = u_MvpMatrix * a_Position;\n' + 
-    '   v_PositionFromLight = u_MvpMatrixFromLight * a_Position;\n' +
+    '   gl_Position = a_Position;\n' +    
+    '   gl_PointSize = 5.0;\n' +                       
     '   v_Color = a_Color;\n' +
     '}\n';
 var FSHADER_SOURCE_7 = 
-    '#ifdef GL_ES\n' +
-    '   precision mediump float;\n' +
-    '#endif\n' +
-    'uniform sampler2D u_ShadowMap;\n' +
-    'varying vec4 v_PositionFromLight;\n' +
-    'varying vec4 v_Color;\n' +
-    'void main() {\n' +
-    '   vec3 shadowCoord = (v_PositionFromLight.xyz/v_PositionFromLight.w)/2.0 + 0.5;\n' +
-    '   vec4 rgbaDepth = texture2D(u_ShadowMap, shadowCoord.xy);\n' +
-    '   float depth = rgbaDepth.r;\n' + // Retrieve the z-value from R
-    '   float visibility = (shadowCoord.z > depth + 0.005) ? 0.7 : 1.0;\n' +
-    '   gl_FragColor = vec4(v_Color.rgb * visibility, v_Color.a);\n' +
-    '}\n';
+     '#ifdef GL_ES\n' +
+     '  precision mediump float;\n' +
+     '#endif\n' +
+     'uniform vec4 u_FragColor;\n' + 
+     'varying vec4 v_Color;\n' + 
+     'void main() {\n' +
+     '  gl_FragColor = v_Color;\n' + 
+     '}\n';
 
 function wglCanvasInit(shaderNumber) {
     loadShaders(shaderNumber);        
@@ -251,7 +245,7 @@ function loadShaders(shaderNumber) {
         case 6: c_shaders_initShaders(VSHADER_SOURCE_6, FSHADER_SOURCE_6, true); break;
         case 7:
             c_shaders_initShaders(VSHADER_SOURCE_7, FSHADER_SOURCE_7, true);
-            c_shaders_initShaders(SHADOW_VSHADER_SOURCE, SHADOW_FSHADER_SOURCE, false);
+            //c_shaders_initShaders(SHADOW_VSHADER_SOURCE, SHADOW_FSHADER_SOURCE, false);
             gl.enable(gl.DEPTH_TEST);
             break;
     }

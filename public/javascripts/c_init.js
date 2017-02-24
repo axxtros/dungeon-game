@@ -170,7 +170,7 @@ function initClientSideComponents(images) {
 function tasks() {        
     //generateNewDungeon();    
     if (isEnabled3DTutorialCanvas()) {
-        var RUN_TASK = 6;                   //melyik task fusson le???
+        var RUN_TASK = 7;                   //melyik task fusson le???
         switch (RUN_TASK) {
             case 1:
                 wglCanvasInit(1);
