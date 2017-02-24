@@ -16,6 +16,8 @@ var util = require('util');
 var fs = require('fs');
 
 var app = module.exports = express();   //a module.exports azért kell, hogy a többi modul is pontosan ezt az app példányt lássa http://stackoverflow.com/questions/10090414/express-how-to-pass-app-instance-to-routes-from-a-different-file
+                                        //az egyes modulokban var app = require('../app') kell fefiniálni, és akkor mindegyik erre az app-ra fog hivatkozni
+
 var websocketPort = 3000;               //ezen a port-on fut a websocket, ha ez változik, akkor írd át a c_socket.js-ben is kliens oldalon (websocketPort)
 var server = http.createServer(app);
 //var server = require('http').createServer(app);
@@ -31,7 +33,8 @@ var adminpage = require('./routes/admin');
 
 // all environments
 app.set('port', process.env.PORT || 3001);              //ezen a port-on fut a node szerver
-app.set('views', path.join(__dirname, 'views'));
+
+app.set('views', path.join(__dirname, 'views'));        //app beállítások
 //app.set('view engine', 'jade');
 app.set('view engine', 'ejs');
 app.use(express.favicon());

@@ -1,7 +1,7 @@
 ﻿
 var app = require('../app');
 import express = require('express');
-var session = require('express-session');
+//var session = require('express-session');
 var async = require('async');
 var dbModule = require('../modules/db');
 
@@ -15,10 +15,16 @@ app.use(express.bodyParser());
 app.use(express.cookieParser('secret'));        //ez kell a session kezelés miatt
 app.use(express.cookieSession());
 
-app.post('/login', function (req, res) {    
-    console.log('@username: ' + req.body.username);
-    req.session.username = req.body.username;    
-    res.redirect('/');
+app.post('/login', function (req, res) {        
+    req.session.username = req.body.username;
+    console.log('@index username: ' + req.session.username);
+    var userName = req.body.username;
+    if (userName == 'admin') {
+        req.session.username = req.body.username;
+        res.redirect('/admin');
+    } else {
+        res.redirect('/');            
+    }    
 });
 
 exports.index = function (req, res) {
