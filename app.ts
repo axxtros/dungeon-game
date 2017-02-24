@@ -10,6 +10,7 @@ import express = require('express');
 import http = require('http');
 import path = require('path');
 import stylus = require('stylus');
+var session = require('express-session');
 var formidable = require('formidable');
 var util = require('util');
 var fs = require('fs');

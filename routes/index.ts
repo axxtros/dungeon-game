@@ -1,4 +1,7 @@
 ﻿
+var app = require('../app');
+import express = require('express');
+var session = require('express-session');
 var async = require('async');
 var dbModule = require('../modules/db');
 
@@ -6,6 +9,17 @@ var dbModule = require('../modules/db');
 import * as appControl from "../modules/application";
 import * as webLabelDAO from "../modules/webPageLabelsDAO";
 import * as storage from "../modules/storage";
+
+//session kezelés: http://code.runnable.com/U0tEnHwraXYyp-JG/simple-usage-of-express-session-and-cookie-parser-with-express-for-node-js
+app.use(express.bodyParser());
+app.use(express.cookieParser('secret'));        //ez kell a session kezelés miatt
+app.use(express.cookieSession());
+
+app.post('/login', function (req, res) {    
+    console.log('@username: ' + req.body.username);
+    req.session.username = req.body.username;    
+    res.redirect('/');
+});
 
 exports.index = function (req, res) {
         

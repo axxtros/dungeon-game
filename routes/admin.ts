@@ -1,11 +1,14 @@
 ﻿
 var app = require('../app');
-import express = require('express');
+//import express = require('express');
+var session = require('express-session');
 var fs = require('fs');
 
 import * as webLabelDAO from "../modules/webPageLabelsDAO";
 
-app.use(express.bodyParser());              //ez fontos, az upload file miatt, hogy lássa a file-t
+//app.use(express.bodyParser());              //ez fontos, az upload file miatt, hogy lássa a file-t
+//app.use(express.cookieParser('secret'));    //ez kell a session miatt
+//app.use(express.cookieSession());
 
 app.post('/uploadfile', function (req, res) {
     //https://www.hacksparrow.com/handle-file-uploads-in-express-node-js.html
@@ -22,11 +25,13 @@ app.post('/uploadfile', function (req, res) {
         var array = data.toString().split('\n');
         console.log(array);
     });
-
     res.redirect('/admin');
 });
 
 exports.admin = function (req, res, next) {
+    //var sess1 = req.session;
+    console.log('@admin username: ' + req.session.username);
+
     res.render('admin.ejs', {
         program_name: webLabelDAO.WebpageLabelsNameSpace.WebPageLabels.PROGRAM_NAME,
         program_version: webLabelDAO.WebpageLabelsNameSpace.WebPageLabels.PROGRAM_VERSION,
