@@ -2,7 +2,8 @@
 import express = require('express');
 
 var router = express.session(); //Router();
-var app = express();
+//var app = express();
+var app = require('../app');
 var async = require('async');
 
 

@@ -5,7 +5,6 @@ var dbModule = require('../modules/db');
 //var db2 = require('../modules/db2');
 import * as appControl from "../modules/application";
 import * as webLabelDAO from "../modules/webPageLabelsDAO";
-
 import * as storage from "../modules/storage";
 
 exports.index = function (req, res) {

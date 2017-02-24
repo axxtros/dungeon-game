@@ -69,7 +69,6 @@ function wgl8_KeyDownHandler(event) {
     if (event.keyCode == 221) {	//lookAt -Z (Ú)
         eyeZ += step;
     }
-
     wgl8_Draw();
 }
 

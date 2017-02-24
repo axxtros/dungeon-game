@@ -9,25 +9,30 @@
     <link rel="stylesheet" href="/stylesheets/style.css">
 </head>
 <body>
-    
+
     <div class="headerDiv">
         <%= program_name %>
-    </div>       
+    </div>
 
     <!-- https://scotch.io/tutorials/use-ejs-to-template-your-node-application -->
     <!-- https://github.com/tj/ejs -->
-    <% include include/mainmenu %>  
+    <% include include/mainmenu %>
 
     <div class="contentDiv">
-        Welcome! This is the index page.<br/>
+        Admin page<br />
+
+        <form id="uploadForm" enctype="multipart/form-data" action="/uploadfile" method="post">
+            <input type="file" name="uploadedFileName" />
+            <input type="submit" value="Upload" />
+        </form>
 
     </div>
 
     <div class="footerDiv">
         <div class="developerAndVersionDiv">
             by <%= program_developer %> v.<%= program_version %>
-        </div>        
+        </div>
     </div>
-        <!--<script src="/javascripts/Test.js"></script>-->
+    <!--<script src="/javascripts/Test.js"></script>-->
 </body>
 </html>

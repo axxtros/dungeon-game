@@ -264,3 +264,4 @@ modules/dungeonGenerator.js
 modules/util.js
 modules/pathFinder.js
 modules/baseClasses.js
+routes/admin.js

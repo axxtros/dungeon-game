@@ -14,7 +14,7 @@ var formidable = require('formidable');
 var util = require('util');
 var fs = require('fs');
 
-var app = express();
+var app = module.exports = express();   //a module.exports azért kell, hogy a többi modul is pontosan ezt az app példányt lássa http://stackoverflow.com/questions/10090414/express-how-to-pass-app-instance-to-routes-from-a-different-file
 var websocketPort = 3000;               //ezen a port-on fut a websocket, ha ez változik, akkor írd át a c_socket.js-ben is kliens oldalon (websocketPort)
 var server = http.createServer(app);
 //var server = require('http').createServer(app);
@@ -26,6 +26,7 @@ import * as appControl from './modules/application';    //itt csak egy pont kell
 
 var routes = require('./routes');
 var gamepage = require('./routes/game');
+var adminpage = require('./routes/admin');
 
 // all environments
 app.set('port', process.env.PORT || 3001);              //ezen a port-on fut a node szerver
@@ -37,7 +38,7 @@ app.use(express.logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(express.methodOverride());
-app.use(express.bodyParser());
+app.use(express.bodyParser());                          //ez fontos, az upload file miatt, hogy lássa a file-t
 app.use(app.router);
 
 app.use(stylus.middleware(path.join(__dirname, 'public')));
@@ -61,26 +62,7 @@ socketCtrl.socketEventHandler(io);
 //routes init
 app.get('/', routes.index);
 app.get('/game', gamepage.game);
-
-app.post('/uploadfile', function (req, res) {
-
-    //https://www.hacksparrow.com/handle-file-uploads-in-express-node-js.html
-    console.log(req.body);
-    console.log(req.files);
-
-    //ha nincs benne az 'utf-8' paraméter, akkor a szimpla (nyers) buffer tartalmat hozza fel, ezért kell a kódolás
-    fs.readFile(req.files.uploadedFileName.path, "utf-8", function (err, data) {    //a files után az input name attributum értékét kell betenni
-        if (err) throw err;
-        // data will contain your file contents
-        console.log(data);
-
-        //http://stackoverflow.com/questions/16732166/read-txt-files-lines-in-js-node-js
-        var array = data.toString().split('\n');
-        console.log(array);        
-    });
-
-    res.redirect('/');
-});
+app.get('/admin', adminpage.admin);
 
 //start server
 http.createServer(app).listen(app.get('port'), function () {
