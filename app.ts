@@ -12,6 +12,7 @@ import path = require('path');
 import stylus = require('stylus');
 var formidable = require('formidable');
 var util = require('util');
+var fs = require('fs');
 
 var app = express();
 var websocketPort = 3000;               //ezen a port-on fut a websocket, ha ez változik, akkor írd át a c_socket.js-ben is kliens oldalon (websocketPort)
@@ -36,6 +37,7 @@ app.use(express.logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(express.methodOverride());
+app.use(express.bodyParser());
 app.use(app.router);
 
 app.use(stylus.middleware(path.join(__dirname, 'public')));
@@ -62,14 +64,21 @@ app.get('/game', gamepage.game);
 
 app.post('/uploadfile', function (req, res) {
 
-    var form = new formidable.IncomingForm();
-    form.parse(req);
+    //https://www.hacksparrow.com/handle-file-uploads-in-express-node-js.html
+    console.log(req.body);
+    console.log(req.files);
 
-    form.on('fileBegin', function (name, file) {        
-        console.log('file: ' + file.name);
-    });    
-    
-    console.log('uploading end...');    
+    //ha nincs benne az 'utf-8' paraméter, akkor a szimpla (nyers) buffer tartalmat hozza fel, ezért kell a kódolás
+    fs.readFile(req.files.uploadedFileName.path, "utf-8", function (err, data) {    //a files után az input name attributum értékét kell betenni
+        if (err) throw err;
+        // data will contain your file contents
+        console.log(data);
+
+        //http://stackoverflow.com/questions/16732166/read-txt-files-lines-in-js-node-js
+        var array = data.toString().split('\n');
+        console.log(array);        
+    });
+
     res.redirect('/');
 });
 
