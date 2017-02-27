@@ -49,3 +49,20 @@ function c_util_convertMouseClickedCoordTo3DCoord(event, canvas) {
     result.y = ( ( (canvas.height / 2) - (y - rect.top) ) / (canvas.height / 2) );
     return result;
 }
+
+function toggleDiv(elementID) {
+    if (elementID != null) {
+        var element = document.getElementById(elementID);
+        if (element != null) { 
+            if (element.style.display == 'block') {                
+                $(element).slideUp("slow", function () {
+                    element.setAttribute("style", "display:none");
+                });                
+            } else {                
+                $(element).slideDown("slow", function () {
+                    element.setAttribute("style", "display:block");
+                });                
+            }
+        }        
+    }
+}

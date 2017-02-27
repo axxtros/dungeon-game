@@ -42,8 +42,11 @@ app.use(express.logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(express.methodOverride());
-app.use(express.bodyParser());                          //ez fontos, az upload file miatt, hogy lássa a file-t
 app.use(app.router);
+
+app.use(express.bodyParser());                          //ez fontos, az upload file miatt, hogy lássa a file-t
+app.use(express.cookieParser('secret'));                //ez kell a session kezelés miatt
+app.use(express.cookieSession());
 
 app.use(stylus.middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));

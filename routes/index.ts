@@ -1,6 +1,6 @@
 ﻿
 var app = require('../app');
-import express = require('express');
+var express = require('express');
 //var session = require('express-session');
 var async = require('async');
 var dbModule = require('../modules/db');
@@ -10,7 +10,12 @@ import * as appControl from "../modules/application";
 import * as webLabelDAO from "../modules/webPageLabelsDAO";
 import * as storage from "../modules/storage";
 
-//session kezelés: http://code.runnable.com/U0tEnHwraXYyp-JG/simple-usage-of-express-session-and-cookie-parser-with-express-for-node-js
+//session kezelés: 
+//tutorials:
+//http://code.runnable.com/U0tEnHwraXYyp-JG/simple-usage-of-express-session-and-cookie-parser-with-express-for-node-js
+//https://www.thepolyglotdeveloper.com/2015/01/session-management-expressjs-web-application/
+//https://glebbahmutov.com/blog/express-sessions/
+//https://github.com/expressjs/session
 app.use(express.bodyParser());
 app.use(express.cookieParser('secret'));        //ez kell a session kezelés miatt
 app.use(express.cookieSession());

@@ -18,13 +18,20 @@
     <% include include/mainmenu %>
 
     <div class="contentDiv">
-        Admin page<br />
+        
+        <div class="pageTitleDiv">Administration page</div>
 
-        <form id="uploadForm" enctype="multipart/form-data" action="/uploadfile" method="post">
-            <input type="file" name="uploadedFileName" />
-            <input type="submit" value="Upload" />
-        </form>
-
+        <%# obj file upload %>
+        <div id="objfileuploaderDiv" class="adminMenuDiv">
+            <div class="adminMenuTitle" onclick="toggleDiv('objectfileuploaderdiv')">OBJ állomány feltöltése</div>
+            <div id="objectfileuploaderdiv" class="adminMenuContentDiv" style="display: none;">
+                <form id="uploadForm" enctype="multipart/form-data" action="/uploadfile" method="post">
+                    <input type="file" name="uploadedFileName" />
+                    <input type="submit" value="Upload" />
+                </form>
+            </div>
+        </div>
+        
         <%= file_properites %>
 
     </div>
@@ -34,6 +41,8 @@
             by <%= program_developer %> v.<%= program_version %>
         </div>
     </div>
-    <!--<script src="/javascripts/Test.js"></script>-->
+    
+    <script src="/javascripts/c_util.js"></script>
+
 </body>
 </html>
