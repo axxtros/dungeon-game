@@ -12,15 +12,18 @@ import * as util from "../modules/Util";
 //app.use(express.cookieParser('secret'));    //ez kell a session miatt
 //app.use(express.cookieSession());
 
-var error_msg_upload_obj_file = "";
 var succ_msg_upload_obj_file = "";
+var error_msg_upload_obj_file = "";
 var display_upload_obj_file_block = 'none';
 
 app.post('/uploadfile', function (req, res) {
     //https://www.hacksparrow.com/handle-file-uploads-in-express-node-js.html
     //console.log('@req.body: ' + req.body.toString());
     //console.log('@req.files: ' + req.files.toString());
-    
+
+    succ_msg_upload_obj_file = "";
+    error_msg_upload_obj_file = "";    
+
     if (!util.Util.checkFileExtension(req.files.uploadedFileName.originalFilename, 'obj')) {
         error_msg_upload_obj_file = 'A feltöltött állomány nem obj kiterjesztésű, ezért nem tölthető fel!';
     } else {

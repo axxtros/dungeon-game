@@ -27,12 +27,12 @@
             <div id="objectfileuploaderdiv" class="adminMenuContentDiv" style="display: <%= block %>;">
                 <form id="uploadForm" enctype="multipart/form-data" action="/uploadfile" method="post">
                     <input type="file" name="uploadedFileName" />
-                    <input type="submit" value="Feltöltés" />                    
+                    <input type="submit" value="Feltöltés" onclick="deleteMsgDivContent('objectfileuploaderdiv')" />                    
                 </form>
                 <div class="success_msg"><%= succ_msg_upload_obj  %></div>
-                <div class="error_msg"><%= error_msg_upload_obj  %></div>                
+                <div class="error_msg"><%= error_msg_upload_obj  %></div>
             </div>            
-        </div>        
+        </div>
 
     </div>
 

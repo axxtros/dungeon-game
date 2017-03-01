@@ -56,12 +56,12 @@ function c_util_convertMouseClickedCoordTo3DCoord(event, canvas) {
  */ 
 function toggleDiv(elementID) {
     if (elementID != null) {
+        deleteMsgDivContent(elementID);
         var element = document.getElementById(elementID);
         if (element != null) { 
             if (element.style.display == 'block') {                
                 $(element).slideUp(DIV_SLIDE_ANIMATION_SPEED, function () {
-                    element.setAttribute("style", "display:none");
-                    //a msg div-ek tartalmát törölni kell, rá kell keresni jqeryvel az msg div-ekre
+                    element.setAttribute("style", "display:none");                                        
                 });                
             } else {                
                 $(element).slideDown(DIV_SLIDE_ANIMATION_SPEED, function () {
@@ -70,4 +70,10 @@ function toggleDiv(elementID) {
             }
         }        
     }
+}
+
+function deleteMsgDivContent(elementID) {
+    var element = document.getElementById(elementID);
+    $(element).find(".success_msg").empty();
+    $(element).find(".error_msg").empty();
 }
