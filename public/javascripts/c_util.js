@@ -5,6 +5,7 @@ var DEBUG_MODE = false;
 var ENABLED_MOUSE_EVENT = true;
 var ENABLED_KEY_EVENT = true;
 var ENABLED_3D_TUTORIAL_CANVAS = true;
+var DIV_SLIDE_ANIMATION_SPEED = 100;
 
 var coord3D = {
     x : 0,
@@ -50,16 +51,20 @@ function c_util_convertMouseClickedCoordTo3DCoord(event, canvas) {
     return result;
 }
 
+/**
+ * A paraméterben megadott div elem animációval megvalósított le/fel nyitása.
+ */ 
 function toggleDiv(elementID) {
     if (elementID != null) {
         var element = document.getElementById(elementID);
         if (element != null) { 
             if (element.style.display == 'block') {                
-                $(element).slideUp("slow", function () {
+                $(element).slideUp(DIV_SLIDE_ANIMATION_SPEED, function () {
                     element.setAttribute("style", "display:none");
+                    //a msg div-ek tartalmát törölni kell, rá kell keresni jqeryvel az msg div-ekre
                 });                
             } else {                
-                $(element).slideDown("slow", function () {
+                $(element).slideDown(DIV_SLIDE_ANIMATION_SPEED, function () {
                     element.setAttribute("style", "display:block");
                 });                
             }

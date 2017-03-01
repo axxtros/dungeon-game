@@ -24,15 +24,15 @@
         <%# obj file upload %>
         <div id="objfileuploaderDiv" class="adminMenuDiv">
             <div class="adminMenuTitle" onclick="toggleDiv('objectfileuploaderdiv')">OBJ állomány feltöltése</div>
-            <div id="objectfileuploaderdiv" class="adminMenuContentDiv" style="display: none;">
+            <div id="objectfileuploaderdiv" class="adminMenuContentDiv" style="display: <%= block %>;">
                 <form id="uploadForm" enctype="multipart/form-data" action="/uploadfile" method="post">
                     <input type="file" name="uploadedFileName" />
-                    <input type="submit" value="Upload" />
+                    <input type="submit" value="Feltöltés" />                    
                 </form>
-            </div>
-        </div>
-        
-        <%= file_properites %>
+                <div class="success_msg"><%= succ_msg_upload_obj  %></div>
+                <div class="error_msg"><%= error_msg_upload_obj  %></div>                
+            </div>            
+        </div>        
 
     </div>
 
