@@ -35,6 +35,7 @@
   </PropertyGroup>
   <ItemGroup>
     <TypeScriptCompile Include="app.ts" />
+    <TypeScriptCompile Include="modules\appConstans.ts" />
     <TypeScriptCompile Include="modules\application.ts" />
     <TypeScriptCompile Include="modules\baseClasses.ts" />
     <TypeScriptCompile Include="modules\db.ts" />
