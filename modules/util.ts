@@ -3,6 +3,8 @@
  * 21/01/2017
  */
 
+import * as appcons from "../modules/AppConstans";
+
 export class Util {
 
     constructor() {
@@ -23,6 +25,30 @@ export class Util {
             }
         }
         return false;
+    }
+
+    public static getLayoutMessageColor(msg: string): string {
+        if (msg == null || msg.trim().length <= 0) {
+            return appcons.AppConstans.EMPTY_MESSAGE_COLOR;
+        }
+        if (msg.trim().substr(0, appcons.AppConstans.SUCCES_MESSAGE_PREFIX.length) == appcons.AppConstans.SUCCES_MESSAGE_PREFIX) {
+            return appcons.AppConstans.SUCCES_MESSAGE_COLOR;
+        }
+        if (msg.trim().substr(0, appcons.AppConstans.ERROR_MESSAGE_PREFIX.length) == appcons.AppConstans.ERROR_MESSAGE_PREFIX) {
+            return appcons.AppConstans.ERROR_MESSAGE_COLOR;
+        }
+        return appcons.AppConstans.EMPTY_MESSAGE_COLOR;
+    }
+
+    public static getLayoutMessage(msg: string): string {
+        if (msg == null || msg.trim().length <= 0) {
+            return "";
+        }
+        if (msg.substr(0, appcons.AppConstans.SUCCES_MESSAGE_PREFIX.length) == appcons.AppConstans.SUCCES_MESSAGE_PREFIX ||
+            msg.substr(0, appcons.AppConstans.ERROR_MESSAGE_PREFIX.length) == appcons.AppConstans.ERROR_MESSAGE_PREFIX) {
+            return msg.substr(5, msg.length).trim();
+        }
+        return "";        
     }
 
 }

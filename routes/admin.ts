@@ -13,25 +13,24 @@ import * as appcons from "../modules/AppConstans";
 //app.use(express.cookieParser('secret'));    //ez kell a session miatt
 //app.use(express.cookieSession());
 
-var obj_file_parse_result_msg = "";
-var obj_file_parse_error_msg = "";
 var display_upload_obj_file_block = 'none';
+var objFileUploaderMsg = "";
+var objFileUploaderMsgColor = "";
 
 app.post('/uploadfile', function (req, res) {
     //https://www.hacksparrow.com/handle-file-uploads-in-express-node-js.html
     //console.log('@req.body: ' + req.body.toString());
     //console.log('@req.files: ' + req.files.toString());
 
-    obj_file_parse_result_msg = "";
-    obj_file_parse_error_msg = "";    
+    objFileUploaderMsg = "";   
 
     if (!util.Util.checkFileExtension(req.files.uploadedFileName.originalFilename, 'obj')) {
-        obj_file_parse_error_msg = appcons.AppConstans.ADMIN_OBJ_UPLOAD_FILE_EXTENSION_ERR_MSG;
+        objFileUploaderMsg = appcons.AppConstans.ADMIN_OBJ_UPLOAD_FILE_EXTENSION_ERR_MSG;
     } else {
         //ha nincs benne az 'utf-8' paraméter, akkor a szimpla (nyers) buffer tartalmat hozza fel, ezért kell a kódolás
         fs.readFile(req.files.uploadedFileName.path, "utf-8", function (err, data) {    //a files után az input name attributum értékét kell betenni
             if (err) {
-                obj_file_parse_error_msg = appcons.AppConstans.ADMIN_OBJ_UPLOAD_FILE_EXPECT_ERR_MSG;
+                objFileUploaderMsg = appcons.AppConstans.ADMIN_OBJ_UPLOAD_FILE_EXPECT_ERR_MSG;
                 throw err;
             }
             // data will contain your file contents
@@ -39,10 +38,10 @@ app.post('/uploadfile', function (req, res) {
             //http://stackoverflow.com/questions/16732166/read-txt-files-lines-in-js-node-js
             var fileContent = data.toString().split('\n');
             var objFileParderClass = new objFileParser.ObjFileParser();
-            obj_file_parse_result_msg = objFileParderClass.objFileParser(fileContent);
+            objFileUploaderMsg = objFileParderClass.objFileParser(fileContent);
         });
     }
-    display_upload_obj_file_block = 'block';
+    display_upload_obj_file_block = 'block';    
     res.redirect('/admin');
 });
 
@@ -50,13 +49,17 @@ exports.admin = function (req, res, next) {
     //var sess1 = req.session;
     console.log('@admin username: ' + req.session.username);    //session változó kiolvasása
 
+    //obj uploader result message
+    objFileUploaderMsgColor = util.Util.getLayoutMessageColor(objFileUploaderMsg);
+    objFileUploaderMsg = util.Util.getLayoutMessage(objFileUploaderMsg);
+
     res.render('admin.ejs', {
         program_name: webLabelDAO.WebpageLabelsNameSpace.WebPageLabels.PROGRAM_NAME,
         program_version: webLabelDAO.WebpageLabelsNameSpace.WebPageLabels.PROGRAM_VERSION,
         program_developer: webLabelDAO.WebpageLabelsNameSpace.WebPageLabels.PROGRAM_DEVELOPER,
         //obj file uploader block control
-        error_msg_upload_obj: obj_file_parse_error_msg,
-        succ_msg_upload_obj: obj_file_parse_result_msg,
+        msg_color: objFileUploaderMsgColor,
+        msg_text: objFileUploaderMsg,
         block: display_upload_obj_file_block
     });
 }

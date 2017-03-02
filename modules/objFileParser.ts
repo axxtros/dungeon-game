@@ -109,9 +109,6 @@ export class ObjFileParser {
                 var line: string = this.objFileContent[i];
                 var lineLetter = line.substr(0, 2).trim();
                 if (lineLetter != null) {
-                    //if (lineLetter == 'v') {
-                    //    throw new Error("Authentication not found");
-                    //}
                     switch (lineLetter) {
                         case 'v': this.verticesReader(line, lineLetter); break;
                         case 'vn': this.verticesReader(line, lineLetter); break;

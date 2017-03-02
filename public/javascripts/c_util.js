@@ -74,6 +74,7 @@ function toggleDiv(elementID) {
 
 function deleteMsgDivContent(elementID) {
     var element = document.getElementById(elementID);
-    $(element).find(".success_msg").empty();
-    $(element).find(".error_msg").empty();
+    //$(element).find(".success_msg").empty();
+    //$(element).find(".error_msg").empty();
+    $(element).find(".msg").empty();
 }

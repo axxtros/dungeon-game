@@ -29,8 +29,7 @@
                     <input type="file" name="uploadedFileName" />
                     <input type="submit" value="Feltöltés" onclick="deleteMsgDivContent('objectfileuploaderdiv')" />                    
                 </form>
-                <div class="success_msg"><%= succ_msg_upload_obj  %></div>
-                <div class="error_msg"><%= error_msg_upload_obj  %></div>
+                <div class="msg" style="color: <%= msg_color %>"><%= msg_text %></div>
             </div>            
         </div>
 
