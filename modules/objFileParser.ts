@@ -2,99 +2,22 @@
 
 import * as utilModul from "../modules/util";
 import * as appcons from "../modules/AppConstans";
+import * as object3d from "../modules/Object3D";
+import * as databaseControl from "../modules/db";
 
-export class Object3D {
-
-    private _objectname: string;
-    private _groupname: string;
-    private _geomteryVertices: number[];           //v
-    private _vertexNormals: number[];              //vn
-    private _textureCoords: number[];              //vt
-    private _vertexIndices: number[];              //f
-    private _vertexTextureIndices: number[];       //f
-    private _vertexNormalIndices: number[];        //f
-
-    constructor() {
-        this._objectname = "";
-        this._groupname = "";
-        this._geomteryVertices = new Array();
-        this._vertexNormals = new Array();
-        this._textureCoords = new Array();
-        this._vertexIndices = new Array();
-        this._vertexTextureIndices = new Array();
-        this._vertexNormalIndices = new Array();
-    }
-
-    get objectname(): string {
-        return this._objectname;
-    }
-    set objectname(objectname: string) {
-        this._objectname = objectname;
-    }
-
-    get groupname(): string {
-        return this._groupname;
-    }
-    set groupname(groupname: string) {
-        this._groupname = groupname;
-    }
-
-    get geomteryVertices(): number[] {
-        return this._geomteryVertices;
-    }
-
-    set geomteryVertices(geomteryVertices: number[]) {
-        this._geomteryVertices = geomteryVertices;
-    }
-
-    get vertexNormals(): number[] {
-        return this._vertexNormals;
-    }
-
-    set vertexNormals(vertexNormals: number[]) {
-        this._vertexNormals = vertexNormals;
-    }
-
-    get textureCoords(): number[] {
-        return this._textureCoords;
-    }
-
-    set textureCoords(textureCoords: number[]) {
-        this._textureCoords = textureCoords;
-    }
-
-    get vertexIndices(): number[] {
-        return this._vertexIndices;
-    }
-
-    set vertexIndices(vertexIndices: number[]) {
-        this._vertexIndices = vertexIndices;
-    }
-
-    get vertexTextureIndices(): number[] {
-        return this._vertexTextureIndices;
-    }
-
-    set vertexTextureIndices(vertexTextureIndices: number[]) {
-        this._vertexTextureIndices = vertexTextureIndices;
-    }
-
-    get vertexNormalIndices(): number[] {
-        return this._vertexNormalIndices;
-    }
-
-    set vertexNormalIndices(vertexNormalIndices: number[]) {
-        this._vertexNormalIndices = vertexNormalIndices;
-    }
-}
+enum FacesType {
+    VERTEX_INDICES,
+    TEXTURE_INDICES,
+    NORMAL_INDICES
+};
 
 export class ObjFileParser {        
 
     private objFileContent: any;
-    private object3D: Object3D;    
+    private object3D: object3d.Object3D;    
 
     constructor() {
-        this.object3D = new Object3D();
+        this.object3D = new object3d.Object3D();
     }
 
     public objFileParser(fileContent: any): string {        
@@ -115,6 +38,20 @@ export class ObjFileParser {
                         case 'vt': this.verticesReader(line, lineLetter); break;
                         case 'o': this.object3D.objectname = this.removeLineLetter(line, lineLetter.length); break;
                         case 'g': this.object3D.groupname = this.removeLineLetter(line, lineLetter.length); break;
+                        case 'f':
+                            var vertexIndices: number[] = this.facesReader(line, lineLetter, FacesType.VERTEX_INDICES);                            
+                            for (var vi = 0; vi != vertexIndices.length; vi++) {
+                                this.object3D.vertexIndices.push(vertexIndices[vi]);
+                            }
+                            var normalIndices: number[] = this.facesReader(line, lineLetter, FacesType.NORMAL_INDICES);
+                            for (var ni = 0; ni != normalIndices.length; ni++) {
+                                this.object3D.vertexNormalIndices.push(normalIndices[ni]);
+                            }
+                            var textureIndices: number[] = this.facesReader(line, lineLetter, FacesType.TEXTURE_INDICES);
+                            for (var ti = 0; ti != textureIndices.length; ti++) {
+                                this.object3D.vertexTextureIndices.push(textureIndices[ti]);
+                            }
+                            break;
                     }
                 }
             }            
@@ -122,14 +59,16 @@ export class ObjFileParser {
         } catch (ex) {
             console.log(ex.message);                
             resultMsg = appcons.AppConstans.ADMIN_OBJ_PARSE_FILE_EXPECT_ERR_MSG + ' ' + ex.message;
-        }                
+        }
+        var db = new databaseControl.DatabaseControlNameSpace.DBControl();
+        db.saveObject3D(this.object3D);             
         return resultMsg;
     }
 
     private verticesReader(line: string, lineLetter: string): void {
         if (line != null && line.trim().length > 0) {
             line = this.removeLineLetter(line, lineLetter.length);
-            var vertices = this.parseLine(line);
+            var vertices = this.parseVertexLine(line);
         }
         for (var i = 0; i != vertices.length; i++) {
             switch (lineLetter) {
@@ -140,11 +79,43 @@ export class ObjFileParser {
         }
     }
 
-    private parseLine(line: string): number[] {
+    private parseVertexLine(line: string): number[] {
         var elements: string[] = line.split(/[ ,]+/);
         var result: number[] = new Array();
         for (var i = 0; i != elements.length; i++) {
             result.push(parseFloat(elements[i]));
+        }
+        return result;
+    }
+
+    private facesReader(line: string, lineLetter: string, facesType: FacesType): number[] {
+        if (line != null && line.trim().length > 0) {
+            line = this.removeLineLetter(line, lineLetter.length);
+            return this.parseFacesIndicesLine(line, facesType);            
+        }
+        return null;
+    }
+    
+    //v1/vt1/vn1 v2/vt2/vn2 v3/vt3/vn3
+    private parseFacesIndicesLine(line: String, type: FacesType): number[] {
+        var elements: string[] = line.split(/[ ,/]+/);
+        var result: number[] = new Array();
+        for (var i = 0; i != elements.length; i++) {
+            if (type == FacesType.VERTEX_INDICES) {
+                if (i == 0 || i == 3 || i == 6) {
+                    result.push(parseInt(elements[i]));
+                }
+            }
+            if (type == FacesType.TEXTURE_INDICES) {
+                if (i == 1 || i == 4 || i == 7) {
+                    result.push(parseInt(elements[i]));
+                }
+            }
+            if (type == FacesType.NORMAL_INDICES) {
+                if (i == 2 || i == 5 || i == 8) {
+                    result.push(parseInt(elements[i]));
+                }
+            }
         }
         return result;
     }

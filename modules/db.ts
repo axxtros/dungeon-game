@@ -3,6 +3,8 @@
  * 13/12/2016
  */
 
+import * as object3d from "../modules/Object3D";
+
 //hogyan kell kitenni egy adatbázisból lekérdezett eredményt az async modulból kijebb
 //http://stackoverflow.com/questions/38337896/how-to-async-combine-multiple-json-arrays-into-1-with-node-js-javascript
 //többszörös rekord lekérdezése, és azonnali elhelyezése egy array-ben (ez nem biztos, hogy segít, de nézd át)
@@ -110,6 +112,25 @@ export namespace DatabaseControlNameSpace {
                 } else {
                     //console.log('@db rows id: ' + rows.id + ' rows key: ' + rows.key + ' rows value: ' + rows.value);
                     callback(null, rows);
+                }
+            });
+        }
+
+        saveObject3D(savedObject3D: object3d.Object3D): any {
+            var parameters = {
+                $id: null,
+                $objectname: savedObject3D.objectname,
+                $groupname: savedObject3D.groupname,
+                $geomteryVertices: savedObject3D.geomteryVertices
+            };
+            var sql = "INSERT INTO dat_object3d (id, objectname, groupname, geomteryVertices) VALUES ($id, $objectname, $groupname, $geomteryVertices)";
+            var st = dbase.prepare(sql);
+            st.run(parameters, function (err) {
+                if (err) {
+                    console.log(err);
+                    //callback(false);
+                } else {
+                    console.log(this);
                 }
             });
         }
