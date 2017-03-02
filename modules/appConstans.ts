@@ -8,6 +8,7 @@ export class AppConstans {
     //admin page
     public static ADMIN_OBJ_UPLOAD_FILE_EXTENSION_ERR_MSG: string = 'A feltöltött állomány nem obj kiterjesztésű, ezért nem tölthető fel!';
     public static ADMIN_OBJ_UPLOAD_FILE_EXPECT_ERR_MSG: string = 'A feltöltés során váratlan hiba lépett fel!';
+    public static ADMIN_OBJ_PARSE_FILE_EXPECT_ERR_MSG: string = 'Az állomány felolvasása során váratlan hiba lépett fel!';
     public static ADMIN_OBJ_UPLOAD_FILE_SUCC_MSG: string = 'Feltöltés sikeresen befejezve!';
 
     constructor() {        
