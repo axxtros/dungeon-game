@@ -4,6 +4,7 @@
  */
 
 import * as object3d from "../modules/Object3D";
+import * as appcons from "../modules/AppConstans";
 
 //hogyan kell kitenni egy adatbázisból lekérdezett eredményt az async modulból kijebb
 //http://stackoverflow.com/questions/38337896/how-to-async-combine-multiple-json-arrays-into-1-with-node-js-javascript
@@ -116,25 +117,33 @@ export namespace DatabaseControlNameSpace {
             });
         }
 
-        saveObject3D(savedObject3D: object3d.Object3D): any {
+        saveObject3D(savedObject3D: object3d.Object3D): string {
+            //console.log('@2');            
             var parameters = {
                 $id: null,
                 $objectname: savedObject3D.objectname,
                 $groupname: savedObject3D.groupname,
-                $geomteryVertices: savedObject3D.geomteryVertices
+                $geomteryVertices: savedObject3D.geomteryVertices,
+                $vertexNormals: savedObject3D.vertexNormals,
+                $textureCoords: savedObject3D.textureCoords,
+                $vertexIndices: savedObject3D.vertexIndices,
+                $vertexTextureIndices: savedObject3D.vertexTextureIndices,
+                $vertexNormalIndices: savedObject3D.vertexNormalIndices,
             };
-            var sql = "INSERT INTO dat_object3d (id, objectname, groupname, geomteryVertices) VALUES ($id, $objectname, $groupname, $geomteryVertices)";
+            var sql = " INSERT INTO dat_object3d (id, objectname, groupname, geomteryVertices, vertexNormals, textureCoords, vertexIndices, vertexTextureIndices, vertexNormalIndices) VALUES ($id, $objectname, $groupname, $geomteryVertices, $vertexNormals, $textureCoords, $vertexIndices, $vertexTextureIndices, $vertexNormalIndices)";
             var st = dbase.prepare(sql);
             st.run(parameters, function (err) {
-                if (err) {
+                if (err) {                    
                     console.log(err);
                     //callback(false);
+                    return appcons.AppConstans.ADMIN_OBJ_SAVE_DB_ERR_MSG + ' ' + err.message;
                 } else {
                     console.log(this);
+                    return null;
                 }
             });
+            return null;
         }
-
     }
 
 }

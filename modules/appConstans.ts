@@ -9,14 +9,15 @@ export class AppConstans {
     public static EMPTY_MESSAGE_COLOR = 'black';
 
     //index page
-
+    
 
     //admin page
     public static ADMIN_OBJ_UPLOAD_FILE_EXTENSION_ERR_MSG: string = AppConstans.ERROR_MESSAGE_PREFIX + 'A feltöltött állomány nem obj kiterjesztésű, ezért nem tölthető fel!';
     public static ADMIN_OBJ_UPLOAD_FILE_EXPECT_ERR_MSG: string = AppConstans.ERROR_MESSAGE_PREFIX + 'A feltöltés során váratlan hiba lépett fel!';
     public static ADMIN_OBJ_PARSE_FILE_EXPECT_ERR_MSG: string = AppConstans.ERROR_MESSAGE_PREFIX + 'Az állomány felolvasása során váratlan hiba lépett fel!';
+    public static ADMIN_OBJ_SAVE_DB_ERR_MSG: string = AppConstans.ERROR_MESSAGE_PREFIX + 'Az adatbázis mentés során hiba lépett fel!';
     public static ADMIN_OBJ_UPLOAD_FILE_SUCC_MSG: string = AppConstans.SUCCES_MESSAGE_PREFIX + 'Feltöltés sikeresen befejezve!';
-
+    
     constructor() {        
     }
 

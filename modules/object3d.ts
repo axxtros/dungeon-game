@@ -4,22 +4,22 @@ export class Object3D {
 
     private _objectname: string;
     private _groupname: string;
-    private _geomteryVertices: number[];           //v
-    private _vertexNormals: number[];              //vn
-    private _textureCoords: number[];              //vt
-    private _vertexIndices: number[];              //f
-    private _vertexTextureIndices: number[];       //f
-    private _vertexNormalIndices: number[];        //f
+    private _geomteryVertices: string;           //v
+    private _vertexNormals: string;              //vn
+    private _textureCoords: string;              //vt
+    private _vertexIndices: string;              //f
+    private _vertexTextureIndices: string;       //f
+    private _vertexNormalIndices: string;        //f
 
     constructor() {
         this._objectname = "";
         this._groupname = "";
-        this._geomteryVertices = new Array();
-        this._vertexNormals = new Array();
-        this._textureCoords = new Array();
-        this._vertexIndices = new Array();
-        this._vertexTextureIndices = new Array();
-        this._vertexNormalIndices = new Array();
+        this._geomteryVertices = "";
+        this._vertexNormals = "";
+        this._textureCoords = "";
+        this._vertexIndices = "";
+        this._vertexTextureIndices = "";
+        this._vertexNormalIndices = "";
     }
 
     get objectname(): string {
@@ -36,51 +36,51 @@ export class Object3D {
         this._groupname = groupname;
     }
 
-    get geomteryVertices(): number[] {
+    get geomteryVertices(): string {
         return this._geomteryVertices;
     }
 
-    set geomteryVertices(geomteryVertices: number[]) {
+    set geomteryVertices(geomteryVertices: string) {
         this._geomteryVertices = geomteryVertices;
     }
 
-    get vertexNormals(): number[] {
+    get vertexNormals(): string {
         return this._vertexNormals;
     }
 
-    set vertexNormals(vertexNormals: number[]) {
+    set vertexNormals(vertexNormals: string) {
         this._vertexNormals = vertexNormals;
     }
 
-    get textureCoords(): number[] {
+    get textureCoords(): string {
         return this._textureCoords;
     }
 
-    set textureCoords(textureCoords: number[]) {
+    set textureCoords(textureCoords: string) {
         this._textureCoords = textureCoords;
     }
 
-    get vertexIndices(): number[] {
+    get vertexIndices(): string {
         return this._vertexIndices;
     }
 
-    set vertexIndices(vertexIndices: number[]) {
+    set vertexIndices(vertexIndices: string) {
         this._vertexIndices = vertexIndices;
     }
 
-    get vertexTextureIndices(): number[] {
+    get vertexTextureIndices(): string {
         return this._vertexTextureIndices;
     }
 
-    set vertexTextureIndices(vertexTextureIndices: number[]) {
+    set vertexTextureIndices(vertexTextureIndices: string) {
         this._vertexTextureIndices = vertexTextureIndices;
     }
 
-    get vertexNormalIndices(): number[] {
+    get vertexNormalIndices(): string {
         return this._vertexNormalIndices;
     }
 
-    set vertexNormalIndices(vertexNormalIndices: number[]) {
+    set vertexNormalIndices(vertexNormalIndices: string) {
         this._vertexNormalIndices = vertexNormalIndices;
     }
 }

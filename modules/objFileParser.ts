@@ -5,6 +5,8 @@ import * as appcons from "../modules/AppConstans";
 import * as object3d from "../modules/Object3D";
 import * as databaseControl from "../modules/db";
 
+var async = require('async');
+
 enum FacesType {
     VERTEX_INDICES,
     TEXTURE_INDICES,
@@ -12,7 +14,7 @@ enum FacesType {
 };
 
 export class ObjFileParser {        
-
+    
     private objFileContent: any;
     private object3D: object3d.Object3D;    
 
@@ -25,8 +27,7 @@ export class ObjFileParser {
         return this.parse();
     }
 
-    private parse(): string {
-        var resultMsg: string;
+    private parse(): string {        
         try {
             for (var i = 0; i != this.objFileContent.length; i++) {
                 var line: string = this.objFileContent[i];
@@ -39,29 +40,32 @@ export class ObjFileParser {
                         case 'o': this.object3D.objectname = this.removeLineLetter(line, lineLetter.length); break;
                         case 'g': this.object3D.groupname = this.removeLineLetter(line, lineLetter.length); break;
                         case 'f':
-                            var vertexIndices: number[] = this.facesReader(line, lineLetter, FacesType.VERTEX_INDICES);                            
-                            for (var vi = 0; vi != vertexIndices.length; vi++) {
-                                this.object3D.vertexIndices.push(vertexIndices[vi]);
-                            }
-                            var normalIndices: number[] = this.facesReader(line, lineLetter, FacesType.NORMAL_INDICES);
-                            for (var ni = 0; ni != normalIndices.length; ni++) {
-                                this.object3D.vertexNormalIndices.push(normalIndices[ni]);
-                            }
-                            var textureIndices: number[] = this.facesReader(line, lineLetter, FacesType.TEXTURE_INDICES);
-                            for (var ti = 0; ti != textureIndices.length; ti++) {
-                                this.object3D.vertexTextureIndices.push(textureIndices[ti]);
-                            }
+                            this.object3D.vertexIndices += this.facesReader(line, lineLetter, FacesType.VERTEX_INDICES);
+                            this.object3D.vertexNormalIndices += this.facesReader(line, lineLetter, FacesType.NORMAL_INDICES);
+                            this.object3D.vertexTextureIndices += this.facesReader(line, lineLetter, FacesType.TEXTURE_INDICES);                            
                             break;
                     }
                 }
-            }            
-            resultMsg = appcons.AppConstans.ADMIN_OBJ_UPLOAD_FILE_SUCC_MSG;            
+            }
+            var resultMsg: string;
+            //console.log('@1');            
+            var self = this;            //így kell, hogy a async lássa az objektum "külső" változóit https://www.codementor.io/codeforgeek/manage-async-nodejs-callback-example-code-du107q1pn
+            async.series([
+                function () {
+                    var db = new databaseControl.DatabaseControlNameSpace.DBControl();
+                    resultMsg = db.saveObject3D(self.object3D);
+                    //console.log('@3');
+                }
+            ]);
+            //console.log('@4');
+
+            if (resultMsg == null || resultMsg.trim().length == 0) {
+                resultMsg = appcons.AppConstans.ADMIN_OBJ_UPLOAD_FILE_SUCC_MSG;                                
+            }
         } catch (ex) {
             console.log(ex.message);                
             resultMsg = appcons.AppConstans.ADMIN_OBJ_PARSE_FILE_EXPECT_ERR_MSG + ' ' + ex.message;
-        }
-        var db = new databaseControl.DatabaseControlNameSpace.DBControl();
-        db.saveObject3D(this.object3D);             
+        }        
         return resultMsg;
     }
 
@@ -72,23 +76,23 @@ export class ObjFileParser {
         }
         for (var i = 0; i != vertices.length; i++) {
             switch (lineLetter) {
-                case 'v': this.object3D.geomteryVertices.push(vertices[i]); break;
-                case 'vn': this.object3D.vertexNormals.push(vertices[i]); break;
-                case 'vt': this.object3D.textureCoords.push(vertices[i]); break;
+                case 'v': this.object3D.geomteryVertices += vertices[i] + ','; break;
+                case 'vn': this.object3D.vertexNormals += vertices[i] + ','; break;
+                case 'vt': this.object3D.textureCoords += vertices[i] + ','; break;
             }            
         }
     }
 
-    private parseVertexLine(line: string): number[] {
+    private parseVertexLine(line: string): string[] {
         var elements: string[] = line.split(/[ ,]+/);
-        var result: number[] = new Array();
+        var result: string[] = new Array();
         for (var i = 0; i != elements.length; i++) {
-            result.push(parseFloat(elements[i]));
+            result.push(parseFloat(elements[i]).toFixed(2));
         }
         return result;
     }
 
-    private facesReader(line: string, lineLetter: string, facesType: FacesType): number[] {
+    private facesReader(line: string, lineLetter: string, facesType: FacesType): string {
         if (line != null && line.trim().length > 0) {
             line = this.removeLineLetter(line, lineLetter.length);
             return this.parseFacesIndicesLine(line, facesType);            
@@ -97,23 +101,23 @@ export class ObjFileParser {
     }
     
     //v1/vt1/vn1 v2/vt2/vn2 v3/vt3/vn3
-    private parseFacesIndicesLine(line: String, type: FacesType): number[] {
+    private parseFacesIndicesLine(line: String, type: FacesType): string {
         var elements: string[] = line.split(/[ ,/]+/);
-        var result: number[] = new Array();
+        var result: string = "";
         for (var i = 0; i != elements.length; i++) {
             if (type == FacesType.VERTEX_INDICES) {
-                if (i == 0 || i == 3 || i == 6) {
-                    result.push(parseInt(elements[i]));
+                if (i == 0 || i == 3 || i == 6) {                    
+                    result += elements[i] + ',';
                 }
             }
             if (type == FacesType.TEXTURE_INDICES) {
                 if (i == 1 || i == 4 || i == 7) {
-                    result.push(parseInt(elements[i]));
+                    result += elements[i] + ',';
                 }
             }
             if (type == FacesType.NORMAL_INDICES) {
                 if (i == 2 || i == 5 || i == 8) {
-                    result.push(parseInt(elements[i]));
+                    result += elements[i] + ',';
                 }
             }
         }
