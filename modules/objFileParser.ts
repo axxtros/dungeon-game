@@ -16,7 +16,8 @@ enum FacesType {
 export class ObjFileParser {        
     
     private objFileContent: any;
-    private object3D: object3d.Object3D;    
+    private object3D: object3d.Object3D; 
+    private loadedObject3D: object3d.Object3D;
 
     constructor() {
         this.object3D = new object3d.Object3D();
@@ -58,6 +59,12 @@ export class ObjFileParser {
                 }
             ]);
             //console.log('@4');
+            
+            async.series([
+                function (callback) {
+                    self.loadedObject3D = new databaseControl.DatabaseControlNameSpace.DBControl().loadObject3D(callback, 10);
+                }
+            ]);            
 
             if (resultMsg == null || resultMsg.trim().length == 0) {
                 resultMsg = appcons.AppConstans.ADMIN_OBJ_UPLOAD_FILE_SUCC_MSG;                                

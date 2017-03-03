@@ -130,9 +130,9 @@ export namespace DatabaseControlNameSpace {
                 $vertexTextureIndices: savedObject3D.vertexTextureIndices,
                 $vertexNormalIndices: savedObject3D.vertexNormalIndices,
             };
-            var sql = " INSERT INTO dat_object3d (id, objectname, groupname, geomteryVertices, vertexNormals, textureCoords, vertexIndices, vertexTextureIndices, vertexNormalIndices) VALUES ($id, $objectname, $groupname, $geomteryVertices, $vertexNormals, $textureCoords, $vertexIndices, $vertexTextureIndices, $vertexNormalIndices)";
-            var st = dbase.prepare(sql);
-            st.run(parameters, function (err) {
+            var sql = "INSERT INTO dat_object3d (id, objectname, groupname, geomteryVertices, vertexNormals, textureCoords, vertexIndices, vertexTextureIndices, vertexNormalIndices) VALUES ($id, $objectname, $groupname, $geomteryVertices, $vertexNormals, $textureCoords, $vertexIndices, $vertexTextureIndices, $vertexNormalIndices)";
+            var statement = dbase.prepare(sql);
+            statement.run(parameters, function (err) {
                 if (err) {                    
                     console.log(err);
                     //callback(false);
@@ -143,6 +143,20 @@ export namespace DatabaseControlNameSpace {
                 }
             });
             return null;
+        }
+
+        loadObject3D(callback: any, objectID: number): any {            
+            var parameters = {
+                $id: objectID
+            };
+            var sql = "select id, objectname, groupname, geomteryVertices, vertexNormals, textureCoords, vertexIndices, vertexTextureIndices, vertexNormalIndices from dat_object3d where id = $id";
+            dbase.all(sql, parameters, function (err, rows) {
+                if (err) {                    
+                    callback(err, null);
+                } else {                    
+                    callback(null, rows);
+                }
+            });            
         }
     }
 
