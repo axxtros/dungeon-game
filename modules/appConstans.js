@@ -3,7 +3,7 @@
 var AppConstans = (function () {
     function AppConstans() {
     }
-    AppConstans.ERROR_MESSAGE_PREFIX = '_ERR_';
+    AppConstans.ERROR_MESSAGE_PREFIX = '_ERR_'; //a prefixek legyenek azonos hosszúak (5 karakter)
     AppConstans.SUCCES_MESSAGE_PREFIX = '_SUC_';
     AppConstans.ERROR_MESSAGE_COLOR = 'red';
     AppConstans.SUCCES_MESSAGE_COLOR = 'green';
@@ -20,4 +20,4 @@ var AppConstans = (function () {
     return AppConstans;
 }());
 exports.AppConstans = AppConstans;
-//# sourceMappingURL=AppConstans.js.map
+//# sourceMappingURL=appConstans.js.map

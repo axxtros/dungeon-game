@@ -2,8 +2,8 @@
 
 export class AppConstans {
 
-    public static ERROR_MESSAGE_PREFIX = '_ERR_';
-    public static SUCCES_MESSAGE_PREFIX = '_SUC_';
+    public static ERROR_MESSAGE_PREFIX = '_ERR_';           //a prefixek legyenek azonos hosszúak (5 karakter)
+    public static SUCCES_MESSAGE_PREFIX = '_SUC_';          
     public static ERROR_MESSAGE_COLOR = 'red';
     public static SUCCES_MESSAGE_COLOR = 'green';
     public static EMPTY_MESSAGE_COLOR = 'black';

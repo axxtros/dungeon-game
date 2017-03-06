@@ -46,7 +46,7 @@ export class Util {
         }
         if (msg.substr(0, appcons.AppConstans.SUCCES_MESSAGE_PREFIX.length) == appcons.AppConstans.SUCCES_MESSAGE_PREFIX ||
             msg.substr(0, appcons.AppConstans.ERROR_MESSAGE_PREFIX.length) == appcons.AppConstans.ERROR_MESSAGE_PREFIX) {
-            return msg.substr(5, msg.length).trim();
+            return msg.substr(appcons.AppConstans.SUCCES_MESSAGE_PREFIX.length, msg.length).trim();
         }
         return "";        
     }
