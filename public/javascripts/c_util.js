@@ -54,18 +54,30 @@ function c_util_convertMouseClickedCoordTo3DCoord(event, canvas) {
 /**
  * A paraméterben megadott div elem animációval megvalósított le/fel nyitása.
  */ 
-function toggleDiv(elementID) {
+function toggleDiv(headerDiv, elementID, openCloseFormID) {
     if (elementID != null) {
         deleteMsgDivContent(elementID);
         var element = document.getElementById(elementID);
         if (element != null) { 
             if (element.style.display == 'block') {                
                 $(element).slideUp(DIV_SLIDE_ANIMATION_SPEED, function () {
-                    element.setAttribute("style", "display:none");                                        
+                    element.setAttribute("style", "display:none");                    
+                    if (openCloseFormID != null) {
+                        submitForm(openCloseFormID);
+                    }
+                    if (headerDiv != null) {
+                        $(headerDiv).children().next()[0].innerHTML = '[+]';
+                    }                    
                 });                
             } else {                
                 $(element).slideDown(DIV_SLIDE_ANIMATION_SPEED, function () {
                     element.setAttribute("style", "display:block");
+                    if (openCloseFormID != null) {
+                        submitForm(openCloseFormID);
+                    }
+                    if (headerDiv != null) {
+                        $(headerDiv).children().next()[0].innerHTML = '[-]';
+                    }                    
                 });                
             }
         }        
@@ -77,4 +89,8 @@ function deleteMsgDivContent(elementID) {
     //$(element).find(".success_msg").empty();
     //$(element).find(".error_msg").empty();
     $(element).find(".msg").empty();
+}
+
+function submitForm(formID) {
+    document.getElementById(formID).submit();
 }

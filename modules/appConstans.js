@@ -8,6 +8,8 @@ var AppConstans = (function () {
     AppConstans.ERROR_MESSAGE_COLOR = 'red';
     AppConstans.SUCCES_MESSAGE_COLOR = 'green';
     AppConstans.EMPTY_MESSAGE_COLOR = 'black';
+    AppConstans.OPEN_PANEL_SYMBOL = '[+]';
+    AppConstans.CLOSE_PANEL_SYMBOL = '[-]';
     //index page
     //admin page
     AppConstans.ADMIN_OBJ_UPLOAD_FILE_EXTENSION_ERR_MSG = AppConstans.ERROR_MESSAGE_PREFIX + 'A feltöltött állomány nem obj kiterjesztésű, ezért nem tölthető fel!';

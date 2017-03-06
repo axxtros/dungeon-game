@@ -48,17 +48,16 @@ export class ObjFileParser {
                     }
                 }
             }
-            var resultMsg: string;
-            //console.log('@1');            
+            var resultMsg: string;            
+
             var self = this;            //így kell, hogy a async lássa az objektum "külső" változóit https://www.codementor.io/codeforgeek/manage-async-nodejs-callback-example-code-du107q1pn
+
             async.series([
                 function () {
                     var db = new databaseControl.DatabaseControlNameSpace.DBControl();
-                    resultMsg = db.saveObject3D(self.object3D);
-                    //console.log('@3');
+                    resultMsg = db.saveObject3D(self.object3D);                    
                 }
-            ]);
-            //console.log('@4');
+            ]);            
             
             async.series([
                 function (callback) {

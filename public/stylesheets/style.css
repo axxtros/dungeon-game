@@ -91,20 +91,33 @@ div.adminMenuDiv {
     display: block;    
 }
 
-div.adminMenuTitle {
+div.adminMenuHeader {    
+    cursor: pointer;
     color: #848484;
-    font-weight: bold;
-    padding: 2px;
-    cursor: pointer;    
-    border-bottom: 1px solid black;
+    font-weight: bold;        
+    padding: 4px 2px 2px 2px;
 }
 
-div.adminMenuTitle:hover { 
-    color: black;    
+div.adminMenuHeader:hover {
+    color: black;
+}
+
+div.adminMenuTitle {            
+    float: left;
+    width: 90%;
+    text-align: left;
+}
+
+div.adminMenuOpenCloser {
+    float: right;
+    width: 10%;
+    text-align: right;
+    font-size: 14px;    
 }
 
 div.adminMenuContentDiv {
     padding: 4px;
+    border-top: 1px solid black;
     border-left: 1px solid black;
     border-right: 1px solid black;
     border-bottom: 1px solid black;

@@ -7,6 +7,8 @@ export class AppConstans {
     public static ERROR_MESSAGE_COLOR = 'red';
     public static SUCCES_MESSAGE_COLOR = 'green';
     public static EMPTY_MESSAGE_COLOR = 'black';
+    public static OPEN_PANEL_SYMBOL = '[+]';
+    public static CLOSE_PANEL_SYMBOL = '[-]';
 
     //index page
     

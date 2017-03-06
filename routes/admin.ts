@@ -13,11 +13,26 @@ import * as appcons from "../modules/AppConstans";
 //app.use(express.cookieParser('secret'));    //ez kell a session miatt
 //app.use(express.cookieSession());
 
-var display_upload_obj_file_block = 'none';
 var objFileUploaderMsg = "";
 var objFileUploaderMsgColor = "";
+var objFileUploaderBlockDispaly = 'none';
+var objFileUploaderBlockSymbol = appcons.AppConstans.OPEN_PANEL_SYMBOL;
 
-app.post('/uploadfile', function (req, res) {
+app.post('/adminPanelOpenCloseAction', function (req, res) {    
+    if (req.body.panelName != null) {
+        switch (req.body.panelName) {
+            case 'objectfileuploaderdiv':
+                objFileUploaderBlockDispaly == 'none' ? objFileUploaderBlockDispaly = 'block' : objFileUploaderBlockDispaly = 'none';
+                objFileUploaderBlockSymbol == appcons.AppConstans.OPEN_PANEL_SYMBOL ? objFileUploaderBlockSymbol = appcons.AppConstans.CLOSE_PANEL_SYMBOL : objFileUploaderBlockSymbol = appcons.AppConstans.OPEN_PANEL_SYMBOL;
+                break;
+        }
+    }
+
+    res.redirect('/admin');
+});
+
+//obj állomány feltöltése
+app.post('/objFileuploadAction', function (req, res) {
     //https://www.hacksparrow.com/handle-file-uploads-in-express-node-js.html
     //console.log('@req.body: ' + req.body.toString());
     //console.log('@req.files: ' + req.files.toString());
@@ -41,9 +56,10 @@ app.post('/uploadfile', function (req, res) {
             objFileUploaderMsg = objFileParderClass.objFileParser(fileContent);
         });
     }
-    display_upload_obj_file_block = 'block';    
+    objFileUploaderBlockDispaly = 'block';
     res.redirect('/admin');
 });
+
 
 exports.admin = function (req, res, next) {
     //var sess1 = req.session;
@@ -60,6 +76,7 @@ exports.admin = function (req, res, next) {
         //obj file uploader block control
         msg_color: objFileUploaderMsgColor,
         msg_text: objFileUploaderMsg,
-        block: display_upload_obj_file_block
+        display_upload_obj_file_block: objFileUploaderBlockDispaly,
+        upload_obj_file_block_display: objFileUploaderBlockSymbol
     });
 }
