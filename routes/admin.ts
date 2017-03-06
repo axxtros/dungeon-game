@@ -18,6 +18,7 @@ var objFileUploaderMsgColor = "";
 var objFileUploaderBlockDispaly = 'none';
 var objFileUploaderBlockSymbol = appcons.AppConstans.OPEN_PANEL_SYMBOL;
 
+//admin menüpontok panel vezérlése
 app.post('/adminPanelOpenCloseAction', function (req, res) {    
     if (req.body.panelName != null) {
         switch (req.body.panelName) {
@@ -27,7 +28,6 @@ app.post('/adminPanelOpenCloseAction', function (req, res) {
                 break;
         }
     }
-
     res.redirect('/admin');
 });
 

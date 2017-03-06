@@ -7,8 +7,8 @@ export class AppConstans {
     public static ERROR_MESSAGE_COLOR = 'red';
     public static SUCCES_MESSAGE_COLOR = 'green';
     public static EMPTY_MESSAGE_COLOR = 'black';
-    public static OPEN_PANEL_SYMBOL = '[+]';
-    public static CLOSE_PANEL_SYMBOL = '[-]';
+    public static OPEN_PANEL_SYMBOL = '[▼▼▼]';              //http://stackoverflow.com/questions/2701192/what-characters-can-be-used-for-up-down-triangle-arrow-without-stem-for-displa
+    public static CLOSE_PANEL_SYMBOL = '[▲▲▲]';
 
     //index page
     
@@ -20,7 +20,7 @@ export class AppConstans {
     public static ADMIN_OBJ_SAVE_DB_ERR_MSG: string = AppConstans.ERROR_MESSAGE_PREFIX + 'Az adatbázis mentés során hiba lépett fel!';
     public static ADMIN_OBJ_UPLOAD_FILE_SUCC_MSG: string = AppConstans.SUCCES_MESSAGE_PREFIX + 'Feltöltés sikeresen befejezve!';
     
-    constructor() {        
+    constructor() {
     }
 
 }

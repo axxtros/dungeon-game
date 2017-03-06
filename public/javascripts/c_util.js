@@ -66,7 +66,7 @@ function toggleDiv(headerDiv, elementID, openCloseFormID) {
                         submitForm(openCloseFormID);
                     }
                     if (headerDiv != null) {
-                        $(headerDiv).children().next()[0].innerHTML = '[+]';
+                        $(headerDiv).children().next()[0].innerHTML = '[▲▲▲]';    //egyenlőre ennek semmi értelme, mivel szerver oldalról van vezérelve, erre ki kell találni valamit, hogy maradjon csak kliens oldalon
                     }                    
                 });                
             } else {                
@@ -76,7 +76,7 @@ function toggleDiv(headerDiv, elementID, openCloseFormID) {
                         submitForm(openCloseFormID);
                     }
                     if (headerDiv != null) {
-                        $(headerDiv).children().next()[0].innerHTML = '[-]';
+                        $(headerDiv).children().next()[0].innerHTML = '[▼▼▼]';    //egyenlőre ennek semmi értelme, mivel szerver oldalról van vezérelve, erre ki kell találni valamit, hogy maradjon csak kliens oldalon
                     }                    
                 });                
             }
