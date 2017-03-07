@@ -117,8 +117,7 @@ export namespace DatabaseControlNameSpace {
             });
         }
 
-        saveObject3D(savedObject3D: object3d.Object3D): string {
-            //console.log('@2');            
+        saveObject3D(savedObject3D: object3d.Object3D, callback: any): string {            
             var parameters = {
                 $id: null,
                 $objectname: savedObject3D.objectname,
@@ -134,15 +133,16 @@ export namespace DatabaseControlNameSpace {
             var statement = dbase.prepare(sql);
             statement.run(parameters, function (err) {
                 if (err) {                    
-                    console.log(err);
-                    //callback(false);
+                    console.log(err);                    
+                    //callback(appcons.AppConstans.ADMIN_OBJ_SAVE_DB_ERR_MSG + ' ' + err.message);
                     return appcons.AppConstans.ADMIN_OBJ_SAVE_DB_ERR_MSG + ' ' + err.message;
                 } else {
-                    console.log(this);
+                    //console.log(this);
+                    //callback('0');
                     return null;
                 }
             });
-            return null;
+            return null;            
         }
 
         loadObject3D(callback: any, objectID: number): any {            

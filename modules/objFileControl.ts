@@ -49,7 +49,7 @@ export class ObjFileControl {
                 }
             }
             var resultMsg: string;                                                           
-
+            
             resultMsg = this.save3DObject();
 
             if (resultMsg == null || resultMsg == '0') {
@@ -125,15 +125,19 @@ export class ObjFileControl {
         var resultMsg = null;
         var self = this;            //így kell, hogy a async lássa az objektum "külső" változóit https://www.codementor.io/codeforgeek/manage-async-nodejs-callback-example-code-du107q1pn
         try {
-            async.series([
-                function () {
+            async.series({
+                save: function (callback) {                    
                     var db = new databaseControl.DatabaseControlNameSpace.DBControl();
-                    resultMsg += db.saveObject3D(self.object3D);
+                    resultMsg += db.saveObject3D(self.object3D, callback);                    
+                    callback();
                 }
-            ]);
-        } catch (error) {
+            }, function (err) {
+                    
+                }                
+            );
+        } catch (error) {            
             resultMsg += appcons.AppConstans.OBJECT_3D_SAVE_ERROR + ' ' + error.message;
-        }        
+        }                
         return resultMsg;              
     }
 

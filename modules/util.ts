@@ -28,7 +28,7 @@ export class Util {
     }
 
     public static getLayoutMessageColor(msg: string): string {
-        if (msg == null || msg == '0'/* || msg.trim().length <= 0*/) {
+        if (msg == null || msg == '0' || msg == 'NaN'/* || msg.trim().length <= 0*/) {
             return appcons.AppConstans.EMPTY_MESSAGE_COLOR;
         }
         if (msg.trim().substr(0, appcons.AppConstans.SUCCES_MESSAGE_PREFIX.length) == appcons.AppConstans.SUCCES_MESSAGE_PREFIX) {
@@ -41,7 +41,7 @@ export class Util {
     }
 
     public static getLayoutMessage(msg: string): string {
-        if (msg == null || msg == '0'/* || msg.trim().length <= 0*/) {
+        if (msg == null || msg == '0' || msg == 'NaN'/* || msg.trim().length <= 0*/) {
             return "";
         }
         if (msg.substr(0, appcons.AppConstans.SUCCES_MESSAGE_PREFIX.length) == appcons.AppConstans.SUCCES_MESSAGE_PREFIX ||

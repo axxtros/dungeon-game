@@ -24,4 +24,4 @@ var AppConstans = (function () {
     return AppConstans;
 }());
 exports.AppConstans = AppConstans;
-//# sourceMappingURL=AppConstans.js.map
+//# sourceMappingURL=appConstans.js.map
