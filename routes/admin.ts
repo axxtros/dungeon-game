@@ -13,7 +13,7 @@ import * as appcons from "../modules/AppConstans";
 //app.use(express.cookieParser('secret'));    //ez kell a session miatt
 //app.use(express.cookieSession());
 
-var objFileUploaderMsg = "";
+var objFileUploaderMsgText = "";
 var objFileUploaderMsgColor = "";
 var objFileUploaderBlockDispaly = 'none';
 var objFileUploaderBlockSymbol = appcons.AppConstans.OPEN_PANEL_SYMBOL;
@@ -37,15 +37,15 @@ app.post('/objFileuploadAction', function (req, res) {
     //console.log('@req.body: ' + req.body.toString());
     //console.log('@req.files: ' + req.files.toString());
 
-    objFileUploaderMsg = "";   
+    objFileUploaderMsgText = "";   
 
     if (!util.Util.checkFileExtension(req.files.uploadedFileName.originalFilename, 'obj')) {
-        objFileUploaderMsg = appcons.AppConstans.ADMIN_OBJ_UPLOAD_FILE_EXTENSION_ERR_MSG;
+        objFileUploaderMsgText = appcons.AppConstans.ADMIN_OBJ_UPLOAD_FILE_EXTENSION_ERR_MSG;
     } else {
         //ha nincs benne az 'utf-8' paraméter, akkor a szimpla (nyers) buffer tartalmat hozza fel, ezért kell a kódolás
         fs.readFile(req.files.uploadedFileName.path, "utf-8", function (err, data) {    //a files után az input name attributum értékét kell betenni
             if (err) {
-                objFileUploaderMsg = appcons.AppConstans.ADMIN_OBJ_UPLOAD_FILE_EXPECT_ERR_MSG;
+                objFileUploaderMsgText = appcons.AppConstans.ADMIN_OBJ_UPLOAD_FILE_EXPECT_ERR_MSG;
                 throw err;
             }
             // data will contain your file contents
@@ -53,7 +53,7 @@ app.post('/objFileuploadAction', function (req, res) {
             //http://stackoverflow.com/questions/16732166/read-txt-files-lines-in-js-node-js
             var fileContent = data.toString().split('\n');
             var objFileControlClass = new objFileControl.ObjFileControl();
-            objFileUploaderMsg = objFileControlClass.objFileParser(fileContent);
+            objFileUploaderMsgText = objFileControlClass.objFileParser(fileContent);
         });
     }
     objFileUploaderBlockDispaly = 'block';
@@ -66,17 +66,17 @@ exports.admin = function (req, res, next) {
     console.log('@admin username: ' + req.session.username);    //session változó kiolvasása
 
     //obj uploader result message
-    objFileUploaderMsgColor = util.Util.getLayoutMessageColor(objFileUploaderMsg);
-    objFileUploaderMsg = util.Util.getLayoutMessage(objFileUploaderMsg);
+    objFileUploaderMsgColor = util.Util.getLayoutMessageColor(objFileUploaderMsgText);
+    objFileUploaderMsgText = util.Util.getLayoutMessage(objFileUploaderMsgText);
 
     res.render('admin.ejs', {
         program_name: webLabelDAO.WebpageLabelsNameSpace.WebPageLabels.PROGRAM_NAME,
         program_version: webLabelDAO.WebpageLabelsNameSpace.WebPageLabels.PROGRAM_VERSION,
         program_developer: webLabelDAO.WebpageLabelsNameSpace.WebPageLabels.PROGRAM_DEVELOPER,
-        //obj file uploader block control
+        //obj file uploader block
         upload_obj_file_block_label: appcons.AppConstans.ADMIN_OBJ_UPLOAD_MENU_LABEL,
         upload_obj_file_block_msg_color: objFileUploaderMsgColor,
-        upload_obj_file_block_msg_text: objFileUploaderMsg,
+        upload_obj_file_block_msg_text: objFileUploaderMsgText,
         upload_obj_file_block_display: objFileUploaderBlockDispaly,
         upload_obj_file_block_symbol: objFileUploaderBlockSymbol
     });

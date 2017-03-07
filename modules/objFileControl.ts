@@ -19,7 +19,7 @@ export class ObjFileControl {
     private object3D: object3d.Object3D;     
 
     constructor() {
-        
+        //NOP...
     }
 
     public objFileParser(fileContent: any): string {        
