@@ -5,7 +5,7 @@ var fs = require('fs');
 var path = require('path');
 
 import * as webLabelDAO from "../modules/webPageLabelsDAO";
-import * as objFileParser from "../modules/ObjFileParser";
+import * as objFileControl from "../modules/ObjFileControl";
 import * as util from "../modules/Util";
 import * as appcons from "../modules/AppConstans";
 
@@ -52,8 +52,8 @@ app.post('/objFileuploadAction', function (req, res) {
             //console.log(data);            
             //http://stackoverflow.com/questions/16732166/read-txt-files-lines-in-js-node-js
             var fileContent = data.toString().split('\n');
-            var objFileParderClass = new objFileParser.ObjFileParser();
-            objFileUploaderMsg = objFileParderClass.objFileParser(fileContent);
+            var objFileControlClass = new objFileControl.ObjFileControl();
+            objFileUploaderMsg = objFileControlClass.objFileParser(fileContent);
         });
     }
     objFileUploaderBlockDispaly = 'block';
@@ -74,9 +74,10 @@ exports.admin = function (req, res, next) {
         program_version: webLabelDAO.WebpageLabelsNameSpace.WebPageLabels.PROGRAM_VERSION,
         program_developer: webLabelDAO.WebpageLabelsNameSpace.WebPageLabels.PROGRAM_DEVELOPER,
         //obj file uploader block control
-        msg_color: objFileUploaderMsgColor,
-        msg_text: objFileUploaderMsg,
-        display_upload_obj_file_block: objFileUploaderBlockDispaly,
-        upload_obj_file_block_display: objFileUploaderBlockSymbol
+        upload_obj_file_block_label: appcons.AppConstans.ADMIN_OBJ_UPLOAD_MENU_LABEL,
+        upload_obj_file_block_msg_color: objFileUploaderMsgColor,
+        upload_obj_file_block_msg_text: objFileUploaderMsg,
+        upload_obj_file_block_display: objFileUploaderBlockDispaly,
+        upload_obj_file_block_symbol: objFileUploaderBlockSymbol
     });
 }

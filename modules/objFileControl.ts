@@ -13,22 +13,22 @@ enum FacesType {
     NORMAL_INDICES
 };
 
-export class ObjFileParser {        
+export class ObjFileControl {        
     
     private objFileContent: any;
-    private object3D: object3d.Object3D; 
-    private loadedObject3D: object3d.Object3D;
+    private object3D: object3d.Object3D;     
 
     constructor() {
-        this.object3D = new object3d.Object3D();
+        
     }
 
     public objFileParser(fileContent: any): string {        
         this.objFileContent = fileContent;
+        this.object3D = new object3d.Object3D();
         return this.parse();
     }
 
-    private parse(): string {        
+    private parse(): string {
         try {
             for (var i = 0; i != this.objFileContent.length; i++) {
                 var line: string = this.objFileContent[i];
@@ -48,24 +48,11 @@ export class ObjFileParser {
                     }
                 }
             }
-            var resultMsg: string;            
+            var resultMsg: string;                                                           
 
-            var self = this;            //így kell, hogy a async lássa az objektum "külső" változóit https://www.codementor.io/codeforgeek/manage-async-nodejs-callback-example-code-du107q1pn
+            resultMsg = this.save3DObject();
 
-            async.series([
-                function () {
-                    var db = new databaseControl.DatabaseControlNameSpace.DBControl();
-                    resultMsg = db.saveObject3D(self.object3D);                    
-                }
-            ]);            
-            
-            async.series([
-                function (callback) {
-                    self.loadedObject3D = new databaseControl.DatabaseControlNameSpace.DBControl().loadObject3D(callback, 10);
-                }
-            ]);            
-
-            if (resultMsg == null || resultMsg.trim().length == 0) {
+            if (resultMsg == null || resultMsg == '0') {
                 resultMsg = appcons.AppConstans.ADMIN_OBJ_UPLOAD_FILE_SUCC_MSG;                                
             }
         } catch (ex) {
@@ -132,6 +119,37 @@ export class ObjFileParser {
 
     private removeLineLetter(line: string, startIndex: number): string {
         return line.substr(startIndex, line.length).trim();
+    }
+
+    private save3DObject(): string {
+        var resultMsg = null;
+        var self = this;            //így kell, hogy a async lássa az objektum "külső" változóit https://www.codementor.io/codeforgeek/manage-async-nodejs-callback-example-code-du107q1pn
+        try {
+            async.series([
+                function () {
+                    var db = new databaseControl.DatabaseControlNameSpace.DBControl();
+                    resultMsg += db.saveObject3D(self.object3D);
+                }
+            ]);
+        } catch (error) {
+            resultMsg += appcons.AppConstans.OBJECT_3D_SAVE_ERROR + ' ' + error.message;
+        }        
+        return resultMsg;              
+    }
+
+    public load3DObject(objectID: number): object3d.Object3D {        
+        var self = this;
+        var loadedObject3D: object3d.Object3D = new object3d.Object3D();
+        try {
+            async.series({
+                load: function (callback) {
+                    this.loadedObject3D = new databaseControl.DatabaseControlNameSpace.DBControl().loadObject3D(callback, objectID);
+                }
+            });
+        } catch (error) {            
+            console.log(appcons.AppConstans.OBJECT_3D_LOAD_ERROR + ' ' + error.message);
+        }        
+        return loadedObject3D;
     }
 
 }

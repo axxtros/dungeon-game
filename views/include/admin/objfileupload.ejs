@@ -2,19 +2,19 @@
 
 <div class="adminMenuDiv">
     <div class="adminMenuHeader" onclick="toggleDiv(this, 'objectfileuploaderdiv', 'objAdminPanelOpenCloseForm');">
-        <div class="adminMenuTitle">OBJ állomány feltöltése</div>
-        <div class="adminMenuOpenCloser"><%= upload_obj_file_block_display %></div>
+        <div class="adminMenuTitle"><%= upload_obj_file_block_label %></div>
+        <div class="adminMenuOpenCloser"><%= upload_obj_file_block_symbol %></div>
         <form id="objAdminPanelOpenCloseForm" enctype="multipart/form-data" action="/adminPanelOpenCloseAction" method="post">
             <input type="hidden" name="panelName" value="objectfileuploaderdiv" />
         </form>
     </div>
     <div style="clear: both" />
-    <div id="objectfileuploaderdiv" class="adminMenuContentDiv" style="display: <%= display_upload_obj_file_block %>;">
+    <div id="objectfileuploaderdiv" class="adminMenuContentDiv" style="display: <%= upload_obj_file_block_display %>;">
         <form id="objFileuploadForm" enctype="multipart/form-data" action="/objFileuploadAction" method="post">
             <input type="file" name="uploadedFileName" />
             <input type="submit" value="Feltöltés" onclick="deleteMsgDivContent('objectfileuploaderdiv')" />
         </form>
-        <div class="msg" style="color: <%= msg_color %>"><%= msg_text %></div>
+        <div class="msg" style="color: <%= upload_obj_file_block_msg_color %>"><%= upload_obj_file_block_msg_text %></div>
     </div>
 </div>
 <div style="clear: both" />

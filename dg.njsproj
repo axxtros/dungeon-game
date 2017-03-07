@@ -41,7 +41,7 @@
     <TypeScriptCompile Include="modules\db.ts" />
     <TypeScriptCompile Include="modules\dungeonGenerator.ts" />
     <TypeScriptCompile Include="modules\object3d.ts" />
-    <TypeScriptCompile Include="modules\objFileParser.ts" />
+    <TypeScriptCompile Include="modules\objFileControl.ts" />
     <TypeScriptCompile Include="modules\pathFinder.ts" />
     <TypeScriptCompile Include="modules\socket.ts" />
     <TypeScriptCompile Include="modules\storage.ts" />

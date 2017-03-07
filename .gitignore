@@ -267,3 +267,4 @@ modules/baseClasses.js
 routes/admin.js
 modules/objFileParser.js
 modules/object3d.js
+modules/objFileControl.js
