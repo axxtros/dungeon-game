@@ -2,6 +2,7 @@
 
 export class Object3D {
 
+    private _id: number;
     private _objectname: string;
     private _groupname: string;
     private _geomteryVertices: string;           //v
@@ -20,6 +21,14 @@ export class Object3D {
         this._vertexIndices = "";
         this._vertexTextureIndices = "";
         this._vertexNormalIndices = "";
+    }
+
+    get id(): number {
+        return this._id;
+    }
+
+    set id(id: number) {
+        this._id = id;
     }
 
     get objectname(): string {

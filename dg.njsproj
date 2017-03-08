@@ -56,6 +56,7 @@
     <TypeScriptCompile Include="Scripts\typings\stylus\stylus.d.ts" />
     <Content Include="package.json" />
     <Content Include="views\admin.ejs" />
+    <Content Include="views\include\admin\objloader.ejs" />
     <Content Include="views\include\admin\objfileupload.ejs" />
     <Content Include="views\include\mainmenu.ejs" />
     <Content Include="public\stylesheets\style.css" />

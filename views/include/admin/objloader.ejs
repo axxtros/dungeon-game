@@ -1,0 +1,20 @@
+﻿<%# adminpage - obj file loader menu %>
+
+<div class="adminMenuDiv">
+    <div class="adminMenuHeader" onclick="toggleDiv(this, 'objectloaderdiv', 'objloaderAdminPanelOpenCloseForm');">
+        <div class="adminMenuTitle"><%= obj_loader_block_label %></div>
+        <div class="adminMenuOpenCloser"><%= obj_loader_block_symbol %></div>
+        <form id="objloaderAdminPanelOpenCloseForm" enctype="multipart/form-data" action="/adminPanelOpenCloseAction" method="post">
+            <input type="hidden" name="panelName" value="objectloaderdiv" />
+        </form>
+    </div>
+    <div style="clear: both" />
+    <div id="objectloaderdiv" class="adminMenuContentDiv" style="display: <%= obj_loader_block_display %>;">
+        <form id="objLoaderForm" enctype="multipart/form-data" action="/objloaderAction" method="post">                        
+            <button type="submit" onclick="deleteMsgDivContent('objectloaderdiv')">Betöltés</button>    
+            <input type="text" name="dummy" style="visibility:hidden;"/>            
+        </form>        
+        <div class="msg" style="color: <%= obj_loader_msg_color %>"><%= obj_loader_msg_text %></div>
+    </div>
+</div>
+<div style="clear: both" />

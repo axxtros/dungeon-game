@@ -16,7 +16,9 @@ enum FacesType {
 export class ObjFileControl {        
     
     private objFileContent: any;
-    private object3D: object3d.Object3D;     
+    private object3D: object3d.Object3D;  
+    private _loaded3DObj: object3d.Object3D;
+    private dbCtrl = new databaseControl.DatabaseControlNameSpace.DBControl();
 
     constructor() {
         //NOP...
@@ -141,19 +143,55 @@ export class ObjFileControl {
         return resultMsg;              
     }
 
-    public load3DObject(objectID: number): object3d.Object3D {        
+    public get3DObject(objectID): object3d.Object3D {        
+        return this.load3DObject(objectID);        
+    }
+
+    private load3DObject(objectID: number): object3d.Object3D {        
         var self = this;
-        var loadedObject3D: object3d.Object3D = new object3d.Object3D();
+        self._loaded3DObj = new object3d.Object3D();
         try {
+            //https://prog.hu/tudastar/192946/node-js-async-muveletek-sorrendisege            
+            console.log('@1');            
             async.series({
                 load: function (callback) {
-                    this.loadedObject3D = new databaseControl.DatabaseControlNameSpace.DBControl().loadObject3D(callback, objectID);
+                    console.log('@2');
+                    self.dbCtrl.loadObject3D(function getCallback(err, result) {
+                        if (err) {
+                            console.log('@6 ' + err.message);
+                        } else {
+                            console.log('@6');
+                            if (result.length > 0) {
+                                self._loaded3DObj = result[0];
+                                //console.log(result[0].geomteryVertices);
+                                //loadedObject3D.id = result[0].id;
+                                //loadedObject3D.geomteryVertices = result[0].geomteryVertices;
+                                //return self._loaded3DObj;
+                            }
+                        }
+                        callback(err, result);
+                    }, objectID);                    
+                }                
+            }, function asyncParallalResulthandler(err, results) {
+                if (err) {
+                    console.log('@7 ' + err.message);
+                } else {
+                    //console.log('@7' + results.load);
+                    if (results.load[0] != null) {
+                        //loadedObject3D = results.load[0];
+                        //loadedObject3D.id = results.load[0].id;
+                        //loadedObject3D.geomteryVertices = results.load[0].geomteryVertices;
+                    }
+                    console.log('@7 betoltve' + self._loaded3DObj.geomteryVertices);
+                    return self._loaded3DObj;                                       
                 }
             });
+            console.log('@8');
         } catch (error) {            
             console.log(appcons.AppConstans.OBJECT_3D_LOAD_ERROR + ' ' + error.message);
-        }        
-        return loadedObject3D;
-    }
+        }    
+        console.log('@10 kilep loadedObject3D');    
+        return self._loaded3DObj;
+    }    
 
 }

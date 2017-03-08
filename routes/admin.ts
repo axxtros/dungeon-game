@@ -3,9 +3,11 @@ var app = require('../app');
 //var session = require('express-session');
 var fs = require('fs');
 var path = require('path');
+var async = require('async');
 
 import * as webLabelDAO from "../modules/webPageLabelsDAO";
 import * as objFileControl from "../modules/ObjFileControl";
+import * as object3d from "../modules/Object3D";
 import * as util from "../modules/Util";
 import * as appcons from "../modules/AppConstans";
 
@@ -13,10 +15,18 @@ import * as appcons from "../modules/AppConstans";
 //app.use(express.cookieParser('secret'));    //ez kell a session miatt
 //app.use(express.cookieSession());
 
+var loaded3D: object3d.Object3D;
+var objFileControlClass = new objFileControl.ObjFileControl();
+
 var objFileUploaderMsgText = "";
 var objFileUploaderMsgColor = "";
 var objFileUploaderBlockDispaly = 'none';
 var objFileUploaderBlockSymbol = appcons.AppConstans.OPEN_PANEL_SYMBOL;
+
+var objLoaderMsgText = "";
+var objLoaderMsgColor = "";
+var objLoaderBlockDispaly = 'none';
+var objLoaderBlockSymbol = appcons.AppConstans.OPEN_PANEL_SYMBOL;
 
 //admin menüpontok panel vezérlése
 app.post('/adminPanelOpenCloseAction', function (req, res) {    
@@ -25,6 +35,10 @@ app.post('/adminPanelOpenCloseAction', function (req, res) {
             case 'objectfileuploaderdiv':
                 objFileUploaderBlockDispaly == 'none' ? objFileUploaderBlockDispaly = 'block' : objFileUploaderBlockDispaly = 'none';
                 objFileUploaderBlockSymbol == appcons.AppConstans.OPEN_PANEL_SYMBOL ? objFileUploaderBlockSymbol = appcons.AppConstans.CLOSE_PANEL_SYMBOL : objFileUploaderBlockSymbol = appcons.AppConstans.OPEN_PANEL_SYMBOL;
+                break;
+            case 'objectloaderdiv':
+                objLoaderBlockDispaly == 'none' ? objLoaderBlockDispaly = 'block' : objLoaderBlockDispaly = 'none';
+                objLoaderBlockSymbol == appcons.AppConstans.OPEN_PANEL_SYMBOL ? objLoaderBlockSymbol = appcons.AppConstans.CLOSE_PANEL_SYMBOL : objLoaderBlockSymbol = appcons.AppConstans.OPEN_PANEL_SYMBOL;
                 break;
         }
     }
@@ -56,10 +70,21 @@ app.post('/objFileuploadAction', function (req, res) {
             objFileUploaderMsgText = objFileControlClass.objFileParser(fileContent);
         });
     }
+
     objFileUploaderBlockDispaly = 'block';
-    res.redirect('/admin');
+    res.redirect('/admin');    
 });
 
+app.post('/objloaderAction', function (req, res) {    
+
+    //loaded3D = new object3d.Object3D();    
+    loaded3D = objFileControlClass.get3DObject(10);
+
+    console.log('@done ........................................................................');
+
+    objLoaderBlockDispaly = 'block';    
+    res.redirect('/admin');    
+});
 
 exports.admin = function (req, res, next) {
     //var sess1 = req.session;
@@ -68,6 +93,8 @@ exports.admin = function (req, res, next) {
     //obj uploader result message
     objFileUploaderMsgColor = util.Util.getLayoutMessageColor(objFileUploaderMsgText);
     objFileUploaderMsgText = util.Util.getLayoutMessage(objFileUploaderMsgText);
+    objLoaderMsgColor = util.Util.getLayoutMessageColor(objLoaderMsgColor);
+    objLoaderBlockSymbol = util.Util.getLayoutMessage(objLoaderBlockSymbol);
 
     res.render('admin.ejs', {
         program_name: webLabelDAO.WebpageLabelsNameSpace.WebPageLabels.PROGRAM_NAME,
@@ -78,6 +105,13 @@ exports.admin = function (req, res, next) {
         upload_obj_file_block_msg_color: objFileUploaderMsgColor,
         upload_obj_file_block_msg_text: objFileUploaderMsgText,
         upload_obj_file_block_display: objFileUploaderBlockDispaly,
-        upload_obj_file_block_symbol: objFileUploaderBlockSymbol
+        upload_obj_file_block_symbol: objFileUploaderBlockSymbol,
+        //obj loader
+        obj_loader_block_label: appcons.AppConstans.OBJ_LOADER_MENU_LABEL,
+        obj_loader_msg_color: objLoaderMsgColor,
+        obj_loader_msg_text: objLoaderMsgText,
+        obj_loader_block_display: objLoaderBlockDispaly,
+        obj_loader_block_symbol: objLoaderBlockSymbol,
+        loaded_3d: loaded3D != null ? loaded3D : new object3d.Object3D()
     });
 }
