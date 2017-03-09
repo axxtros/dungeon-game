@@ -147,6 +147,12 @@ export class ObjFileControl {
         return this.load3DObject(objectID);        
     }
 
+    public getLoaded3DObject(): object3d.Object3D {
+        if (this._loaded3DObj == null)
+            return new object3d.Object3D();
+        return this._loaded3DObj;
+    }
+
     private load3DObject(objectID: number): object3d.Object3D {        
         var self = this;
         self._loaded3DObj = new object3d.Object3D();

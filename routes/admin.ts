@@ -112,6 +112,6 @@ exports.admin = function (req, res, next) {
         obj_loader_msg_text: objLoaderMsgText,
         obj_loader_block_display: objLoaderBlockDispaly,
         obj_loader_block_symbol: objLoaderBlockSymbol,
-        loaded_3d: loaded3D != null ? loaded3D : new object3d.Object3D()
+        loaded_3d: /*loaded3D != null ? loaded3D :*/ objFileControlClass.getLoaded3DObject()
     });
 }
