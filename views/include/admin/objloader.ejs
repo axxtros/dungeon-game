@@ -10,11 +10,56 @@
     </div>
     <div style="clear: both" />
     <div id="objectloaderdiv" class="adminMenuContentDiv" style="display: <%= obj_loader_block_display %>;">
-        <form id="objLoaderForm" enctype="multipart/form-data" action="/objloaderAction" method="post">                        
-            <button type="submit" onclick="deleteMsgDivContent('objectloaderdiv')">Betöltés</button>    
-            <input type="text" name="dummy" style="visibility:hidden;"/>            
+        <form id="objLoaderForm" enctype="multipart/form-data" action="/objloaderAction" method="post"> 
+            <label for="object3dInput">Betöltendő objektum ID: </label>
+            <input id="object3dInput" type="text" name="object3DIdField" />
+            <button type="submit" onclick="deleteMsgDivContent('objectloaderdiv')">Betöltés</button>                
         </form>        
         <div class="msg" style="color: <%= obj_loader_msg_color %>"><%= obj_loader_msg_text %></div>
+
+        <% if(loaded_3d.id != null) { %>
+            <div>
+                <table class="simpleDataTable">
+                    <tr>
+                        <td class="nameCell">ID:</td>
+                        <td class="dataCell"><%= loaded_3d.id %></td>
+                    </tr>
+                    <tr>
+                        <td class="nameCell">Name:</td>
+                        <td class="dataCell"><%= loaded_3d.objectname %></td>
+                    </tr>
+                    <tr>
+                        <td class="nameCell">Group:</td>
+                        <td class="dataCell"><%= loaded_3d.groupname %></td>
+                    </tr>
+                    <tr>
+                        <td class="nameCell">Geometry vertices:</td>
+                        <td class="dataCell"><%= loaded_3d.geomteryVertices %></td>
+                    </tr>
+                    <tr>
+                        <td class="nameCell">Vertex normals:</td>
+                        <td class="dataCell"><%= loaded_3d.vertexNormals %></td>
+                    </tr>
+                    <tr>
+                        <td class="nameCell">Texture coordinates:</td>
+                        <td class="dataCell"><%= loaded_3d.textureCoords %></td>
+                    </tr>
+                    <tr>
+                        <td class="nameCell">Vertex indices:</td>
+                        <td class="dataCell"><%= loaded_3d.vertexIndices %></td>
+                    </tr>
+                    <tr>
+                        <td class="nameCell">Texture indices:</td>
+                        <td class="dataCell"><%= loaded_3d.vertexTextureIndices %></td>
+                    </tr>
+                    <tr>
+                        <td class="nameCell">Vertex normals indices:</td>
+                        <td class="dataCell"><%= loaded_3d.vertexNormalIndices %></td>
+                    </tr>
+                </table>
+            </div>
+        <% } %>
+        
     </div>
 </div>
 <div style="clear: both" />

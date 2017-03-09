@@ -127,3 +127,20 @@ div.adminMenuContentDiv {
 
 /* admin page end -------------------------------------------------------------*/
 
+/* simple data table css begin ------------------------------------------------ */
+
+table.simpleDataTable {
+    table-layout: fixed; 
+    width: 100%;
+}
+
+table.simpleDataTable td.nameCell {
+    font-weight: bold;
+    width: 20%;
+}
+
+table.simpleDataTable td.dataCell {
+    word-wrap: break-word;
+}
+
+/* simple data table css end -------------------------------------------------- */

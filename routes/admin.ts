@@ -75,13 +75,14 @@ app.post('/objFileuploadAction', function (req, res) {
     res.redirect('/admin');    
 });
 
-app.post('/objloaderAction', function (req, res) {    
-
-    //loaded3D = new object3d.Object3D();    
-    loaded3D = objFileControlClass.get3DObject(10);
-
+app.post('/objloaderAction', function (req, res) {
+    var objectId = req.body.object3DIdField;
+    try {
+        objFileControlClass.get3DObject(Number(objectId));
+    } catch(err) {
+        console.log(err.message);
+    }    
     console.log('@done ........................................................................');
-
     objLoaderBlockDispaly = 'block';    
     res.redirect('/admin');    
 });

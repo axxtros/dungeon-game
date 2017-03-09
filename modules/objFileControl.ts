@@ -143,8 +143,8 @@ export class ObjFileControl {
         return resultMsg;              
     }
 
-    public get3DObject(objectID): object3d.Object3D {        
-        return this.load3DObject(objectID);        
+    public get3DObject(objectID): void {
+        this.load3DObject(objectID);       
     }
 
     public getLoaded3DObject(): object3d.Object3D {
@@ -153,7 +153,7 @@ export class ObjFileControl {
         return this._loaded3DObj;
     }
 
-    private load3DObject(objectID: number): object3d.Object3D {        
+    private load3DObject(objectID: number): void {        
         var self = this;
         self._loaded3DObj = new object3d.Object3D();
         try {
@@ -188,16 +188,14 @@ export class ObjFileControl {
                         //loadedObject3D.id = results.load[0].id;
                         //loadedObject3D.geomteryVertices = results.load[0].geomteryVertices;
                     }
-                    console.log('@7 betoltve' + self._loaded3DObj.geomteryVertices);
-                    return self._loaded3DObj;                                       
+                    console.log('@7 betoltve' + self._loaded3DObj.geomteryVertices);                    
                 }
             });
             console.log('@8');
         } catch (error) {            
             console.log(appcons.AppConstans.OBJECT_3D_LOAD_ERROR + ' ' + error.message);
         }    
-        console.log('@10 kilep loadedObject3D');    
-        return self._loaded3DObj;
+        console.log('@10 kilep loadedObject3D');
     }    
 
 }
