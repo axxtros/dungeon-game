@@ -146,7 +146,7 @@ export namespace DatabaseControlNameSpace {
         }
 
         loadObject3D(callback: any, objectID: number): any {
-            console.log('@3');
+            //console.log('@3');
             var resultObject = new object3d.Object3D();
             var parameters = {
                 $id: objectID
@@ -154,14 +154,14 @@ export namespace DatabaseControlNameSpace {
             var sql = "select id, objectname, groupname, geomteryVertices, vertexNormals, textureCoords, vertexIndices, vertexTextureIndices, vertexNormalIndices from dat_object3d where id = $id";
             dbase.all(sql, parameters, function (err, rows) {
                 if (err) {                    
-                    console.log('@4');
+                    //console.log('@4');
                     callback(err, null);
                 } else {
-                    console.log('@5');
+                    //console.log('@5');
                     callback(null, rows);                    
                 }
             });            
-            console.log('@a kilep');              
+            //console.log('@a kilep');              
         }
     }
 }

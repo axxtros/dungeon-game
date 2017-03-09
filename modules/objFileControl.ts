@@ -158,15 +158,15 @@ export class ObjFileControl {
         self._loaded3DObj = new object3d.Object3D();
         try {
             //https://prog.hu/tudastar/192946/node-js-async-muveletek-sorrendisege            
-            console.log('@1');            
+            //console.log('@1');            
             async.series({
                 load: function (callback) {
-                    console.log('@2');
+                    //console.log('@2');
                     self.dbCtrl.loadObject3D(function getCallback(err, result) {
                         if (err) {
-                            console.log('@6 ' + err.message);
+                            console.log('ERROR [self.dbCtrl.loadObject3D]: ' + err.message);
                         } else {
-                            console.log('@6');
+                            //console.log('@6');
                             if (result.length > 0) {
                                 self._loaded3DObj = result[0];
                                 //console.log(result[0].geomteryVertices);
@@ -180,22 +180,23 @@ export class ObjFileControl {
                 }                
             }, function asyncParallalResulthandler(err, results) {
                 if (err) {
-                    console.log('@7 ' + err.message);
+                    console.log('ERROR [asyncParallalResulthandler]: ' + err.message);
                 } else {
                     //console.log('@7' + results.load);
                     if (results.load[0] != null) {
+                        //azért nem itt történik az adatátadás, mert a @6 előbb hajtódik végre
                         //loadedObject3D = results.load[0];
                         //loadedObject3D.id = results.load[0].id;
                         //loadedObject3D.geomteryVertices = results.load[0].geomteryVertices;
                     }
-                    console.log('@7 betoltve' + self._loaded3DObj.geomteryVertices);                    
+                    //console.log('@7 betoltve' + self._loaded3DObj.geomteryVertices);                    
                 }
             });
-            console.log('@8');
+            //console.log('@8');
         } catch (error) {            
-            console.log(appcons.AppConstans.OBJECT_3D_LOAD_ERROR + ' ' + error.message);
+            console.log('ERROR [async.series]: ' + appcons.AppConstans.OBJECT_3D_LOAD_ERROR + ' ' + error.message);
         }    
-        console.log('@10 kilep loadedObject3D');
+        //console.log('@10 kilep loadedObject3D');
     }    
 
 }
