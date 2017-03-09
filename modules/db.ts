@@ -119,7 +119,7 @@ export namespace DatabaseControlNameSpace {
 
         saveObject3D(savedObject3D: object3d.Object3D, callback: any): string {            
             var parameters = {
-                $id: null,
+                $id: savedObject3D.id,
                 $objectname: savedObject3D.objectname,
                 $groupname: savedObject3D.groupname,
                 $geomteryVertices: savedObject3D.geomteryVertices,
@@ -128,8 +128,16 @@ export namespace DatabaseControlNameSpace {
                 $vertexIndices: savedObject3D.vertexIndices,
                 $vertexTextureIndices: savedObject3D.vertexTextureIndices,
                 $vertexNormalIndices: savedObject3D.vertexNormalIndices,
+                $geometryVerticesNumber: savedObject3D.geometryVerticesNumber,
+                $vertexNormalsNumber: savedObject3D.vertexNormalsNumber,
+                $textureCoordsNumber: savedObject3D.textureCoordsNumber,
+                $facesNumber: savedObject3D.facesNumber
             };
-            var sql = "INSERT INTO dat_object3d (id, objectname, groupname, geomteryVertices, vertexNormals, textureCoords, vertexIndices, vertexTextureIndices, vertexNormalIndices) VALUES ($id, $objectname, $groupname, $geomteryVertices, $vertexNormals, $textureCoords, $vertexIndices, $vertexTextureIndices, $vertexNormalIndices)";
+            var sql = " INSERT INTO dat_object3d (\n" +
+                      " id, objectname, groupname, geomteryVertices, vertexNormals, textureCoords,\n" +
+                      " vertexIndices, vertexTextureIndices, vertexNormalIndices, geometryVerticesNumber, vertexNormalsNumber, textureCoordsNumber, facesNumber)\n" +
+                      " VALUES ($id, $objectname, $groupname, $geomteryVertices, $vertexNormals, $textureCoords,\n" +
+                      " $vertexIndices, $vertexTextureIndices, $vertexNormalIndices, $geometryVerticesNumber, $vertexNormalsNumber, $textureCoordsNumber, $facesNumber)";
             var statement = dbase.prepare(sql);
             statement.run(parameters, function (err) {
                 if (err) {                    
@@ -151,7 +159,9 @@ export namespace DatabaseControlNameSpace {
             var parameters = {
                 $id: objectID
             };
-            var sql = "select id, objectname, groupname, geomteryVertices, vertexNormals, textureCoords, vertexIndices, vertexTextureIndices, vertexNormalIndices from dat_object3d where id = $id";
+            var sql = " select id, objectname, groupname, geomteryVertices, vertexNormals, textureCoords,\n" +
+                      " vertexIndices, vertexTextureIndices, vertexNormalIndices, geometryVerticesNumber,\n" +
+                      " vertexNormalsNumber, textureCoordsNumber, facesNumber from dat_object3d where id = $id";
             dbase.all(sql, parameters, function (err, rows) {
                 if (err) {                    
                     //console.log('@4');

@@ -14,7 +14,9 @@ enum FacesType {
 };
 
 export class ObjFileControl {        
-    
+
+    private SEPARATOR_CHARACTER: string = ',';
+
     private objFileContent: any;
     private object3D: object3d.Object3D;  
     private _loaded3DObj: object3d.Object3D;
@@ -37,21 +39,24 @@ export class ObjFileControl {
                 var lineLetter = line.substr(0, 2).trim();
                 if (lineLetter != null) {
                     switch (lineLetter) {
-                        case 'v': this.verticesReader(line, lineLetter); break;
-                        case 'vn': this.verticesReader(line, lineLetter); break;
-                        case 'vt': this.verticesReader(line, lineLetter); break;
+                        case 'v': this.verticesReader(line, lineLetter); this.object3D.geometryVerticesNumber++; break;
+                        case 'vn': this.verticesReader(line, lineLetter); this.object3D.vertexNormalsNumber++; break;
+                        case 'vt': this.verticesReader(line, lineLetter); this.object3D.textureCoordsNumber++; break;
                         case 'o': this.object3D.objectname = this.removeLineLetter(line, lineLetter.length); break;
                         case 'g': this.object3D.groupname = this.removeLineLetter(line, lineLetter.length); break;
                         case 'f':
                             this.object3D.vertexIndices += this.facesReader(line, lineLetter, FacesType.VERTEX_INDICES);
                             this.object3D.vertexNormalIndices += this.facesReader(line, lineLetter, FacesType.NORMAL_INDICES);
-                            this.object3D.vertexTextureIndices += this.facesReader(line, lineLetter, FacesType.TEXTURE_INDICES);                            
+                            this.object3D.vertexTextureIndices += this.facesReader(line, lineLetter, FacesType.TEXTURE_INDICES);
+                            this.object3D.facesNumber++;                            
                             break;
                     }
                 }
             }
-            var resultMsg: string;                                                           
-            
+
+            this.cutLastCharacter();
+
+            var resultMsg: string;                                                                       
             resultMsg = this.save3DObject();
 
             if (resultMsg == null || resultMsg == '0') {
@@ -71,9 +76,9 @@ export class ObjFileControl {
         }
         for (var i = 0; i != vertices.length; i++) {
             switch (lineLetter) {
-                case 'v': this.object3D.geomteryVertices += vertices[i] + ','; break;
-                case 'vn': this.object3D.vertexNormals += vertices[i] + ','; break;
-                case 'vt': this.object3D.textureCoords += vertices[i] + ','; break;
+                case 'v': this.object3D.geomteryVertices += (vertices[i] + this.SEPARATOR_CHARACTER); break;
+                case 'vn': this.object3D.vertexNormals += (vertices[i] + this.SEPARATOR_CHARACTER); break;
+                case 'vt': this.object3D.textureCoords += (vertices[i] + this.SEPARATOR_CHARACTER); break;
             }            
         }
     }
@@ -102,17 +107,17 @@ export class ObjFileControl {
         for (var i = 0; i != elements.length; i++) {
             if (type == FacesType.VERTEX_INDICES) {
                 if (i == 0 || i == 3 || i == 6) {                    
-                    result += elements[i] + ',';
+                    result += (elements[i] + this.SEPARATOR_CHARACTER);
                 }
             }
             if (type == FacesType.TEXTURE_INDICES) {
                 if (i == 1 || i == 4 || i == 7) {
-                    result += elements[i] + ',';
+                    result += (elements[i] + this.SEPARATOR_CHARACTER);
                 }
             }
             if (type == FacesType.NORMAL_INDICES) {
                 if (i == 2 || i == 5 || i == 8) {
-                    result += elements[i] + ',';
+                    result += (elements[i] + this.SEPARATOR_CHARACTER);
                 }
             }
         }
@@ -121,6 +126,15 @@ export class ObjFileControl {
 
     private removeLineLetter(line: string, startIndex: number): string {
         return line.substr(startIndex, line.length).trim();
+    }
+
+    private cutLastCharacter(): void {
+        this.object3D.geomteryVertices = utilModul.Util.cutLastCharacter(this.object3D.geomteryVertices, this.SEPARATOR_CHARACTER).trim();
+        this.object3D.vertexNormals = utilModul.Util.cutLastCharacter(this.object3D.vertexNormals, this.SEPARATOR_CHARACTER).trim();
+        this.object3D.textureCoords = utilModul.Util.cutLastCharacter(this.object3D.textureCoords, this.SEPARATOR_CHARACTER).trim();
+        this.object3D.vertexIndices = utilModul.Util.cutLastCharacter(this.object3D.vertexIndices, this.SEPARATOR_CHARACTER).trim();
+        this.object3D.vertexNormalIndices = utilModul.Util.cutLastCharacter(this.object3D.vertexNormalIndices, this.SEPARATOR_CHARACTER).trim();
+        this.object3D.vertexTextureIndices = utilModul.Util.cutLastCharacter(this.object3D.vertexTextureIndices, this.SEPARATOR_CHARACTER).trim();
     }
 
     private save3DObject(): string {
@@ -133,7 +147,7 @@ export class ObjFileControl {
                     resultMsg += db.saveObject3D(self.object3D, callback);                    
                     callback();
                 }
-            }, function (err) {
+            },  function (err) {
                     
                 }                
             );
@@ -145,13 +159,7 @@ export class ObjFileControl {
 
     public get3DObject(objectID): void {
         this.load3DObject(objectID);       
-    }
-
-    public getLoaded3DObject(): object3d.Object3D {
-        if (this._loaded3DObj == null)
-            return new object3d.Object3D();
-        return this._loaded3DObj;
-    }
+    }    
 
     private load3DObject(objectID: number): void {        
         var self = this;
@@ -168,7 +176,7 @@ export class ObjFileControl {
                         } else {
                             //console.log('@6');
                             if (result.length > 0) {
-                                self._loaded3DObj = result[0];
+                                self._loaded3DObj = result[0];                  //implicit konvertálással megy
                                 //console.log(result[0].geomteryVertices);
                                 //loadedObject3D.id = result[0].id;
                                 //loadedObject3D.geomteryVertices = result[0].geomteryVertices;
@@ -198,5 +206,11 @@ export class ObjFileControl {
         }    
         //console.log('@10 kilep loadedObject3D');
     }    
+
+    public getLoaded3DObject(): object3d.Object3D {
+        if (this._loaded3DObj == null)
+            return new object3d.Object3D();
+        return this._loaded3DObj;
+    }
 
 }

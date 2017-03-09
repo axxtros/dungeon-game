@@ -11,8 +11,13 @@ export class Object3D {
     private _vertexIndices: string;              //f
     private _vertexTextureIndices: string;       //f
     private _vertexNormalIndices: string;        //f
+    private _geometryVerticesNumber: number;
+    private _vertexNormalsNumber: number;
+    private _textureCoordsNumber: number;
+    private _facesNumber: number;
 
     constructor() {
+        this._id = null;
         this._objectname = "";
         this._groupname = "";
         this._geomteryVertices = "";
@@ -21,7 +26,11 @@ export class Object3D {
         this._vertexIndices = "";
         this._vertexTextureIndices = "";
         this._vertexNormalIndices = "";
-    }
+        this._geometryVerticesNumber = 0;
+        this._vertexNormalsNumber = 0;
+        this._textureCoordsNumber = 0;
+        this._facesNumber = 0;
+    }    
 
     get id(): number {
         return this._id;
@@ -92,4 +101,37 @@ export class Object3D {
     set vertexNormalIndices(vertexNormalIndices: string) {
         this._vertexNormalIndices = vertexNormalIndices;
     }
+
+    get geometryVerticesNumber(): number {
+        return this._geometryVerticesNumber;
+    }
+
+    set geometryVerticesNumber(geometryVerticesNumber: number) {
+        this._geometryVerticesNumber = geometryVerticesNumber;
+    }
+
+    get vertexNormalsNumber(): number {
+        return this._vertexNormalsNumber;
+    }
+
+    set vertexNormalsNumber(vertexNormalsNumber: number) {
+        this._vertexNormalsNumber = vertexNormalsNumber;
+    }
+
+    get textureCoordsNumber(): number {
+        return this._textureCoordsNumber;
+    }
+
+    set textureCoordsNumber(textureCoordsNumber: number) {
+        this._textureCoordsNumber = textureCoordsNumber;
+    }
+
+    get facesNumber(): number {
+        return this._facesNumber;
+    }
+
+    set facesNumber(facesNumber: number) {
+        this._facesNumber = facesNumber;
+    }
+
 }

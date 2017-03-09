@@ -51,4 +51,13 @@ export class Util {
         return "";        
     }
 
+    public static cutLastCharacter(value: string, cuttingChar: string): string {
+        if (value == null)
+            return null;
+        if (value.substr(value.length - 1, value.length) == cuttingChar) {
+            return value.substr(0, value.length - 1);
+        }
+        return value;
+    }
+
 }
