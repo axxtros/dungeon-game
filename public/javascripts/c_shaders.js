@@ -216,7 +216,6 @@ var FSHADER_SOURCE_7 =
      '  gl_FragColor = v_Color;//u_FragColor;\n' + 
      '}\n';
 
-
 //-----------------------------------------------------------------------------
 //shadow
 var SHADOW_VSHADER_SOURCE = 
