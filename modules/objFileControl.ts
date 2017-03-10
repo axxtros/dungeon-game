@@ -13,9 +13,7 @@ enum FacesType {
     NORMAL_INDICES
 };
 
-export class ObjFileControl {        
-
-    private SEPARATOR_CHARACTER: string = ',';
+export class ObjFileControl {    
 
     private objFileContent: any;
     private object3D: object3d.Object3D;  
@@ -76,9 +74,9 @@ export class ObjFileControl {
         }
         for (var i = 0; i != vertices.length; i++) {
             switch (lineLetter) {
-                case 'v': this.object3D.geomteryVertices += (vertices[i] + this.SEPARATOR_CHARACTER); break;
-                case 'vn': this.object3D.vertexNormals += (vertices[i] + this.SEPARATOR_CHARACTER); break;
-                case 'vt': this.object3D.textureCoords += (vertices[i] + this.SEPARATOR_CHARACTER); break;
+                case 'v': this.object3D.geomteryVertices += (vertices[i] + utilModul.Util.SEPARATOR_CHARACTER); break;
+                case 'vn': this.object3D.vertexNormals += (vertices[i] + utilModul.Util.SEPARATOR_CHARACTER); break;
+                case 'vt': this.object3D.textureCoords += (vertices[i] + utilModul.Util.SEPARATOR_CHARACTER); break;
             }            
         }
     }
@@ -107,17 +105,17 @@ export class ObjFileControl {
         for (var i = 0; i != elements.length; i++) {
             if (type == FacesType.VERTEX_INDICES) {
                 if (i == 0 || i == 3 || i == 6) {                    
-                    result += (elements[i] + this.SEPARATOR_CHARACTER);
+                    result += (elements[i] + utilModul.Util.SEPARATOR_CHARACTER);
                 }
             }
             if (type == FacesType.TEXTURE_INDICES) {
                 if (i == 1 || i == 4 || i == 7) {
-                    result += (elements[i] + this.SEPARATOR_CHARACTER);
+                    result += (elements[i] + utilModul.Util.SEPARATOR_CHARACTER);
                 }
             }
             if (type == FacesType.NORMAL_INDICES) {
                 if (i == 2 || i == 5 || i == 8) {
-                    result += (elements[i] + this.SEPARATOR_CHARACTER);
+                    result += (elements[i] + utilModul.Util.SEPARATOR_CHARACTER);
                 }
             }
         }
@@ -129,12 +127,12 @@ export class ObjFileControl {
     }
 
     private cutLastCharacter(): void {
-        this.object3D.geomteryVertices = utilModul.Util.cutLastCharacter(this.object3D.geomteryVertices, this.SEPARATOR_CHARACTER).trim();
-        this.object3D.vertexNormals = utilModul.Util.cutLastCharacter(this.object3D.vertexNormals, this.SEPARATOR_CHARACTER).trim();
-        this.object3D.textureCoords = utilModul.Util.cutLastCharacter(this.object3D.textureCoords, this.SEPARATOR_CHARACTER).trim();
-        this.object3D.vertexIndices = utilModul.Util.cutLastCharacter(this.object3D.vertexIndices, this.SEPARATOR_CHARACTER).trim();
-        this.object3D.vertexNormalIndices = utilModul.Util.cutLastCharacter(this.object3D.vertexNormalIndices, this.SEPARATOR_CHARACTER).trim();
-        this.object3D.vertexTextureIndices = utilModul.Util.cutLastCharacter(this.object3D.vertexTextureIndices, this.SEPARATOR_CHARACTER).trim();
+        this.object3D.geomteryVertices = utilModul.Util.cutLastCharacter(this.object3D.geomteryVertices, utilModul.Util.SEPARATOR_CHARACTER).trim();
+        this.object3D.vertexNormals = utilModul.Util.cutLastCharacter(this.object3D.vertexNormals, utilModul.Util.SEPARATOR_CHARACTER).trim();
+        this.object3D.textureCoords = utilModul.Util.cutLastCharacter(this.object3D.textureCoords, utilModul.Util.SEPARATOR_CHARACTER).trim();
+        this.object3D.vertexIndices = utilModul.Util.cutLastCharacter(this.object3D.vertexIndices, utilModul.Util.SEPARATOR_CHARACTER).trim();
+        this.object3D.vertexNormalIndices = utilModul.Util.cutLastCharacter(this.object3D.vertexNormalIndices, utilModul.Util.SEPARATOR_CHARACTER).trim();
+        this.object3D.vertexTextureIndices = utilModul.Util.cutLastCharacter(this.object3D.vertexTextureIndices, utilModul.Util.SEPARATOR_CHARACTER).trim();
     }
 
     private save3DObject(): string {

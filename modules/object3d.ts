@@ -1,4 +1,4 @@
-﻿
+﻿//adatbázis számára fenntartott 3d-s objektum struktúra tárolására szolgáló entitás
 
 export class Object3D {
 
@@ -14,7 +14,7 @@ export class Object3D {
     private _geometryVerticesNumber: number;
     private _vertexNormalsNumber: number;
     private _textureCoordsNumber: number;
-    private _facesNumber: number;
+    private _facesNumber: number;        
 
     constructor() {
         this._id = null;
@@ -30,6 +30,7 @@ export class Object3D {
         this._vertexNormalsNumber = 0;
         this._textureCoordsNumber = 0;
         this._facesNumber = 0;
+        var v = new Float32Array(10);
     }    
 
     get id(): number {

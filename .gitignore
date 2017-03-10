@@ -268,3 +268,4 @@ routes/admin.js
 modules/objFileParser.js
 modules/object3d.js
 modules/objFileControl.js
+modules/glObject3D.js

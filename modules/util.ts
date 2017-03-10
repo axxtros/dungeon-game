@@ -7,6 +7,8 @@ import * as appcons from "../modules/AppConstans";
 
 export class Util {
 
+    public static SEPARATOR_CHARACTER: string = ',';
+
     constructor() {
     }
 
@@ -58,6 +60,34 @@ export class Util {
             return value.substr(0, value.length - 1);
         }
         return value;
+    }
+
+    public static convertStringToFloat32Array(dbArray: string): Float32Array {
+        if (dbArray == null || dbArray.trim().length <= 0)
+            return null;
+        var elements: string[] = dbArray.split(this.SEPARATOR_CHARACTER);
+        if (elements != null && elements.length != 0) {
+            var result: Float32Array = new Float32Array(elements.length);
+            for (var i = 0; i != elements.length; i++) {
+                result[i] = parseFloat(elements[i]);
+            }
+            return result;
+        }
+        return null;
+    }
+
+    public static convertStringToUint8Array(dbArray: string): Uint8Array {
+        if (dbArray == null || dbArray.trim().length <= 0)
+            return null;
+        var elements: string[] = dbArray.split(this.SEPARATOR_CHARACTER);
+        if (elements != null && elements.length != 0) {
+            var result: Uint8Array = new Uint8Array(elements.length);
+            for (var i = 0; i != elements.length; i++) {
+                result[i] = parseFloat(elements[i]);
+            }
+            return result;
+        }
+        return null;
     }
 
 }

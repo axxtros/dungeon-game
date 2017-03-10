@@ -40,6 +40,7 @@
     <TypeScriptCompile Include="modules\baseClasses.ts" />
     <TypeScriptCompile Include="modules\db.ts" />
     <TypeScriptCompile Include="modules\dungeonGenerator.ts" />
+    <TypeScriptCompile Include="modules\glObject3D.ts" />
     <TypeScriptCompile Include="modules\object3d.ts" />
     <TypeScriptCompile Include="modules\objFileControl.ts" />
     <TypeScriptCompile Include="modules\pathFinder.ts" />
