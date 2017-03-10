@@ -169,8 +169,7 @@ export class ObjFileControl {
 
     public getLoaded3DObject(): object3d.Object3D {
         if (this._loaded3DObj == null)
-            return new object3d.Object3D();
-        glStorage.GLStorage.addGLObjectToStorage(new glObject3D.GLObject3D(this._loaded3DObj));
+            return new object3d.Object3D();        
         return this._loaded3DObj;
     }
 
@@ -190,6 +189,7 @@ export class ObjFileControl {
                             //console.log('@6');
                             if (result.length > 0) {
                                 self._loaded3DObj = result[0];                  //implicit konvertálással megy
+                                glStorage.GLStorage.addGLObjectToStorage(new glObject3D.GLObject3D(self._loaded3DObj));
                                 //console.log(result[0].geomteryVertices);
                                 //loadedObject3D.id = result[0].id;
                                 //loadedObject3D.geomteryVertices = result[0].geomteryVertices;

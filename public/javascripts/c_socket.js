@@ -43,6 +43,10 @@ function loadTestGL3DObject(objectID) {
 }
 
 socket.on('response_3d_object', function (loadedGLObject3D) {
-    glObj = loadedGLObject3D;
-    console.log('');
+    glTestObject = loadedGLObject3D;
+    addGLObject(glTestObject);
+    if (glTestObject != null) { 
+        wglCanvasInit(7);
+        wgl9_Draw();
+    }    
 })

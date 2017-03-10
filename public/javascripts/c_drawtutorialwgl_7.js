@@ -2,15 +2,15 @@
 
 //loading object
 
-var glObj;
+
 
 function wgl9_KeyDownHandler(event) {
     
 }
 
-function wgl9_Draw() {
-    loadTestGL3DObject(10);
-    console.log(glObj);
+//ez a c_socket.js-ből hívódik meg, mert rajzolás előtt meg kell várni, amíg a 3D-s object le nem jön a szerverről
+function wgl9_Draw() {    
+    console.log('@wgl9_Draw ' + glObjectStorage[0]._id);
 }
 
 function initVertexBuffersForTriangle() {
