@@ -3,6 +3,8 @@
 import * as utilModul from "../modules/util";
 import * as appcons from "../modules/AppConstans";
 import * as object3d from "../modules/Object3D";
+import * as glObject3D from "../modules/GLObject3D";
+import * as glStorage from "../modules/GLStorage";
 import * as databaseControl from "../modules/db";
 
 var async = require('async');
@@ -155,9 +157,22 @@ export class ObjFileControl {
         return resultMsg;              
     }
 
+    public getGL3DObject(objectID): void {
+        this.load3DObject(objectID);
+        var glObject = new glObject3D.GLObject3D(this._loaded3DObj);
+        glStorage.GLStorage.addGLObjectToStorage(glObject);        
+    }
+
     public get3DObject(objectID): void {
         this.load3DObject(objectID);       
     }    
+
+    public getLoaded3DObject(): object3d.Object3D {
+        if (this._loaded3DObj == null)
+            return new object3d.Object3D();
+        glStorage.GLStorage.addGLObjectToStorage(new glObject3D.GLObject3D(this._loaded3DObj));
+        return this._loaded3DObj;
+    }
 
     private load3DObject(objectID: number): void {        
         var self = this;
@@ -203,12 +218,6 @@ export class ObjFileControl {
             console.log('ERROR [async.series]: ' + appcons.AppConstans.OBJECT_3D_LOAD_ERROR + ' ' + error.message);
         }    
         //console.log('@10 kilep loadedObject3D');
-    }    
-
-    public getLoaded3DObject(): object3d.Object3D {
-        if (this._loaded3DObj == null)
-            return new object3d.Object3D();
-        return this._loaded3DObj;
-    }
+    }        
 
 }

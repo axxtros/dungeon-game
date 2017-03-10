@@ -7,6 +7,9 @@
 import * as dungeonGeneratorModule from '../modules/dungeonGenerator';
 import * as pathFinderModule from '../modules/pathFinder';
 
+import * as glStorage from "../modules/GLStorage";
+import * as globject3D from "../modules/GLObject3D";
+
 /*
 import express = require('express');
 var WebSocket = require('ws');
@@ -68,6 +71,11 @@ export class SocketClass {
                 var pathFinder = new pathFinderModule.Pathfinder(map, startCellY, startCellX, targetCellY, targetCellX, reversedPathSearch);
                 var path = pathFinder.searchPath();
                 socket.emit('path_data_from_server', path);
+            });
+
+            socket.on('load_3d_object', function (objectID) {
+                var loadedGLObject3D = glStorage.GLStorage.getObjectFromStorage(objectID);
+                socket.emit('response_3d_object', loadedGLObject3D);
             });
 
         });

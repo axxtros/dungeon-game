@@ -269,3 +269,4 @@ modules/objFileParser.js
 modules/object3d.js
 modules/objFileControl.js
 modules/glObject3D.js
+modules/GLStorage.js

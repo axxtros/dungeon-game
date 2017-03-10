@@ -64,7 +64,7 @@ export class Util {
 
     public static convertStringToFloat32Array(dbArray: string): Float32Array {
         if (dbArray == null || dbArray.trim().length <= 0)
-            return null;
+            return new Float32Array(0);
         var elements: string[] = dbArray.split(this.SEPARATOR_CHARACTER);
         if (elements != null && elements.length != 0) {
             var result: Float32Array = new Float32Array(elements.length);
@@ -73,12 +73,12 @@ export class Util {
             }
             return result;
         }
-        return null;
+        return new Float32Array(0);
     }
 
     public static convertStringToUint8Array(dbArray: string): Uint8Array {
         if (dbArray == null || dbArray.trim().length <= 0)
-            return null;
+            return new Uint8Array(0);
         var elements: string[] = dbArray.split(this.SEPARATOR_CHARACTER);
         if (elements != null && elements.length != 0) {
             var result: Uint8Array = new Uint8Array(elements.length);
@@ -87,7 +87,7 @@ export class Util {
             }
             return result;
         }
-        return null;
+        return new Uint8Array(0);
     }
 
 }

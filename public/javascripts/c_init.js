@@ -17,8 +17,8 @@ var unitcanvasContext;
 var missilecanvasContext;
 var devcanvasContext;
 var mouseCanvasContext;
-var gl;                     //webGL canvas context
 
+var gl;                     //webGL canvas context
 var canvasOffset;           //ebben van eltárolva, hogy mennyivel vannak eltolva az egyes canvas-ek. ez főleg az egér kurzor lekérdezésénél fontos (c_events.js)
 
 //var testTextureImage = new Image();
@@ -170,7 +170,7 @@ function initClientSideComponents(images) {
 function tasks() {        
     //generateNewDungeon();    
     if (isEnabled3DTutorialCanvas()) {
-        var RUN_TASK = 6;                   //melyik task fusson le???
+        var RUN_TASK = 7;                   //melyik task fusson le???
         switch (RUN_TASK) {
             case 1:
                 wglCanvasInit(1);
@@ -200,7 +200,7 @@ function tasks() {
                 wgl8_Draw();
                 document.addEventListener("keydown", wgl8_KeyDownHandler, true);
                 break;
-            case 7://shadow 
+            case 7://loading object from server                
                 wglCanvasInit(7); 
                 wgl9_Draw();          
                 document.addEventListener("keydown", wgl9_KeyDownHandler, true);

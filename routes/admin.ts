@@ -8,6 +8,7 @@ var async = require('async');
 import * as webLabelDAO from "../modules/webPageLabelsDAO";
 import * as objFileControl from "../modules/ObjFileControl";
 import * as object3d from "../modules/Object3D";
+import * as glStorage from "../modules/GLStorage";
 import * as globject3D from "../modules/GLObject3D";
 import * as util from "../modules/Util";
 import * as appcons from "../modules/AppConstans";
@@ -71,16 +72,18 @@ app.post('/objFileuploadAction', function (req, res) {
             objFileUploaderMsgText = objFileControlClass.objFileParser(fileContent);
         });
     }
-
     objFileUploaderBlockDispaly = 'block';
-    res.redirect('/admin');    
+    res.redirect('/admin');
 });
 
 //obj állomány betöltése
 app.post('/objloaderAction', function (req, res) {
     var objectId = req.body.object3DIdField;
     try {
-        objFileControlClass.get3DObject(Number(objectId));        
+        objFileControlClass.get3DObject(Number(objectId));
+
+        objFileControlClass.getGL3DObject(objectId);
+
     } catch(err) {
         console.log(err.message);
     }
@@ -90,9 +93,7 @@ app.post('/objloaderAction', function (req, res) {
 
 exports.admin = function (req, res, next) {
     //var sess1 = req.session;
-    console.log('@admin username: ' + req.session.username);    //session változó kiolvasása
-
-    var glObj = new globject3D.GLObject3D(objFileControlClass.getLoaded3DObject());
+    //console.log('@admin username: ' + req.session.username);    //session változó kiolvasása    
 
     //obj uploader result message
     objFileUploaderMsgColor = util.Util.getLayoutMessageColor(objFileUploaderMsgText);

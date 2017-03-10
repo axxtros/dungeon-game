@@ -37,3 +37,12 @@ socket.on('path_data_from_server', function (path) {
     addPath(path);
     drawPath(path);       
 })
+
+function loadTestGL3DObject(objectID) { 
+    socket.emit('load_3d_object', objectID);
+}
+
+socket.on('response_3d_object', function (loadedGLObject3D) {
+    glObj = loadedGLObject3D;
+    console.log('');
+})

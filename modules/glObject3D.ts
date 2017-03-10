@@ -46,6 +46,7 @@ export class GLObject3D {
     private initEmpty(): void {
         this.id = 0;
         this.name = "";
+        this.group = "";
         this.vertices = new Float32Array(0);
         this.vertexIndices = new Uint8Array(0);
         this.verticesNumber = 0;

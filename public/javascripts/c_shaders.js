@@ -193,6 +193,31 @@ var FSHADER_SOURCE_6 =
     '}\n';
 
 //-----------------------------------------------------------------------------
+//loading object from server
+var VSHADER_SOURCE_7 =
+ 'attribute vec4 a_Position;\n' +
+    'attribute float a_PointSize;\n' +
+    'uniform vec4 u_Translation;\n' +
+    'uniform mat4 u_ModelMatrix;\n' +
+    'attribute vec4 a_Color;\n' +
+    'varying vec4 v_Color;\n' +
+    'void main() {\n' +
+    '   gl_Position = a_Position;// + u_Translation;\n' +    
+    '   gl_PointSize = a_PointSize; //10.0;\n' +
+    '   v_Color = a_Color;\n' +                       
+    '}\n';
+
+//Fragment shader program
+var FSHADER_SOURCE_7 =
+ 'precision mediump float;\n' +
+     'uniform vec4 u_FragColor;\n' +
+     'varying vec4 v_Color;\n' + 
+     'void main() {\n' +
+     '  gl_FragColor = v_Color;//u_FragColor;\n' + 
+     '}\n';
+
+
+//-----------------------------------------------------------------------------
 //shadow
 var SHADOW_VSHADER_SOURCE = 
     'attribute vec4 a_Position;\n' +
@@ -208,7 +233,7 @@ var SHADOW_FSHADER_SOURCE =
     '   gl_FragColor = vec4(gl_FragCoord.z, 0.0, 0.0, 0.0);\n' + // Write the z-value in R
     '}\n';
 
-var VSHADER_SOURCE_7 =
+var VSHADER_SOURCE_8 =
     'attribute vec4 a_Position;\n' +
     'attribute float a_PointSize;\n' +
     'attribute vec4 a_Color;\n' +
@@ -218,7 +243,7 @@ var VSHADER_SOURCE_7 =
     '   gl_PointSize = 5.0;\n' +                       
     '   v_Color = a_Color;\n' +
     '}\n';
-var FSHADER_SOURCE_7 = 
+var FSHADER_SOURCE_8 = 
      '#ifdef GL_ES\n' +
      '  precision mediump float;\n' +
      '#endif\n' +
@@ -243,8 +268,9 @@ function loadShaders(shaderNumber) {
         case 4: c_shaders_initShaders(VSHADER_SOURCE_4, FSHADER_SOURCE_4, true); break;
         case 5: c_shaders_initShaders(VSHADER_SOURCE_5, FSHADER_SOURCE_5, true); break;
         case 6: c_shaders_initShaders(VSHADER_SOURCE_6, FSHADER_SOURCE_6, true); break;
-        case 7:
-            c_shaders_initShaders(VSHADER_SOURCE_7, FSHADER_SOURCE_7, true);
+        case 7: c_shaders_initShaders(VSHADER_SOURCE_7, FSHADER_SOURCE_7, true); break;
+        case 8:
+            c_shaders_initShaders(VSHADER_SOURCE_8, FSHADER_SOURCE_8, true);
             //c_shaders_initShaders(SHADOW_VSHADER_SOURCE, SHADOW_FSHADER_SOURCE, false);
             gl.enable(gl.DEPTH_TEST);
             break;
