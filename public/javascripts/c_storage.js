@@ -3,14 +3,6 @@
 var st_gameMap = null;                 //az éppen aktuális térkép
 var st_playerUnitPath = null;
 
-var glObject = {
-    id: 0,
-    name : "",
-    group : "",
-
-
-};
-
 var glObjectStorage = new Array();
 
 function addNewGameMap(map) {
@@ -31,15 +23,17 @@ function convertObjectToGLObject(object) {
     var convertGlObject = new Object();
     convertGlObject.id = object._id;
     convertGlObject.name = object._name;
-    convertGlObject.group = object._group;
-    convertGlObject.vertices = new Float32Array(10);
+    convertGlObject.group = object._group;    
     
-    var idx = 0;
-    for (var key in object._vertices) {
-        convertGlObject.vertices[idx] = object._vertices[key];
-        idx++;
-        //console.log(key, data[key]);
-    }
+    var tempValues = new Array();        
+    if (object._vertices != null) {        
+        for (var key in object._vertices) {
+            tempValues.push(object._vertices[key]);  
+        }
+        convertGlObject.vertices = new Float32Array(tempValues);        
+    }    
+    
+    
 
     return convertGlObject;
 }
