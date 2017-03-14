@@ -162,7 +162,7 @@ export namespace DatabaseControlNameSpace {
             } catch (err) {
                 console.log('@async CATCH ERROR: ' + err.message);
             }
-        }        
+        }
 
         private addValue(svalue: string): void {
             this.testArray.push(svalue);
