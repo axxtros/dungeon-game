@@ -11,23 +11,18 @@ function wgl9_KeyDownHandler(event) {
 //ez a c_socket.js-ből hívódik meg, mert rajzolás előtt meg kell várni, amíg a 3D-s object le nem jön a szerverről
 function wgl9_Draw() {    
     if (glObjectStorage[0] != null) {
-        //console.log('@wgl9_Draw ID: ' + glObjectStorage[0].id);
-        
-        var u_FragColor = gl.getUniformLocation(glProgram, 'a_Color');
-        gl.uniform4f(u_FragColor, 1.0, 0.0, 0.0, 0.0);
+        //console.log('@wgl9_Draw ID: ' + glObjectStorage[0].id);       
 
         var modelMatrix = new Matrix4();
-        modelMatrix.setRotate(45, 0, 0, 1);
+        modelMatrix.setRotate(0, 0, 1, 0);
         var u_ModelMatrix = gl.getUniformLocation(glProgram, 'u_ModelMatrix');
         gl.uniformMatrix4fv(u_ModelMatrix, false, modelMatrix.elements);
 
         gl.enable(gl.DEPTH_TEST);
         wglCanvasClear();
         n = initGLObject(glObjectStorage[0]);
-        //gl.drawArrays(gl.POINTS, 0, n);
-        
-
-        gl.drawElements(gl.TRIANGLES, n, gl.UNSIGNED_BYTE, 0);        
+        //gl.drawArrays(gl.POINTS, 0, n);        
+        gl.drawElements(gl.POINTS, n, gl.UNSIGNED_BYTE, 0);
     } else { 
         console.log('ERROR: No draw!');
     }

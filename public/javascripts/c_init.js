@@ -203,7 +203,7 @@ function tasks() {
                 document.addEventListener("keydown", wgl8_KeyDownHandler, true);
                 break;
             case 7://loading object from server                
-                loadTestGL3DObject(10);
+                loadTestGL3DObject(66);
                 //az init és a draw a c_socket.js-ből hívódik meg, mert rajzolás előtt meg kell várni, amíg a 3D-s object le nem jön a szerverről
                 //wglCanvasInit(7);
                 //wgl9_Draw();
