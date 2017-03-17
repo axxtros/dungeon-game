@@ -7,6 +7,7 @@ var host = window.location.hostname;
 var websocketPort = 3000;
 var socket = new io.connect("ws://" + host + ":" + websocketPort);
 //var socket = new WebSocket("ws://" + host + ":" + websocketPort);
+var currentGLObjectID;
 
 socket.open(function (e) {
     console.log("Connection open..." + e.message);
@@ -38,15 +39,18 @@ socket.on('path_data_from_server', function (path) {
     drawPath(path);       
 })
 
-function loadTestGL3DObject(objectID) { 
+function loadTestGL3DObject(objectID) {
+    currentGLObjectID = objectID;
     socket.emit('load_3d_object', objectID);
 }
 
 socket.on('response_3d_object', function (loadedGLObject3D) {
-    glTestObject = loadedGLObject3D;
-    addGLObject(glTestObject);
-    if (glTestObject != null) { 
+    if (loadedGLObject3D != null) {
+        currentGLObjectID = null;
+        addGLObject(loadedGLObject3D);
         wglCanvasInit(7);
         wgl9_Draw();
-    }    
+    } else { 
+        loadTestGL3DObject(currentGLObjectID);  //ha elsőre nem sikerülne, akkor hívja meg újra a betöltést
+    }
 })

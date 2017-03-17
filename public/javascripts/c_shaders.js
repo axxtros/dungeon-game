@@ -202,7 +202,7 @@ var VSHADER_SOURCE_7 =
     'attribute vec4 a_Color;\n' +
     'varying vec4 v_Color;\n' +
     'void main() {\n' +
-    '   gl_Position = a_Position;// + u_Translation;\n' +    
+    '   gl_Position = u_ModelMatrix * a_Position;// + u_Translation;\n' +    
     '   gl_PointSize = 10.0;\n' +
     '   v_Color = a_Color;\n' +                       
     '}\n';

@@ -82,7 +82,7 @@ app.post('/objloaderAction', function (req, res) {
     try {
         objFileControlClass.get3DObject(Number(objectId));
 
-        objFileControlClass.getGL3DObject(objectId);
+        //objFileControlClass.getGL3DObject(objectId);
 
     } catch(err) {
         console.log(err.message);

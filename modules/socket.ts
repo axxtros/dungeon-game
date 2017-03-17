@@ -6,7 +6,7 @@
 
 import * as dungeonGeneratorModule from '../modules/dungeonGenerator';
 import * as pathFinderModule from '../modules/pathFinder';
-
+import * as objFileControl from "../modules/ObjFileControl";
 import * as glStorage from "../modules/GLStorage";
 import * as globject3D from "../modules/GLObject3D";
 
@@ -45,13 +45,14 @@ module.exports = function (io) {
 //typescript-es megoldás ------------------------------------------------------
 
 export class SocketClass {    
-
+    
     constructor() {
         //this.dungeonMapGenerator = new dungeonGeneratorModule.DungeonGenerator();
     }    
 
     public socketEventHandler(io: any): void {                
 
+        var objFileControlClass = new objFileControl.ObjFileControl();
         console.log('@websocket Websocket events started.');        
 
         io.sockets.on('connection', function (socket) {
@@ -74,6 +75,7 @@ export class SocketClass {
             });
 
             socket.on('load_3d_object', function (objectID) {
+                objFileControlClass.get3DObject(Number(objectID));
                 var loadedGLObject3D = glStorage.GLStorage.getObjectFromStorage(objectID);
                 socket.emit('response_3d_object', loadedGLObject3D);
             });
