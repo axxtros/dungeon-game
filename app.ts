@@ -16,7 +16,7 @@ var util = require('util');
 var fs = require('fs');
 
 var app = module.exports = express();   //a module.exports azért kell, hogy a többi modul is pontosan ezt az app példányt lássa http://stackoverflow.com/questions/10090414/express-how-to-pass-app-instance-to-routes-from-a-different-file
-                                        //az egyes modulokban var app = require('../app') kell fefiniálni, és akkor mindegyik erre az app-ra fog hivatkozni
+                                        //az egyes modulokban var app = require('../app') kell definiálni, és akkor mindegyik erre az app-ra fog hivatkozni
 
 var websocketPort = 3000;               //ezen a port-on fut a websocket, ha ez változik, akkor írd át a c_socket.js-ben is kliens oldalon (websocketPort)
 var server = http.createServer(app);
