@@ -30,6 +30,7 @@ import * as appControl from './modules/application';    //itt csak egy pont kell
 var routes = require('./routes');
 var gamepage = require('./routes/game');
 var adminpage = require('./routes/admin');
+var mappage = require('./routes/map');
 
 // all environments
 app.set('port', process.env.PORT || 3001);              //ezen a port-on fut a node szerver
@@ -70,6 +71,7 @@ socketCtrl.socketEventHandler(io);
 app.get('/', routes.index);
 app.get('/game', gamepage.game);
 app.get('/admin', adminpage.admin);
+app.get('/map', mappage.map);
 
 //start server
 http.createServer(app).listen(app.get('port'), function () {

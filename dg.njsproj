@@ -34,6 +34,7 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="views\map.ejs" />
     <TypeScriptCompile Include="app.ts" />
     <TypeScriptCompile Include="modules\appConstans.ts" />
     <TypeScriptCompile Include="modules\application.ts" />
@@ -52,6 +53,7 @@
     <TypeScriptCompile Include="routes\admin.ts" />
     <TypeScriptCompile Include="routes\game.ts" />
     <TypeScriptCompile Include="routes\index.ts" />
+    <TypeScriptCompile Include="routes\map.ts" />
     <TypeScriptCompile Include="routes\user.ts" />
     <TypeScriptCompile Include="Scripts\typings\express\express.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\node\node.d.ts" />

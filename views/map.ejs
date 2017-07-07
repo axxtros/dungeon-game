@@ -2,9 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>    
     <meta charset="utf-8" />    
-    <title><%= program_name %></title>    
-    <!--<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>-->
-    <!--<script src="http://localhost:3000/socket.io/socket.io.js"></script>-->    
+    <title><%= program_name %></title>        
     <script src="/javascripts/socket.io.js"></script>           <!-- töltsd le a socket.io-client npm-et a szerverre, és abban benne van a szükséges socket.io.js, majd másold be a javascript könyvtárva -->
     <script src="/javascripts/jquery-3.1.1.min.js"></script>    <!-- jquery hivatalos weboldaláról -->
     <!--<link rel="icon" type="image/x-icon" href="/images/sword.ico"/>-->
@@ -23,20 +21,14 @@
     <div class="contentDiv">
         
         <%/* Csak fejlesztére van ez a gomb fentartva! */%>
-        
-		<!--
-		<div style="display: block; float: right; margin: 0 0 2px 0;">
+        <div style="display: block; float: right; margin: 0 0 2px 0;">
             <button type="button" onclick="generateNewDungeon()">Map generator</button>
         </div>
-		-->
 
         <div id="gamediv" class="gamediv" style="display: block; clear: both; margin: 4px 0 4px 0; margin-left: auto; margin-right: auto;">
             <canvas id="mapcanvas" style="position: absolute; z-index: 0;">
                 Your browser is not supported the HTML5 canvas!
-            </canvas>
-            <canvas id="unitcanvas" style="position: absolute; z-index: 100;"></canvas>
-            <canvas id="missilecanvas" style="position: absolute; z-index: 200;"></canvas>
-            <canvas id="webgltutorialcanvas" style="position: absolute; z-index: 300;"></canvas>
+            </canvas>            
             <canvas id="devcanvas" style="position: absolute; z-index: 400;"></canvas>
             <canvas id="mousecanvas" style="position: absolute; z-index: 500;"></canvas>
         </div>                
@@ -48,22 +40,10 @@
         </div>
     </div>
         
-    <script src="/javascripts/c_util.js"></script>
-    <script src="/javascripts/c_webgl_util.js"></script>
-    <script src="/javascripts/c_socket.js"></script>    
-    <script src="/javascripts/c_storage.js"></script>
+    <script src="/javascripts/c_util.js"></script>    
+    <script src="/javascripts/c_socket.js"></script>        
     <script src="/javascripts/c_init.js"></script>
     <script src="/javascripts/c_events.js"></script>
-    <script src="/javascripts/c_drawmap.js"></script>
-    <!-- webGL scripts -->
-    <script src="/javascripts/ax_matrix_lib.js"></script>
-    <script src="/javascripts/c_shaders.js"></script>
-    <script src="/javascripts/c_drawtutorialwgl_1.js"></script>
-    <script src="/javascripts/c_drawtutorialwgl_2.js"></script>
-    <script src="/javascripts/c_drawtutorialwgl_3.js"></script>
-    <script src="/javascripts/c_drawtutorialwgl_4.js"></script>
-    <script src="/javascripts/c_drawtutorialwgl_5.js"></script>
-    <script src="/javascripts/c_drawtutorialwgl_6.js"></script>
-    <script src="/javascripts/c_drawtutorialwgl_7.js"></script>
+    <script src="/javascripts/c_drawmap.js"></script>    
 </body>
 </html>
