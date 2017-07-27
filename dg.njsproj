@@ -100,6 +100,7 @@
     <Compile Include="public\javascripts\c_drawtutorialwgl_6.js" />
     <Compile Include="public\javascripts\c_drawtutorialwgl_7.js" />
     <Compile Include="public\javascripts\c_events.js" />
+    <Compile Include="public\javascripts\c_init_map.js" />
     <Compile Include="public\javascripts\c_shaders.js" />
     <Compile Include="public\javascripts\c_storage.js" />
     <Compile Include="public\javascripts\c_util.js" />

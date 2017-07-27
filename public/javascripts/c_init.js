@@ -172,7 +172,7 @@ function initClientSideComponents(images) {
 function tasks() {
     //generateNewDungeon();        
     if (isEnabled3DTutorialCanvas()) {
-        var RUN_TASK = 7;                   //melyik task fusson le???
+        var RUN_TASK = 5;                   //melyik task fusson le???
         switch (RUN_TASK) {
             case 1:
                 wglCanvasInit(1);
@@ -210,7 +210,7 @@ function tasks() {
                 document.addEventListener("keydown", wgl9_KeyDownHandler, true);
                 break;
         }                                
-    }    
+    }  
 }
 
 window.onscroll = function (event) { 
