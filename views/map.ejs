@@ -18,12 +18,17 @@
     <!-- https://github.com/tj/ejs -->
     <% include include/mainmenu %>
 
-    <div class="contentDiv">
-        
-        <%/* Csak fejlesztére van ez a gomb fentartva! */%>
-        <div style="display: block; float: right; margin: 0 0 2px 0;">
-            <button type="button" onclick="generateNewDungeon()">Map generator</button>
-        </div>
+    <div class="contentDiv">                      
+          
+        <div id="mapMenus" style="display: block; clear: both; width: 800px; margin: 4px 0 4px 0; margin-left: auto; margin-right: auto;">
+            <div style="display: block; float: left; margin: 0 0 2px 0;">
+                <button type="button" onclick="generateNewDungeon()">Map generator</button>
+            </div>
+
+            <div style="display: block; float: left; margin: 0 0 2px 10px;">
+                <button type="button" onclick="clearMapPath()">Clear path</button>
+            </div>
+        </div>        
 
         <div id="gamediv" class="gamediv" style="display: block; clear: both; margin: 4px 0 4px 0; margin-left: auto; margin-right: auto;">
             <canvas id="mapcanvas" style="position: absolute; z-index: 0;">

@@ -34,6 +34,7 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="tasks.txt" />
     <Content Include="views\map.ejs" />
     <TypeScriptCompile Include="app.ts" />
     <TypeScriptCompile Include="modules\appConstans.ts" />
