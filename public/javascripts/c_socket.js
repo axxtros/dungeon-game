@@ -20,8 +20,9 @@ function sendWelcomMsg() {
 
 function generateNewDungeon() {
     //kb. 10mp a max legenerálása 401x401, 100 szoba
-    //ideális: 95x95, 50 szoba
-    socket.emit('map_generator', 51, 51, 50, 2);
+    //ideális: 95x95, 50 szoba    
+    //width, height, roomNumber, doorsPerRoom (beégetve a dungeonGenerator-ban 3, így itt felsleges, de egyenlőre maradjon)
+    socket.emit('map_generator', 51, 51, 20, 2);
 }
 
 socket.on('map_data_from_server', function (msg, map) {
