@@ -76,7 +76,7 @@ function initCanvasContext(canvasContext, isCanvas2D) {
 }
 
 function initMouseEvents(canvasElement) {
-    canvasElement.addEventListener("mouseup", mouseClickedEvent, false);
+    canvasElement.addEventListener("mouseup", mouseClickedMapEvent, false);
 }
 
 function main() { 

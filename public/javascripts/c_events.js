@@ -1,7 +1,8 @@
 ﻿// game events functions 23/01/2017
 
+//mouse map events
 //http://www.homeandlearn.co.uk/JS/html5_canvas_mouse_events.html
-function mouseClickedEvent(event) {    
+function mouseClickedMapEvent(event) {    
     var clickedY = event.pageY - canvasOffset.top;
     var clickedX = event.pageX - canvasOffset.left;
     DEBUG_LOG('@mousedown click y: ' + clickedY + ' x:' + clickedX);
@@ -26,7 +27,11 @@ function mouseClickedEvent(event) {
         DEBUG_LOG('@mousedown click middle mouse button');        
     }
     if (event.button === 2) {   //jobb egérgomb
-        DEBUG_LOG('@mousedown click right mouse button');
-        //searchUnitPath(testStartY, testStartX, cellY, cellX, true);
+        DEBUG_LOG('@mousedown click right mouse button');        
     }
+}
+
+//mouse 3d game events
+function mouseClickedGameEvent(event) { 
+    console.log('3D gamepage clciked...');
 }

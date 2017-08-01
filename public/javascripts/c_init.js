@@ -127,7 +127,7 @@ function initCanvasContext(canvasContext, isCanvas2D) {
 }
 
 function initMouseEvents(canvasElement) { 
-    canvasElement.addEventListener("mouseup", mouseClickedEvent, false);	
+    canvasElement.addEventListener("mouseup", mouseClickedGameEvent, false);	
 }
 
 function main() {                       //így kell betölteni képeket asszinkron módon sima js-ben, hogy a végrehajtás várjon mindaddig, amíg az összes kép nincs betöltve

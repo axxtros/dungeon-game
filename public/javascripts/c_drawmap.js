@@ -20,8 +20,8 @@ var OKCELL_COLOR = '#81BEF7';
 var PATH_COLOR = '#81F781';
 var TEST_TARGET_CELL_COLOR = '#FF001F';
 
-var testStartY = 20;
-var testStartX = 20;
+var testStartY = 2;
+var testStartX = 2;
 
 function drawMap(map) {
     var mapElementX = 0;

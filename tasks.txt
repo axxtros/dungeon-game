@@ -1,0 +1,18 @@
+﻿Megoldandó feladatok:
+
+OBJ viewer:
+- egy teljeskörő obj viewer elékészítése, amelybe tettszőleges obj kiterjesztésű 3d-s objektumot be lehet tölteni, megjeleníti, és tartalmazza
+  azokat a funkciókat, amelyel a VS rendelkezik
+
+NoSQL:
+- be kell vezetni egy nosql rendszert (MongoDB), amelyben megvalósul a teljes perzisztens adattárolás (a jelenlegi sqlite-ot le kell cserélni)
+
+Map Generator:
+- további map generator algoritmusok kutatása, és a jelenlegi hibás térkép készítő algoritmus javítása, illetve optimalizálása
+
+Dungeon Game:
+- elékszíteni egy 3D-s labirintus térképet, amelybe lehet a kurzor nyilakkal lépkedni
+- a játék további részletei később kerülnek kidolgozásra
+
+Egyéb:
+- 
