@@ -25,10 +25,10 @@ var testStartY = 2;
 var testStartX = 3;
 
 function clearMapPath() { 
-    drawMap(st_gameMap);
+    drawMap(st_gameMap, false);
 }
 
-function drawMap(map) {
+function drawMap(map, isGenerateNewTestPathCell) {
     var mapElementX = 0;
     var mapElementY = 0;
     if (map !== null && map !== 'undefined') {
@@ -55,8 +55,10 @@ function drawMap(map) {
             mapElementX = 0;
             mapElementY += MAP_ELEMENT_SIZE;
         }
-        generateRandomTestPathStartCell(map);
-        drawMapCell(testStartX, testStartY, TEST_START_PATH_CELL_COLOR, false);             //útvonal kereső start mező (beégetett, csak teszt miatt!!!)        
+        if (isGenerateNewTestPathCell) { 
+            generateRandomTestPathStartCell(map);            
+        }
+        drawMapCell(testStartX, testStartY, TEST_START_PATH_CELL_COLOR, false);             //útvonal kereső start mező (beégetett, csak teszt miatt!!!)
     } else { 
         log('Map is null or undefined!');
     }

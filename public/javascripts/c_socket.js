@@ -28,7 +28,7 @@ function generateNewDungeon() {
 socket.on('map_data_from_server', function (msg, map) {
     //console.log('Test message from server: ' + msg);
     addNewGameMap(map);
-    drawMap(map);
+    drawMap(map, true);
 })
 
 function searchUnitPath(startCellY, startCellX, targetCellY, targetCellX, reversedPathSearch) {    
