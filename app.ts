@@ -31,6 +31,7 @@ var routes = require('./routes');
 var gamepage = require('./routes/game');
 var adminpage = require('./routes/admin');
 var mappage = require('./routes/map');
+var webgldemo1 = require('./routes/webgldemo1');
 
 // all environments
 app.set('port', process.env.PORT || 3001);              //ezen a port-on fut a node szerver
@@ -72,6 +73,7 @@ app.get('/', routes.index);
 app.get('/game', gamepage.game);
 app.get('/admin', adminpage.admin);
 app.get('/map', mappage.map);
+app.get('/webgldemo1', webgldemo1.page);
 
 //start server
 http.createServer(app).listen(app.get('port'), function () {

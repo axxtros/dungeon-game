@@ -36,6 +36,7 @@
   <ItemGroup>
     <Content Include="tasks.txt" />
     <Content Include="views\map.ejs" />
+    <Content Include="views\webgldemo1.ejs" />
     <TypeScriptCompile Include="app.ts" />
     <TypeScriptCompile Include="modules\appConstans.ts" />
     <TypeScriptCompile Include="modules\application.ts" />
@@ -56,6 +57,7 @@
     <TypeScriptCompile Include="routes\index.ts" />
     <TypeScriptCompile Include="routes\map.ts" />
     <TypeScriptCompile Include="routes\user.ts" />
+    <TypeScriptCompile Include="routes\webgldemo1.ts" />
     <TypeScriptCompile Include="Scripts\typings\express\express.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\node\node.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\stylus\stylus.d.ts" />
@@ -75,6 +77,7 @@
     <Folder Include="public\" />
     <Folder Include="public\images\" />
     <Folder Include="public\javascripts\" />
+    <Folder Include="public\javascripts\webgldemo1\" />
     <Folder Include="views\include\" />
     <Folder Include="public\resources\" />
     <Folder Include="public\resources\objects3d\" />
@@ -108,6 +111,9 @@
     <Compile Include="public\javascripts\c_init.js" />
     <Compile Include="public\javascripts\c_socket.js" />
     <Compile Include="public\javascripts\c_webgl_util.js" />
+    <Compile Include="public\javascripts\webgldemo1\c_init.js" />
+    <Compile Include="public\javascripts\webgldemo1\c_init_shader.js" />
+    <Compile Include="public\javascripts\webgldemo1\c_shaders.js" />
   </ItemGroup>
   <!-- Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them. -->
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">

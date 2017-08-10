@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>    
+    <meta charset="utf-8" />    
+    <title><%= program_name %></title>        
+    <script src="/javascripts/socket.io.js"></script>           <!-- töltsd le a socket.io-client npm-et a szerverre, és abban benne van a szükséges socket.io.js, majd másold be a javascript könyvtárva -->
+    <script src="/javascripts/jquery-3.1.1.min.js"></script>    <!-- jquery hivatalos weboldaláról -->
+    <link rel="stylesheet" href="/stylesheets/style.css"/>
+</head>
+<body>
+
+    <div class="headerDiv">
+        <%= program_name %>
+    </div>       
+    
+    <!-- https://scotch.io/tutorials/use-ejs-to-template-your-node-application -->
+    <!-- https://github.com/tj/ejs -->
+    <% include include/mainmenu %>
+
+    <div class="contentDiv">                      
+        <div id="gamediv" class="gamediv" style="display: block; clear: both; margin: 4px 0 4px 0; margin-left: auto; margin-right: auto;">
+            <canvas id="webglcanvas" style="position: absolute; z-index: 0;">
+                Your browser is not supported the HTML5 canvas!
+            </canvas>
+        </div>
+    </div>
+        
+    <div class="footerDiv">
+        <div class="developerAndVersionDiv">
+            by <%= program_developer %> v.<%= program_version %>
+        </div>
+    </div>
+            
+    <script src="/javascripts/webgldemo1/c_shaders.js"></script>
+    <script src="/javascripts/webgldemo1/c_init_shader.js"></script>
+    <script src="/javascripts/webgldemo1/c_init.js"></script>
+
+</body>
+</html>
