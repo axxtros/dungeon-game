@@ -26,14 +26,14 @@ function main() {
     canvasOffset = gamediv.getBoundingClientRect();        
 
     webglCanvas = document.getElementById('webglcanvas');
-    webglCanvas.style.top = canvasOffset.top + 'px';
-    webglCanvas.style.left = canvasOffset.left + 'px';
-    webglCanvas.style.width = canvasOffset.width + 'px';
-    webglCanvas.style.height = canvasOffset.height + 'px';
+    //webglCanvas.style.top = canvasOffset.top + 'px';
+    //webglCanvas.style.left = canvasOffset.left + 'px';
+    //webglCanvas.style.width = canvasOffset.width + 'px';
+    //webglCanvas.style.height = canvasOffset.height + 'px';
 
     gl = webglCanvas.getContext("webgl", true) || webglCanvas.getContext("experimental-webgl", true);
-    gl.canvas.width = GAME_DIV_WIDTH;
-    gl.canvas.height = GAME_DIV_HEIGHT;
+    //gl.canvas.width = 100;//GAME_DIV_WIDTH;
+    //gl.canvas.height = 100;//GAME_DIV_HEIGHT;
 
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT);
