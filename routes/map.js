@@ -1,6 +1,7 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var webLabelDAO = require("../modules/webPageLabelsDAO");
-var express = require('express');
+var express = require("express");
 var router = express.session();
 var app = require('../app');
 var async = require('async');

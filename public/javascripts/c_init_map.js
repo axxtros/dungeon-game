@@ -79,11 +79,11 @@ function initMouseEvents(canvasElement) {
     canvasElement.addEventListener("mouseup", mouseClickedMapEvent, false);
 }
 
-function main() {
+function init() {
     init2DCanvasComponents();
     generateNewDungeon();
 }
 
 window.onload = function (event) { 
-    main();
+    init();
 }

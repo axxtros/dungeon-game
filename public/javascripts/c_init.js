@@ -130,7 +130,7 @@ function initMouseEvents(canvasElement) {
     canvasElement.addEventListener("mouseup", mouseClickedGameEvent, false);	
 }
 
-function main() {                       //így kell betölteni képeket asszinkron módon sima js-ben, hogy a végrehajtás várjon mindaddig, amíg az összes kép nincs betöltve
+function init() {                       //így kell betölteni képeket asszinkron módon sima js-ben, hogy a végrehajtás várjon mindaddig, amíg az összes kép nincs betöltve
     loadImages([
         "/images/sky.jpg",
         "/images/sky2.jpg"
@@ -224,7 +224,7 @@ window.onresize = function(event) {
 };
 
 window.onload = function (event) {    
-    main();
+    init();
 };
 
 //testTextureImage.onload = function () { 

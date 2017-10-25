@@ -1,9 +1,12 @@
 ﻿//shader initializations ------------------------------------------------------
+
+var glProgram;
+
 function initShaders(v_shader_source, f_shader_source) {
     vertexShader = cmpShader(v_shader_source, gl.VERTEX_SHADER);
     fragmentShader = cmpShader(f_shader_source, gl.FRAGMENT_SHADER);
     
-    var glProgram = gl.createProgram();
+    glProgram = gl.createProgram();
     gl.attachShader(glProgram, vertexShader);
     gl.attachShader(glProgram, fragmentShader);
     gl.linkProgram(glProgram);
