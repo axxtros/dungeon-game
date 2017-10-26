@@ -61,6 +61,10 @@ function webGLDemo1() {
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, initWebGLDemo1VertexBuffer());   
 }
 
+function webGLDemo2() {
+        
+}
+
 function initWebGLDemo1VertexBuffer() {
     var vertices = new Float32Array([
         -0.5,  0.5, 0.0, 
