@@ -93,7 +93,7 @@ app.post('/objloaderAction', function (req, res) {
 
 exports.admin = function (req, res, next) {
     //var sess1 = req.session;
-    //console.log('@admin username: ' + req.session.username);    //session változó kiolvasása    
+    //console.log('@admin username: ' + req.session.username);    //session változó kiolvasása        
 
     //obj uploader result message
     objFileUploaderMsgColor = util.Util.getLayoutMessageColor(objFileUploaderMsgText);
