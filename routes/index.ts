@@ -25,7 +25,7 @@ app.post('/login', function (req, res) {
     console.log('@index username: ' + req.session.username);
     var userName = req.body.username;
     if (userName == 'admin') {
-        req.session.username = req.body.username;
+        req.session.username = req.body.username + "AAAA";
         res.redirect('/admin');
     } else {
         res.redirect('/');            
